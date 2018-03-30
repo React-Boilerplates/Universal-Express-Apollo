@@ -6,9 +6,10 @@ const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 const babel = require('@babel/core');
 const AssetsPlugin = require('assets-webpack-plugin');
+
 const assetsPluginInstance = new AssetsPlugin({ filename: 'assets.json' });
 
-const __DEV__ = process.env.NODE_ENV === 'development';
+const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line no-underscore-dangle
 
 const UglifyJS = require('uglify-js');
 

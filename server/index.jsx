@@ -38,6 +38,7 @@ app.get('*', (req, res) => {
       );
       const helmet = Helmet.renderStatic();
       const styles = sheet.getStyleTags();
+      /* eslint-disable prettier/prettier */
       res.send(`
           <!doctype html>
           <html>
@@ -50,7 +51,8 @@ app.get('*', (req, res) => {
             <body ${helmet.bodyAttributes.toString()}>
               <script>window.__APOLLO_STATE__ = ${JSON.stringify(
           client.cache.extract()
-        ).replace(/</g, '\\u003c')}</script>
+        ).replace(/</g, '\\u003c')
+        }</script>
               <div id="root">${html}</div>
               <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.3.0/cjs/react-dom-server.browser.production.min.js" integrity="sha256-kteFyrPGPZIASyU+pH5t9fyayICicvqTdfxbxRgp6bw=" crossorigin="anonymous"></script>
               <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.3.0/cjs/react.production.min.js" integrity="sha256-NGhNLMxOmDYSTmpUlxspbliNB3L+zyhWvVzFerPjqso=" crossorigin="anonymous"></script>
@@ -60,6 +62,7 @@ app.get('*', (req, res) => {
             </body>
           </html>
         `);
+      /* eslint-enable prettier/prettier */
     })
   );
 });

@@ -13,7 +13,8 @@ export default (
     style = '',
     link = '',
     cache
-  }) => `
+  }
+) => `
 <!doctype html>
 <html>
   <head>

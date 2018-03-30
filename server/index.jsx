@@ -53,6 +53,18 @@ app.get('*', (req, res) => {
   );
 });
 
-app.listen(processPort, () =>
-  console.log(`App 🚀 @ http://localhost:${processPort}/`)
-);
+const server = app.listen(processPort, () => {
+  console.log(`App 🚀  @ http://localhost:${processPort}/`);
+});
+
+function shutDown() {
+  server.close(() => {
+    console.log('\nServer has been closed');
+    console.log('Exitting Process');
+    process.exit(0);
+  });
+}
+
+process.on('ELIFECYCLE', shutDown);
+process.on('SIGTERM', shutDown);
+process.on('SIGINT', shutDown);

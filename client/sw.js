@@ -25,6 +25,7 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // Always Pass GET through for now
   if (event.request.method !== 'GET') return;
   event.respondWith(
     (async function handleGet() {

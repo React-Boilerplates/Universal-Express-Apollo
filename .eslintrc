@@ -1,0 +1,48 @@
+{
+    "extends": [
+        "airbnb",
+        "plugin:prettier/recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 8,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        }
+    },
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "rules": {
+        "prettier/prettier": ["error", null, {
+            "usePrettierrc": true
+        }],
+        "jsx-a11y/label-has-for": [2, {
+            "components": ["Label"],
+            "required": {
+                "every": ["nesting", "id"]
+            },
+            "allowChildren": true
+        }],
+        "jsx-a11y/anchor-is-valid": ["error", {
+            "components": ["Link"],
+            "specialLink": ["to", "hrefLeft", "hrefRight"],
+            "aspects": ["noHref", "invalidHref", "preferButton"]
+        }],
+        "import/no-extraneous-dependencies": ["error", {
+            "devDependencies": [
+                "**/*.test.js",
+                "**/*.test.jsx",
+                "**/*.spec.js",
+                "**/*.spec.jsx",
+                "**/tools/jest/*.js",
+                "jest.setup.js",
+                "tools/**/*.js",
+                "**/mocks.js"
+            ]
+        }]
+    }
+}

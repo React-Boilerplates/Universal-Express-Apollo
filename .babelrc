@@ -1,0 +1,96 @@
+{
+    "env": {
+        "test": {
+            "presets": [
+                "@babel/preset-env",
+                "@babel/preset-react"
+            ],
+            "plugins": [
+                "@babel/plugin-transform-react-jsx",
+                "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-object-rest-spread",
+                "babel-plugin-dynamic-import-node",
+                "loadable-components/babel",
+                "react-hot-loader/babel",
+                "babel-plugin-styled-components"
+            ]
+        },
+        "server": {
+            "presets": [
+                ["@babel/preset-env", {
+                    "targets": {
+                        "node": "current"
+                    }
+                }],
+                "@babel/preset-react"
+            ],
+            "plugins": [
+                "@babel/plugin-transform-react-jsx",
+                "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-object-rest-spread",
+                "babel-plugin-dynamic-import-node",
+                "loadable-components/babel",
+                "react-hot-loader/babel", ["babel-plugin-styled-components", {
+                    "ssr": true
+                }],
+                "transform-react-remove-prop-types"
+            ]
+        },
+        "server:prod": {
+            "presets": [
+                ["@babel/preset-env", {
+                    "targets": {
+                        "node": "current"
+                    }
+                }],
+                "@babel/preset-react"
+            ],
+            "plugins": [
+                "@babel/plugin-transform-react-jsx",
+                "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-object-rest-spread",
+                "babel-plugin-dynamic-import-node",
+                "loadable-components/babel",
+                "react-hot-loader/babel", ["babel-plugin-styled-components", {
+                    "displayName": false
+                }],
+                "transform-react-remove-prop-types"
+            ]
+        },
+        "client": {
+            "presets": [
+                ["@babel/preset-env", {
+                    "targets": {
+                        "browsers": ["last 2 versions", "safari >= 7"]
+                    }
+                }], "@babel/preset-react"
+            ],
+            "plugins": [
+                "@babel/plugin-transform-react-jsx",
+                "@babel/plugin-syntax-dynamic-import",
+                "loadable-components/babel",
+                "react-hot-loader/babel",
+                "babel-plugin-styled-components"
+            ]
+        },
+        "client:prod": {
+            "presets": [
+                ["@babel/preset-env", {
+                    "targets": {
+                        "browsers": ["last 2 versions", "safari >= 7"]
+                    }
+                }], "@babel/preset-react"
+            ],
+            "plugins": [
+                "graphql-tag",
+                "@babel/plugin-transform-react-jsx",
+                "@babel/plugin-syntax-dynamic-import",
+                "loadable-components/babel",
+                "react-hot-loader/babel", ["babel-plugin-styled-components", {
+                    "displayName": false
+                }],
+                "transform-react-remove-prop-types"
+            ]
+        }
+    }
+}

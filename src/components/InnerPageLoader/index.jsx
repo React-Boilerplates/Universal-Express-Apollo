@@ -1,5 +1,6 @@
 import loadable from 'loadable-components';
 
 export default loadable(() =>
-  import(/* webpackChunkName: "error" */ './Error')
+  import(/* webpackChunkName: "midPageLoader" */
+  './InnerPageLoader')
 );

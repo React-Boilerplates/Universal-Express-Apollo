@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const postcss = require('postcss');
 const precss = require('precss');
 const cssnano = require('cssnano');
@@ -35,7 +36,7 @@ const jsTransformer = content =>
 
 module.exports = {
   entry: {
-    app: ['./client/index.jsx'],
+    app: ['babel-polyfill', './client/index.jsx'],
     vendor: [
       'react',
       'react-dom',
@@ -51,6 +52,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(process.cwd(), 'public'),
+    publicPath: '/',
     filename: __DEV__ ? 'assets/[name].js' : 'assets/[name].[hash].js'
   },
   resolve: {
@@ -73,6 +75,9 @@ module.exports = {
     ]
   },
   plugins: [
+    new ManifestPlugin({
+      fileName: 'assets-manifest.json'
+    }),
     new CopyWebpackPlugin([
       {
         from: staticFolder,

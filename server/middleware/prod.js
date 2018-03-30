@@ -12,7 +12,12 @@ const func = app => {
     express.static('public', {
       setHeaders: (res, path) => {
         if (path.match(/^.*\.[a-f0-9]{20}\..*$/m)) {
-          res.set('Cache-Control', 'public, max-age=31557600');
+          res.set(
+            'Cache-Control',
+            'public, max-age=5259487, s-maxage=31536000'
+          );
+        } else {
+          res.set('Cache-Control', 'public, max-age=0, s-maxage=172800');
         }
       }
     })

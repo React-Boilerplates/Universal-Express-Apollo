@@ -5,8 +5,8 @@ import { getDataFromTree } from 'react-apollo';
 import { getLoadableState } from 'loadable-components/server';
 import { Helmet } from 'react-helmet';
 import { ServerStyleSheet } from 'styled-components';
-import assets from '../assets.json';
 import createClient from './client';
+import Html from './render/Html';
 
 import App from './render/App';
 
@@ -38,31 +38,17 @@ app.get('*', (req, res) => {
       );
       const helmet = Helmet.renderStatic();
       const styles = sheet.getStyleTags();
-      /* eslint-disable prettier/prettier */
-      res.send(`
-          <!doctype html>
-          <html>
-            <head>
-              ${helmet.title.toString()}
-              ${helmet.meta.toString()}
-              ${helmet.link.toString()}
-              ${styles}
-            </head>
-            <body ${helmet.bodyAttributes.toString()}>
-              <script>window.__APOLLO_STATE__ = ${JSON.stringify(
-          client.cache.extract()
-        ).replace(/</g, '\\u003c')
-        }</script>
-              <div id="root">${html}</div>
-              <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.3.0/cjs/react-dom-server.browser.production.min.js" integrity="sha256-kteFyrPGPZIASyU+pH5t9fyayICicvqTdfxbxRgp6bw=" crossorigin="anonymous"></script>
-              <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.3.0/cjs/react.production.min.js" integrity="sha256-NGhNLMxOmDYSTmpUlxspbliNB3L+zyhWvVzFerPjqso=" crossorigin="anonymous"></script>
-              <script src="/${assets.vendor.js}"></script>
-              ${loadableState.getScriptTag()}
-              <script src="/${assets.app.js}"></script>
-            </body>
-          </html>
-        `);
-      /* eslint-enable prettier/prettier */
+      res.send(
+        Html(html, {
+          title: helmet.title.toString(),
+          meta: helmet.meta.toString(),
+          link: helmet.link.toString(),
+          style: styles,
+          bodyAttributes: helmet.bodyAttributes.toString(),
+          bodyScript: loadableState.getScriptTag(),
+          cache: client.cache
+        })
+      );
     })
   );
 });

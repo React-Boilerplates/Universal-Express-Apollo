@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{141:function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default=void 0;var u,d=(u=t(2))&&u.__esModule?u:{default:u};var a=function(){return d.default.createElement("div",null,"Loading...")};n.default=a}}]);

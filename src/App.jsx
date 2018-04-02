@@ -8,7 +8,7 @@ import routes from './routes';
 
 // import Universal from './routes';
 
-const App = ({ amp = false, path = '' }) => (
+const App = ({ amp, path }) => (
   <Layout>
     <Helmet titleTemplate="%s | BoilerPlate">
       <html lang="en-US" />

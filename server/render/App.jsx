@@ -8,7 +8,7 @@ const { StaticRouter: Router } = require('react-router');
 const RoutedApp = ({ context, req, client }) => (
   <ApolloProvider client={client}>
     <Router location={req.url} context={context}>
-      <App path={req.path} />
+      <App path={req.path} amp={req.path.startsWith('/amp/')} />
     </Router>
   </ApolloProvider>
 );

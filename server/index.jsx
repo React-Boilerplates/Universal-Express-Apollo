@@ -28,7 +28,7 @@ middleware(app);
 
 app.get('*', (req, res) => {
   const client = createClient(req);
-  console.log(req.path);
+
   const context = {};
   const appComponent = <App req={req} context={context} client={client} />;
   const sheet = new ServerStyleSheet();

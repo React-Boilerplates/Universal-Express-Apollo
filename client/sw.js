@@ -1,5 +1,6 @@
 /* eslint-env serviceworker */
 /* global fetch */
+/* eslint no-restricted-globals: ["error"] */
 import 'babel-polyfill';
 
 const ASSET_CACHE = '1';
@@ -25,7 +26,7 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // Always Pass GET through for now
+  // Always Pass NON-GET through for now
   if (event.request.method !== 'GET') return;
   event.respondWith(
     (async function handleGet() {

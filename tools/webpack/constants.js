@@ -10,6 +10,7 @@ dotEnv.config({
 const variables = Object.assign({}, process.env);
 
 const hardScripts = `
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js" integrity="sha256-WRc/eG3R84AverJv0zmqxAmdwQxstUpqkiE+avJ3WSo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js" integrity="sha256-YFhaeQSVBgAFNN5z4I9YRB2jCuqc2nvypz0Q2eQzcx8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.3.0/umd/react.production.min.js" integrity="sha256-QUU/D1wsdE4qpKqEF6BDxI7SNr+QCRDpupwVXYMcFC4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.3.0/umd/react-dom.production.min.js" integrity="sha256-oV3TYJ5p2p0qXA2uT3Mepu7FKa0ZH0pLW2hA5dm+7V4=" crossorigin="anonymous"></script>
@@ -23,7 +24,8 @@ const hardScripts = `
 const envVariables = JSON.stringify(
   Object.assign(
     {
-      HARD_CODED_SCRIPTS: hardScripts,
+      HARD_CODED_SCRIPTS:
+        process.env.NODE_ENV === 'production' ? hardScripts : '',
       COOKIE_SECRET: ''
     },
     variables

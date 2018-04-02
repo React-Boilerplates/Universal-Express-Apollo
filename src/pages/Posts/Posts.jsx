@@ -1,6 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import Helmet from 'react-helmet';
 import Error from '../Error';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Link from '../../components/Style/InlineLink';
@@ -21,6 +22,9 @@ const query = gql`
 
 const Posts = () => (
   <ErrorBoundary>
+    <Helmet>
+      <title>Posts</title>
+    </Helmet>
     <Query query={query}>
       {({ loading, error, data }) => {
         if (loading) return <Loading />;

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -25,6 +26,9 @@ const Posts = props => (
         if (error) return <Error />;
         return (
           <div>
+            <Helmet>
+              <title>{`${data.post.title}`}</title>
+            </Helmet>
             <p>{`${data.post.title}: ${data.post.author.name}`}</p>
           </div>
         );

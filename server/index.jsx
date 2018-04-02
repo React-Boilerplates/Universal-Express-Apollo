@@ -28,6 +28,7 @@ middleware(app);
 
 app.get('*', (req, res) => {
   const client = createClient(req);
+  console.log(req.path);
   const context = {};
   const appComponent = <App req={req} context={context} client={client} />;
   const sheet = new ServerStyleSheet();
@@ -43,7 +44,9 @@ app.get('*', (req, res) => {
           title: helmet.title.toString(),
           meta: helmet.meta.toString(),
           link: helmet.link.toString(),
+          path: req.path,
           style: styles,
+          htmlAttributes: helmet.htmlAttributes.toString(),
           bodyAttributes: helmet.bodyAttributes.toString(),
           bodyScript: loadableState.getScriptTag(),
           cache: client.cache

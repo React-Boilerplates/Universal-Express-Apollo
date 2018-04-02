@@ -3,6 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const postcss = require('postcss');
 const precss = require('precss');
+// const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 const babel = require('@babel/core');
@@ -36,7 +37,7 @@ const jsTransformer = content =>
 
 module.exports = {
   entry: {
-    app: ['babel-polyfill', './client/index.jsx'],
+    app: ['./client/index.jsx'],
     vendor: [
       'react',
       'react-dom',
@@ -81,6 +82,7 @@ module.exports = {
     new ManifestPlugin({
       fileName: 'assets-manifest.json'
     }),
+    // new FaviconsWebpackPlugin('static/favicon.png'),
     new CopyWebpackPlugin([
       {
         from: staticFolder,
@@ -100,12 +102,18 @@ module.exports = {
         transform: jsTransformer
       },
       {
-        from: 'static/!(*.css|*.js)',
-        to: __DEV__ ? '[name].[ext]' : '[name].[ext]',
+        from: 'static/!(favicon.png|favicon.ico|*.css|*.js)',
+        to: '[name].[ext]',
         toType: 'template'
       },
       {
         from: 'static/favicon.ico',
+        to: '[name].[ext]',
+        toType: 'template'
+      },
+      // https://developer.mozilla.org/en-US/docs/Web/Manifest
+      {
+        from: 'static/web-app-manifest.json',
         to: '[name].[ext]',
         toType: 'template'
       }

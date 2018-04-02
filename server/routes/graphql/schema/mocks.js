@@ -8,13 +8,13 @@ const sleep = ms =>
 
 const mocks = {
   Post: () =>
-    sleep(200).then(() => ({
+    sleep(50).then(() => ({
       id: casual.uuid,
       author: () => mocks.Person,
       title: casual.title
     })),
   Person: () =>
-    sleep(200).then(() => ({
+    sleep(50).then(() => ({
       id: casual.uuid,
       name: casual.name,
       posts: () => new MockList(10, mocks.Post)

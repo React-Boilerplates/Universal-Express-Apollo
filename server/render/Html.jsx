@@ -9,23 +9,41 @@ export default (
     headScript = '',
     bodyScript = '',
     bodyAttributes = '',
+    htmlAttributes = '',
+    path = '',
     meta = '',
     style = '',
     link = '',
+    amp = false,
     cache
   }
 ) => `
 <!doctype html>
-<html>
-  <head>
+<html ${amp ? 'amp' : ''} ${htmlAttributes}>
+  <head>${
+    amp
+      ? `<meta charset="utf-8"><script async src="https://cdn.ampproject.org/v0.js"></script>`
+      : ''
+  }
     ${title}
+    ${
+      amp
+        ? `<link rel="canonical" href="${path}">`
+        : `<link rel="amphtml" href="${path}">`
+    }
     ${meta}
     ${link}
+    ${
+      amp
+        ? '<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>'
+        : ''
+    }
     ${style}
     ${headScript}
   </head>
   <body ${bodyAttributes}>
     <div id="root">${html}</div>
+    <script>window.AMP = ${stringify(amp)}</script>
     ${process.env.HARD_CODED_SCRIPTS || ''}
     ${bodyScript}
     <script src="${assets.vendor.js}"></script>

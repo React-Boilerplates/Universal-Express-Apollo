@@ -29,15 +29,16 @@ middleware(app);
 
 app.get('*', (req, res) => {
   const client = createClient(req);
-  const { path } = req;
-  const amp = path.startsWith('/amp');
+  const fullUrl = `${req.protocol}://${req.get('host')}`;
+  const styleUrl = `${fullUrl}/assets/styles.css`; // canceling poor styling ``
+  const amp = req.path.startsWith('/amp');
   const context = {};
   const appComponent = <App req={req} context={context} client={client} />;
   const sheet = new ServerStyleSheet();
   getLoadableState(appComponent).then(loadableState =>
     Promise.all([
       amp
-        ? fetch('/assets/styles.css').then(response => response.text())
+        ? fetch(styleUrl).then(response => response.text())
         : Promise.resolve(''),
       getDataFromTree(appComponent)
     ]).then(([style]) => {
@@ -51,6 +52,7 @@ app.get('*', (req, res) => {
           title: helmet.title.toString(),
           meta: helmet.meta.toString(),
           link: helmet.link.toString(),
+          amp,
           path: req.path,
           style: `${styles}<style>${style}</style>`,
           htmlAttributes: helmet.htmlAttributes.toString(),

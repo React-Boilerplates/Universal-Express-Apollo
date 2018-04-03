@@ -11,7 +11,7 @@ const path = window.location.pathname;
 export default () => (
   <ApolloProvider client={client}>
     <Router>
-      <App path={path} amp={amp} />
+      <App path={path} a={amp} />
     </Router>
   </ApolloProvider>
 );

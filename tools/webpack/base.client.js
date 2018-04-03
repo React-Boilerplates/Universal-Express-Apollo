@@ -88,12 +88,6 @@ module.exports = {
         from: 'static/favicon.ico',
         to: '[name].[ext]',
         toType: 'template'
-      },
-      // https://developer.mozilla.org/en-US/docs/Web/Manifest
-      {
-        from: 'static/web-app-manifest.json',
-        to: '[name].[ext]',
-        toType: 'template'
       }
     ]),
     assetsPluginInstance

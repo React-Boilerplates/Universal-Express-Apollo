@@ -16,7 +16,8 @@
         "clean:server": "rm -rf build",
         "clean:client": "rm -rf public",
         "start:prod": "node build/main.js",
-        "start": "npm run inspect:bundles && npm run dev:client && npm run clean && NODE_ENV=development BABEL_ENV=server babel-node server/index.jsx",
+        "pre:start": "npm run inspect:bundles && npm run dev:client && npm run clean",
+        "start": "NODE_ENV=development BABEL_ENV=server babel-node server/index.jsx",
         "heroku-postbuild": "npm run build"
     },
     "author": "Craig Couture <craigjcouture@gmail.com>",

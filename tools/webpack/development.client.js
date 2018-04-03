@@ -12,6 +12,7 @@ config.plugins.unshift(
     'process.env': envVariables
   }),
   new WebpackPwaManifest({
+    filename: 'web-app-manifest.json',
     name: envVariables.PWA_NAME,
     short_name: envVariables.PWA_SHORTNAME,
     description: envVariables.PWA_DESCRIPTION,
@@ -24,12 +25,8 @@ config.plugins.unshift(
     },
     icons: [
       {
-        src: path.resolve('static/favicon.png'),
+        src: path.resolve('./static/favicon.png'),
         sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
-      },
-      {
-        src: path.resolve('static/assets/large-icon.png'),
-        size: '1024x1024' // you can also use the specifications pattern
       }
     ]
   })

@@ -24,6 +24,11 @@ const hardScripts = `
 const envVariables = JSON.stringify(
   Object.assign(
     {
+      PWA_BACKGROUND_COLOR: '#fff',
+      PWA_THEME_COLOR: '#fff',
+      PWA_DESCRIPTION: 'BoilerPlate App',
+      PWA_SHORTNAME: 'BoilerPlate',
+      PWA_NAME: 'BoilerPlate',
       HARD_CODED_SCRIPTS:
         process.env.NODE_ENV === 'production' ? hardScripts : '',
       COOKIE_SECRET: ''

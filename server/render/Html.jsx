@@ -10,7 +10,6 @@ export default (
     bodyScript = '',
     bodyAttributes = '',
     htmlAttributes = '',
-    path = '',
     meta = '',
     style = '',
     link = '',
@@ -20,17 +19,10 @@ export default (
 ) => `
 <!doctype html>
 <html ${amp ? 'amp' : ''} ${htmlAttributes}>
-  <head>${
-    amp
-      ? `<meta charset="utf-8"><script async src="https://cdn.ampproject.org/v0.js"></script>`
-      : ''
-  }
+  <head>
+    <meta charset="utf-8">
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
     ${title}
-    ${
-      amp
-        ? `<link rel="canonical" href="${path}">`
-        : `<link rel="amphtml" href="${path}">`
-    }
     ${meta}
     ${link}
     ${

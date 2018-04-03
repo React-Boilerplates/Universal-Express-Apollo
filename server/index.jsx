@@ -5,6 +5,7 @@ import { getDataFromTree } from 'react-apollo';
 import { getLoadableState } from 'loadable-components/server';
 import { Helmet } from 'react-helmet';
 import { ServerStyleSheet } from 'styled-components';
+import fetch from 'isomorphic-unfetch';
 import createClient from './client';
 import Html from './render/Html';
 
@@ -28,12 +29,18 @@ middleware(app);
 
 app.get('*', (req, res) => {
   const client = createClient(req);
-
+  const { path } = req;
+  const amp = path.startsWith('/amp');
   const context = {};
   const appComponent = <App req={req} context={context} client={client} />;
   const sheet = new ServerStyleSheet();
   getLoadableState(appComponent).then(loadableState =>
-    getDataFromTree(appComponent).then(() => {
+    Promise.all([
+      amp
+        ? fetch('/assets/styles.css').then(response => response.text())
+        : Promise.resolve(''),
+      getDataFromTree(appComponent)
+    ]).then(([style]) => {
       const html = ReactDOMServer.renderToString(
         sheet.collectStyles(appComponent)
       );
@@ -45,7 +52,7 @@ app.get('*', (req, res) => {
           meta: helmet.meta.toString(),
           link: helmet.link.toString(),
           path: req.path,
-          style: styles,
+          style: `${styles}<style>${style}</style>`,
           htmlAttributes: helmet.htmlAttributes.toString(),
           bodyAttributes: helmet.bodyAttributes.toString(),
           bodyScript: loadableState.getScriptTag(),

@@ -1,39 +1,17 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const postcss = require('postcss');
-const precss = require('precss');
 // const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
-const cssnano = require('cssnano');
-const autoprefixer = require('autoprefixer');
-const babel = require('@babel/core');
 const AssetsPlugin = require('assets-webpack-plugin');
+
+const jsTransformer = require('./transformer/js');
+const cssTransformer = require('./transformer/css');
 
 const assetsPluginInstance = new AssetsPlugin({ filename: 'assets.json' });
 
 const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line no-underscore-dangle
 
-const UglifyJS = require('uglify-js');
-
 const staticFolder = path.join(__dirname, '../../', '/static');
-
-const cssTransformer = content =>
-  postcss([precss, autoprefixer, cssnano])
-    .process(content, { from: '/' })
-    .then(({ css }) => css);
-
-const jsTransformer = content =>
-  new Promise((resolve, reject) => {
-    babel.transform(
-      content.toString(),
-      { minified: true, envName: 'client' },
-      (err, { code }) => {
-        if (err) return reject(err);
-        const result = UglifyJS.minify(code, { output: { comments: /^!/ } });
-        return resolve(result.code);
-      }
-    );
-  });
 
 module.exports = {
   entry: {

@@ -1,5 +1,7 @@
 const config = require('./base.client');
+const path = require('path');
 const webpack = require('webpack');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 const { envVariables } = require('./constants');
 const pkg = require('../../package-lock.json');
 const moduleToCdn = require('module-to-cdn');
@@ -8,6 +10,22 @@ const moduleToCdn = require('module-to-cdn');
 config.plugins.unshift(
   new webpack.DefinePlugin({
     'process.env': envVariables
+  }),
+  new WebpackPwaManifest({
+    name: 'BoilerPlate',
+    short_name: 'BoilerPlate',
+    description: 'My awesome Progressive Web App!',
+    background_color: '#ffffff',
+    icons: [
+      {
+        src: path.resolve('static/assets/icon.png'),
+        sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+      },
+      {
+        src: path.resolve('static/assets/large-icon.png'),
+        size: '1024x1024' // you can also use the specifications pattern
+      }
+    ]
   })
 );
 

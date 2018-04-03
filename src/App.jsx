@@ -6,28 +6,42 @@ import { Helmet } from 'react-helmet';
 import Layout from './components/Layout';
 import routes from './routes';
 
+const themeColor = process.env.PWA_THEME_COLOR;
+const description = process.env.PWA_DESCRIPTION;
+const name = process.env.PWA_NAME;
+const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const yandexSiteVerification = process.env.YANDEX_SITE_VERIFICATION;
+const msSiteValidate = process.env.BING_SITE_VERIFICATION;
+const alexaSiteValidate = process.env.BING_SITE_VERIFICATION;
+
 // import Universal from './routes';
 
 const App = ({ amp, path }) => (
   <Layout>
-    <Helmet titleTemplate="%s | BoilerPlate">
-      <html lang="en-US" />
+    <Helmet titleTemplate={`%s | ${name}`}>
+      <html lang="en-US" amp={amp} />
       <meta charSet="utf-8" />
-      <meta name="rating" content="General" />
+      <script async src="https://cdn.ampproject.org/v0.js" />
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
       />
+      <meta name="application-name" content={name} />
+      <meta name="rating" content="General" />
       <title>Home</title>
-      <meta name="theme-color" content="#fff" />
+      <meta name="theme-color" content={themeColor} />
       <link
         rel="manifest"
         type="application/manifest+json"
         href="/web-app-manifest.json"
       />
-      <meta name="description" content="BoilerPlate" />
+      <meta name="description" content={description} />
+      <meta name="google-site-verification" content={googleSiteVerification} />
+      <meta name="alexaVerifyID" content={alexaSiteValidate} />
+      <meta name="yandex-verification" content={yandexSiteVerification} />
+      <meta name="msvalidate.01" content={msSiteValidate} />
       <link
-        rel="canonical"
+        rel={amp ? 'canonical' : 'amphtml'}
         href={amp ? path.replace('amp', '').replace('//', '') : `/amp${path}`}
       />
       <link rel="stylesheet" href="/assets/styles.css" />

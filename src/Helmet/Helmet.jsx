@@ -9,7 +9,7 @@ const pwaName = process.env.PWA_NAME || 'BoilerPlate';
 const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION;
 const yandexSiteVerification = process.env.YANDEX_SITE_VERIFICATION;
 const msSiteValidate = process.env.BING_SITE_VERIFICATION;
-const alexaSiteValidate = process.env.BING_SITE_VERIFICATION;
+const alexaSiteValidate = process.env.ALEXA_SITE_VERIFICATION;
 
 const HeadElements = ({ path, a }) => (
   <Helmet titleTemplate={`%s | ${name}`}>

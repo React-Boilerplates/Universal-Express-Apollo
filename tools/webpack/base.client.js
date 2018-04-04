@@ -24,7 +24,6 @@ module.exports = {
       'babel-polyfill',
       'react-router-dom',
       'react-router',
-      'styled-components',
       'loadable-components',
       'react-helmet',
       'apollo-cache-inmemory',

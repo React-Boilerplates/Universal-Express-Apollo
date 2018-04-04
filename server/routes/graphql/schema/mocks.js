@@ -7,52 +7,45 @@ const sleep = ms =>
     setTimeout(resolve, ms);
   });
 
-function createLoaders() {
-  /* eslint-disable no-use-before-define */
-  return {
-    // query: new DataLoader(query => gen),
-    posts: new DataLoader(ids => {
-      console.log('loading posts');
-      return genPosts(ids);
+// eslint-disable-next-line no-unused-vars
+const createLoaders = authToken => {
+  const Loader = {
+    posts: new DataLoader(keys => {
+      console.log('Loading Posts!');
+      return Loader.genPosts(keys);
     }),
-    persons: new DataLoader(ids => {
-      console.log('loading persons');
-      return genPersons(ids);
+    persons: new DataLoader(keys => {
+      console.log('Loading Persons!');
+      return Loader.genPersons(keys);
     }),
-    queries: new DataLoader(queries => {
-      console.log('loading queries');
-      return queries;
-    })
+    genPosts: ids =>
+      Promise.all(
+        ids.map(id =>
+          sleep(50).then(() => ({
+            id,
+            author: post => Loader.persons.load(post.author),
+            title: casual.title
+          }))
+        )
+      ),
+    genPersons: ids =>
+      Promise.all(
+        ids.map(id =>
+          sleep(50).then(() => ({
+            id,
+            name: casual.name,
+            posts: (_, { next = 10, last }) =>
+              Loader.posts.loadMany(
+                new MockList(next || last, () => casual.uuid)
+              )
+          }))
+        )
+      )
   };
-  /* eslint-enable no-use-before-define */
-}
+  return Loader;
+};
 
 const loaders = createLoaders();
-
-function genPosts(ids) {
-  return Promise.all(
-    ids.map(id =>
-      sleep(50).then(() => ({
-        id,
-        author: post => loaders.persons.load(post.author),
-        title: casual.title
-      }))
-    )
-  );
-}
-
-function genPersons(ids) {
-  return Promise.all(
-    ids.map(id =>
-      sleep(50).then(() => ({
-        id,
-        name: casual.name,
-        posts: (_, { next = 10, last }) =>
-          new MockList(next || last, () => casual.uuid)
-      }))
-    )
-  );
-}
 
 const mocks = {
   PostEdge: () => ({

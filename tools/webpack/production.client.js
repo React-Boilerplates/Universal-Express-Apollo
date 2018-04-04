@@ -3,8 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const { envVariables } = require('./constants');
-const pkg = require('../../package-lock.json');
-const moduleToCdn = require('module-to-cdn');
 
 // const envVariables = Object.assign({}, process.env);
 config.plugins.unshift(
@@ -26,16 +24,11 @@ config.plugins.unshift(
   })
 );
 
-const getExternalVar = name => {
-  const details = moduleToCdn(name, pkg.dependencies[name].version);
-  return details.var;
-};
-
 config.externals = {
-  react: getExternalVar('react'),
-  'react-dom': getExternalVar('react-dom'),
+  react: 'React',
+  'react-dom': 'ReactDOM',
   lodash: '_',
-  'react-router-dom': getExternalVar('react-router-dom'),
+  'react-router-dom': 'ReactRouterDOM',
   'react-router': 'ReactRouter',
   'styled-components': 'styled',
   'babel-polyfill': '_babelPolyfill'

@@ -61,4 +61,5 @@ typings/
 
 *-stats.json
 assets.json
+db.sqlite
 

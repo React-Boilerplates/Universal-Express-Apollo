@@ -27,7 +27,7 @@ require('./routes').default(app);
 
 middleware(app);
 
-app.get('*', (req, res) => {
+app.get('*', (req, res, next) => {
   const client = createClient(req);
   const fullUrl = `${req.protocol}://${req.get('host')}`;
   const styleUrl = `${fullUrl}/assets/styles.css`; // canceling poor styling ``
@@ -62,7 +62,7 @@ app.get('*', (req, res) => {
         })
       );
     })
-  );
+  ).catch(next);
 });
 
 const server = app.listen(processPort, () => {

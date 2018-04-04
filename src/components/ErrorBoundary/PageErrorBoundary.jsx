@@ -12,7 +12,7 @@ class PageErrorBoundary extends React.Component {
     this.setState(() => ({ hasError: true }));
     import(/* webpackChunkName: "errorReportingService" */ './errorReportingService').then(
       reporter => {
-        reporter(error, info);
+        reporter.default(error, info);
       }
     );
   }

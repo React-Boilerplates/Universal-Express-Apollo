@@ -1,5 +1,5 @@
-const webpack = require('webpack');
 /* eslint-disable import/no-extraneous-dependencies */
+const webpack = require('webpack');
 const webpackDev = require('webpack-dev-middleware');
 const webpackHot = require('webpack-hot-middleware');
 /* eslint-enable import/no-extraneous-dependencies */

@@ -18,7 +18,7 @@ export default (
   }
 ) => `
 <!doctype html>
-<html ${amp ? 'amp' : ''} ${htmlAttributes}>
+<html ${htmlAttributes}>
   <head>
     <meta charset="utf-8">
     ${

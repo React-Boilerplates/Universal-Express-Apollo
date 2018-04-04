@@ -1,16 +1,17 @@
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
-import mocks from './mocks';
+
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers
 });
-
-addMockFunctionsToSchema({
-  schema,
-  mocks
-});
+if (process.env.NODE_ENV === 'development') {
+  addMockFunctionsToSchema({
+    schema,
+    mocks: require('./mocks').default
+  });
+}
 
 export default schema;

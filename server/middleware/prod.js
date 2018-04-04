@@ -1,5 +1,6 @@
 import morgan from 'morgan';
 import helmet from 'helmet';
+const compression = require('compression');
 import cookieParser from 'cookie-parser';
 
 const express = require('express');
@@ -8,6 +9,7 @@ const cookieSecret = process.env.COOKIE_SECRET;
 
 const func = app => {
   console.log('Applying Production Middleware!');
+  app.use(compression());
   app.use(
     express.static('public', {
       setHeaders: (res, path) => {

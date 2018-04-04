@@ -18,6 +18,10 @@ function createLoaders() {
     persons: new DataLoader(ids => {
       console.log('loading persons');
       return genPersons(ids);
+    }),
+    queries: new DataLoader(queries => {
+      console.log('loading queries');
+      return queries;
     })
   };
   /* eslint-enable no-use-before-define */
@@ -54,6 +58,10 @@ const mocks = {
   PostEdge: () => ({
     cursor: casual.uuid,
     node: () => mocks.Post
+  }),
+  PageInfo: () => ({
+    hasNextPage: casual.boolean,
+    hasPrevPage: casual.boolean
   }),
   PostConnection: ({ next, last }) => ({
     pageInfo: () => mocks.PageInfo,

@@ -30,10 +30,18 @@ const HeadElements = ({ path, a }) => (
     {!a ? <link rel="stylesheet" href="/assets/styles.css" /> : null}
     <meta name="application-name" content={pwaName} />
     <meta name="description" content={description} />
-    <meta name="google-site-verification" content={googleSiteVerification} />
-    <meta name="alexaVerifyID" content={alexaSiteValidate} />
-    <meta name="yandex-verification" content={yandexSiteVerification} />
-    <meta name="msvalidate.01" content={msSiteValidate} />
+    {googleSiteVerification ? (
+      <meta name="google-site-verification" content={googleSiteVerification} />
+    ) : null}
+    {alexaSiteValidate ? (
+      <meta name="alexaVerifyID" content={alexaSiteValidate} />
+    ) : null}
+    {yandexSiteVerification ? (
+      <meta name="yandex-verification" content={yandexSiteVerification} />
+    ) : null}
+    {msSiteValidate ? (
+      <meta name="msvalidate.01" content={msSiteValidate} />
+    ) : null}
     <link
       rel={a ? 'canonical' : 'amphtml'}
       href={a ? path.replace('amp', '').replace('//', '/') : `/amp${path}`}

@@ -8,7 +8,7 @@ import Post from '../Post';
 import Loading from '../../components/InnerPageLoader';
 
 const query = gql`
-  {
+  query getPosts {
     posts {
       edges {
         node {

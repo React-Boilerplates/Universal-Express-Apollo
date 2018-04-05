@@ -17,7 +17,7 @@ const resolvers = {
           list.map(v => {
             const userId = v.get('userId');
             if (userId) context.loader.users.load(userId);
-            return v.get({ plain: true });
+            return v.get();
           })
         ),
         args
@@ -59,7 +59,7 @@ const resolvers = {
             userId: parent.id
           },
           order: [['createdAt', 'DESC']]
-        }).then(list => list.map(v => v.get({ plain: true }))),
+        }).then(list => list.map(v => v.get())),
         args
       )
   },

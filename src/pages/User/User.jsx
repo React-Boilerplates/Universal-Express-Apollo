@@ -3,23 +3,18 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import Link from '../../components/Style/InlineLink';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Loading from '../../components/InnerPageLoader';
 
 export const query = gql`
   query getPost($id: ID!) {
-    post(id: $id) {
-      title
-      author {
-        name
-        id
-      }
+    user(id: $id) {
+      name
     }
   }
 `;
 
-const Post = props => (
+const User = props => (
   <ErrorBoundary>
     <Query query={query} variables={props.match.params}>
       {({ loading, error, data }) => {
@@ -30,10 +25,7 @@ const Post = props => (
             <Helmet>
               <title>{data.post.title}</title>
             </Helmet>
-            <h1>{data.post.title}</h1>
-            <Link to={`/user/${data.post.author.name}`}>
-              <div>{`${data.post.author.name}`}</div>
-            </Link>
+            <p>{`${data.post.title}: ${data.post.author.name}`}</p>
           </div>
         );
       }}
@@ -41,7 +33,7 @@ const Post = props => (
   </ErrorBoundary>
 );
 
-Post.propTypes = {
+User.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
@@ -49,4 +41,4 @@ Post.propTypes = {
   }).isRequired
 };
 
-export default Post;
+export default User;

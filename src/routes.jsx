@@ -3,6 +3,8 @@ import { Route } from 'react-router';
 import Home from './pages/Home';
 import ErrorPage from './pages/Error';
 import Post from './pages/Post';
+import User from './pages/User';
+import Users from './pages/Users';
 import Posts from './pages/Posts';
 import NoMatch from './pages/NoMatch';
 
@@ -14,8 +16,8 @@ const Routes = [
   },
   {
     exact: true,
-    path: '/posts',
-    component: Posts
+    path: '/amp/',
+    component: Home
   },
   {
     exact: true,
@@ -24,8 +26,23 @@ const Routes = [
   },
   {
     exact: true,
-    path: '/amp/',
-    component: Home
+    path: '/amp/post/:id',
+    component: Post
+  },
+  {
+    exact: true,
+    path: '/user/:id',
+    component: User
+  },
+  {
+    exact: true,
+    path: '/amp/user/:id',
+    component: User
+  },
+  {
+    exact: true,
+    path: '/posts',
+    component: Posts
   },
   {
     exact: true,
@@ -34,8 +51,13 @@ const Routes = [
   },
   {
     exact: true,
-    path: '/amp/post/:id',
-    component: Post
+    path: '/users',
+    component: Users
+  },
+  {
+    exact: true,
+    path: '/amp/users',
+    component: Users
   }
 ];
 

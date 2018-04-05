@@ -10,7 +10,14 @@ import Loading from '../../components/InnerPageLoader';
 const query = gql`
   query getPosts {
     posts {
+      pageInfo {
+        startCursor
+        endCursor
+        hasPreviousPage
+        hasNextPage
+      }
       edges {
+        cursor
         node {
           id
           title

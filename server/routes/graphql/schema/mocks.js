@@ -48,23 +48,20 @@ const createLoaders = authToken => {
 const loaders = createLoaders();
 
 const mocks = {
-  PostEdge: () => ({
-    cursor: casual.uuid,
-    node: () => mocks.Post
-  }),
-  PageInfo: () => ({
-    hasNextPage: casual.boolean,
-    hasPrevPage: casual.boolean
-  }),
-  PostConnection: ({ next, last }) => ({
-    pageInfo: () => mocks.PageInfo,
-    edges: () => new MockList(next || last, () => casual.uuid)
-  }),
-  Post: ({ id = casual.uuid }) => loaders.posts.load(id),
-  Person: ({ id = casual.uuid }) => loaders.persons.load(id),
+  // PostEdge: () => ({
+  //   cursor: casual.uuid,
+  //   node: () => mocks.Post
+  // }),
+  // PageInfo: () => ({
+  //   hasNextPage: casual.boolean,
+  //   hasPrevPage: casual.boolean
+  // }),
+
+  // Post: ({ id = casual.uuid }) => loaders.posts.load(id),
+  // Person: ({ id = casual.uuid } = user) => user || loaders.persons.load(id),
   Query: () => ({
-    post: (_, { id }) => loaders.posts.load(id),
-    posts: (_, { next = 10, last }) => mocks.PostConnection({ next, last })
+    post: (_, { id }) => loaders.posts.load(id)
+    // posts: (_, { next = 10, last }) => mocks.PostConnection({ next, last })
   })
 };
 

@@ -1,6 +1,7 @@
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import db from '../models';
 
 const compression = require('compression');
 const session = require('express-session');
@@ -14,6 +15,10 @@ const cookieSecret = process.env.COOKIE_SECRET;
 const func = app => {
   console.log('Applying Production Middleware!');
   app.use(compression());
+  app.use((req, res, next) => {
+    req.db = db;
+    next();
+  });
   app.use(
     express.static('public', {
       setHeaders: (res, path) => {
@@ -31,9 +36,16 @@ const func = app => {
   app.use(morgan('combined'));
   app.use(helmet());
   app.get('/jwt', (req, res) =>
-    Promise.resolve()
-      .then(() => jwt.sign({ id: 'bar' }, cookieSecret)) // Query a Session Store to provide this
-      .then(token => res.json({ token }))
+    Promise.resolve().then(() =>
+      req.db.models
+        .findOne({ where: req.body })
+        .then(user => user.get({ plain: true }))
+        .then(user => ({
+          ...user,
+          token: jwt.sign({ id: user.id }, cookieSecret)
+        })) // Query a Session Store to provide this
+        .then(token => res.json({ token }))
+    )
   );
   app.use(
     jwtMiddleware({
@@ -60,7 +72,7 @@ const func = app => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 30
       },
-      name: 'boilerplate'
+      name: process.env.SESSION_NAME || 'boilerplate'
     })(req, res, next);
   });
   return app;

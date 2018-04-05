@@ -42,9 +42,9 @@ export default (
     <script>window.AMP = ${stringify(amp)}</script>
     ${process.env.HARD_CODED_SCRIPTS || ''}
     ${bodyScript}
-    <script src="${assets.vendor.js}"></script>
+    <script defer async src="${assets.vendor.js}"></script>
     <script>window.__APOLLO_STATE__ = ${stringify(cache.extract())}</script>
-    <script src="${assets.app.js}"></script>
+    <script defer async src="${assets.app.js}"></script>
   </body>
 </html>
 `;

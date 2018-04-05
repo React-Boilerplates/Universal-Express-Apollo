@@ -9,6 +9,7 @@ const schema = makeExecutableSchema({
 if (process.env.NODE_ENV === 'development') {
   addMockFunctionsToSchema({
     schema,
+    preserveResolvers: true,
     mocks: require('./mocks').default // eslint-disable-line global-require
   });
 }

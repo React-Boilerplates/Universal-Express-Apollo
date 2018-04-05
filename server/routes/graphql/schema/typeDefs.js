@@ -5,11 +5,14 @@ interface Node {
 type Post implements Node {
   id: ID!
   title: String!
+  description: String!
   author: Person!
 }
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
+  startCursor: String!
+  endCursor: String!
 }
 type PostEdge {
   node: Post!
@@ -19,17 +22,26 @@ type PostConnection {
   pageInfo: PageInfo
   edges: [PostEdge]
 }
+type JwtResponse {
+  token: String
+  user: Person
+}
 type Person implements Node {
   id: ID!
   name: String!
   posts: [Post]
 }
 type Query {
-  posts(next:Int = 10 last:Int after: String, before: String): PostConnection
+  posts(first: Int = 10, after: String, last: Int, before: String): PostConnection
   post(id:ID!): Post
 }
+type Mutation {
+  signOnJwt(email: String password: String): JwtResponse
+  signOn(email: String password: String): Person
+}
 schema {
-  query: Query
+  query: Query,
+  mutation: Mutation
 }
 `;
 

@@ -25,9 +25,9 @@ require('dotenv').config();
 const processPort = process.env.PORT;
 const app = express();
 
-require('./routes').default(app);
-
 middleware(app);
+
+require('./routes').default(app);
 
 app.get('*', (req, res, next) => {
   const client = createClient(req);

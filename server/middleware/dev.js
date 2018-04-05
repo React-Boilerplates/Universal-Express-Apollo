@@ -13,7 +13,6 @@ const func = app => {
   console.log('Applying Development Middleware!');
   app.use(compression());
   app.use(express.static('public'));
-
   app.use(
     webpackDev(compiler, {
       publicPath: config.output.publicPath

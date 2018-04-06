@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import { ServerStyleSheet } from 'styled-components';
 import fetch from 'isomorphic-unfetch';
 
+import createStore from '../src/createStore';
 import createClient from './client';
 import Html from './render/Html';
 import App from './render/App';
@@ -35,7 +36,10 @@ app.get('*', (req, res, next) => {
   const styleUrl = `${fullUrl}/assets/styles.css`; // canceling poor styling ``
   const amp = req.path.startsWith('/amp');
   const context = {};
-  const appComponent = <App req={req} context={context} client={client} />;
+  const store = createStore();
+  const appComponent = (
+    <App req={req} context={context} client={client} store={store} />
+  );
   const sheet = new ServerStyleSheet();
   getLoadableState(appComponent)
     .then(loadableState =>
@@ -60,7 +64,9 @@ app.get('*', (req, res, next) => {
             style: `${styles}<style>${style}</style>`,
             htmlAttributes: helmet.htmlAttributes.toString(),
             bodyAttributes: helmet.bodyAttributes.toString(),
-            bodyScript: loadableState.getScriptTag(),
+            bodyScript: `<script>window.__REDUX__ = ${JSON.stringify(
+              store.getState()
+            )}</script>${loadableState.getScriptTag()}`,
             cache: client.cache
           })
         );

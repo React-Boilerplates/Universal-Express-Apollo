@@ -15,8 +15,8 @@ const hardScripts = `
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js" integrity="sha256-YFhaeQSVBgAFNN5z4I9YRB2jCuqc2nvypz0Q2eQzcx8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.3.0/umd/react.production.min.js" integrity="sha256-QUU/D1wsdE4qpKqEF6BDxI7SNr+QCRDpupwVXYMcFC4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js" integrity="sha256-Y8AuGIYFWCOBO5/w1oXzcEErW4JALGUWiG5VWleVWyw=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/redux-form/7.3.0/redux-form.min.js" integrity="sha256-XoTI2YCuIhRZUopK4HSlgpqELEWZ4AoSYQ8K20LUQt8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.min.js" integrity="sha256-um7DcEns3J42qU41brDoZeZ1fAn2eHRtLOKLgMZ3UVE=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux-form/7.3.0/redux-form.min.js" integrity="sha256-XoTI2YCuIhRZUopK4HSlgpqELEWZ4AoSYQ8K20LUQt8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.3.0/umd/react-dom.production.min.js" integrity="sha256-oV3TYJ5p2p0qXA2uT3Mepu7FKa0ZH0pLW2hA5dm+7V4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/styled-components/3.2.3/styled-components.min.js" integrity="sha256-7p2Aa6qcrahVPo0sZCeYevLDCuextd4z9OmmKhl9fLM=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/4.2.2/react-router-dom.min.js" integrity="sha256-jLCuf08f087TmqfJOoAIRiS+J81kiDT4hdxuxdmPyUQ=" crossorigin="anonymous"></script>

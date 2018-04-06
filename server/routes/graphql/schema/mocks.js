@@ -14,7 +14,7 @@ const createLoaders = authToken => {
       console.log('Loading Posts!');
       return Loader.genPosts(keys);
     }),
-    persons: new DataLoader(keys => {
+    users: new DataLoader(keys => {
       console.log('Loading Persons!');
       return Loader.genPersons(keys);
     }),
@@ -23,7 +23,7 @@ const createLoaders = authToken => {
         ids.map(id =>
           sleep(50).then(() => ({
             id,
-            author: post => Loader.persons.load(post.author),
+            author: post => Loader.users.load(post.author),
             title: casual.title
           }))
         )
@@ -61,6 +61,7 @@ const mocks = {
   // Person: ({ id = casual.uuid } = user) => user || loaders.persons.load(id),
   Query: () => ({
     post: (_, { id }) => loaders.posts.load(id)
+    // user: (_, { id } = {}) => loaders.users.load(id)
     // posts: (_, { next = 10, last }) => mocks.PostConnection({ next, last })
   })
 };

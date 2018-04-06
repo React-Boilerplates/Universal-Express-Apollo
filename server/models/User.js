@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 
+const force = process.env.NODE_ENV === 'development';
+
 // eslint-disable-next-line global-require
 const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
   const User = sequelize.define(
@@ -63,30 +65,77 @@ const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
     user.set('hash', hash);
     return user;
   };
+  User.associations = models => {
+    const relationships = {};
+    // CREATE JOINS
+    relationships.Post = User.hasMany(models.Post, { as: 'posts' });
+    return relationships;
+  };
   User.beforeCreate(
     async user => (!user.password ? null : User.hasSecurePassword(user))
   );
   User.beforeUpdate(
     async user => (!user.password ? null : User.hasSecurePassword(user))
   );
+  User.postSetup = async (models, relationships) => {
+    const range = length => [...Array(length).keys()];
+    if (force) {
+      try {
+        await models.User.sync({ force });
+        console.log('Building Model');
+        const casual = require('casual'); // eslint-disable-line global-require, import/no-extraneous-dependencies
+        await models.User.create(
+          {
+            firstName: 'Craig',
+            lastName: 'Couture',
+            email: 'couturecraigj@gmail.com',
+            password: 'password',
+            password_confirmation: 'password',
+            posts: range(5).map(() => ({
+              title: casual.title,
+              description: casual.description
+            }))
+          },
+          {
+            include: [relationships.User.Post]
+          }
+        );
+
+        await Promise.all(
+          range(30).map(async () => {
+            const { password } = casual;
+            console.log(password);
+            const user = await models.User.create(
+              {
+                firstName: casual.first_name,
+                lastName: casual.last_name,
+                password,
+                password_confirmation: password,
+                posts: range(5).map(() => ({
+                  title: casual.title,
+                  description: casual.description
+                }))
+              },
+              {
+                include: [relationships.User.Post]
+              }
+            );
+            return user;
+          })
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    } else await models.User.sync({ force });
+  };
   return User;
 };
 
-createUserModel.connections = models => {
-  const relationships = {};
-  // CREATE JOINS
-  // console.log(models.Post.hasOne(models.User));
-  relationships.Post = models.User.hasMany(models.Post, { as: 'posts' });
-
-  // console.log(postToUser);
-  return relationships;
-};
-
 createUserModel.postSetup = async (models, relationships) => {
-  if (process.env.NODE_ENV === 'development') {
-    const range = length => [...Array(length).keys()];
+  const range = length => [...Array(length).keys()];
+  if (force) {
     try {
-      await models.User.sync({ force: true });
+      await models.User.sync({ force });
       console.log('Building Model');
       const casual = require('casual'); // eslint-disable-line global-require, import/no-extraneous-dependencies
       await models.User.create(
@@ -130,7 +179,7 @@ createUserModel.postSetup = async (models, relationships) => {
     } catch (e) {
       console.log(e);
     }
-  }
+  } else await models.User.sync({ force });
 };
 
 module.exports = createUserModel;

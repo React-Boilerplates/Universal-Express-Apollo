@@ -1,11 +1,11 @@
 /* eslint-env jest */
 import React from 'react';
 import { shallow } from 'enzyme';
-import Post from './Post';
+import UserPage from './UserPage';
 
-describe('Post', () => {
+describe('UserPage', () => {
   it('should render', () => {
-    const post = shallow(<Post />);
-    expect(post).toBeDefined();
+    const userPage = shallow(<UserPage match={{ params: { id: 123 } }} />);
+    expect(userPage).toBeDefined();
   });
 });

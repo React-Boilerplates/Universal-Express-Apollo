@@ -19,6 +19,9 @@ const Header = () => (
     <Link activeClassName="active" to="/posts">
       Posts
     </Link>
+    <Link activeClassName="active" to="/users">
+      Users
+    </Link>
   </StyledHeader>
 );
 

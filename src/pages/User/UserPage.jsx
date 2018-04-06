@@ -3,37 +3,29 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import gql from 'graphql-tag';
 import Page from '../../components/Page';
-import Link from '../../components/Style/InlineLink';
 
 export const query = gql`
-  query getPost($id: ID!) {
-    post(id: $id) {
-      title
-      author {
-        name
-        id
-      }
+  query getUser($id: ID!) {
+    user(id: $id) {
+      name
     }
   }
 `;
 
-const Post = props => (
+const UserPage = props => (
   <Page query={query} match={props.match}>
     {data => (
       <div>
         <Helmet>
-          <title>{data.post.title}</title>
+          <title>{data.user.name}</title>
         </Helmet>
-        <h1>{data.post.title}</h1>
-        <Link to={`/user/${data.post.author.id}`}>
-          <div>{`${data.post.author.name}`}</div>
-        </Link>
+        <p>{`${data.user.name}`}</p>
       </div>
     )}
   </Page>
 );
 
-Post.propTypes = {
+UserPage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
@@ -41,4 +33,4 @@ Post.propTypes = {
   }).isRequired
 };
 
-export default Post;
+export default UserPage;

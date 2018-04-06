@@ -16,7 +16,7 @@
         "clean:server": "rm -rf build",
         "clean:client": "rm -rf public",
         "start:prod": "node build/main.js",
-        "pre:start": "npm run inspect:bundles && npm run dev:client && npm run clean",
+        "pre:start": "npm run dev:client && npm run clean",
         "start": "NODE_ENV=development BABEL_ENV=server babel-node server/index.jsx",
         "heroku-postbuild": "npm run build"
     },

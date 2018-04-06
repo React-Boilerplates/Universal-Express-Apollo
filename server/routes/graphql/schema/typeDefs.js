@@ -11,8 +11,8 @@ type Post implements Node {
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
-  startCursor: String!
-  endCursor: String!
+  startCursor: String
+  endCursor: String
 }
 type PostEdge {
   node: Post!
@@ -21,6 +21,14 @@ type PostEdge {
 type PostConnection {
   pageInfo: PageInfo
   edges: [PostEdge]
+}
+type PersonEdge {
+  node: Person!
+  cursor: ID!
+}
+type PersonConnection {
+  pageInfo: PageInfo
+  edges: [PersonEdge]
 }
 type JwtResponse {
   token: String
@@ -34,13 +42,15 @@ type Person implements Node {
 type Query {
   posts(first: Int = 10, after: String, last: Int, before: String): PostConnection
   post(id:ID!): Post
+  user(id:ID!): Person
+  users(first: Int = 10, after: String, last: Int, before: String): PersonConnection
 }
 type Mutation {
   signOnJwt(email: String password: String): JwtResponse
   signOn(email: String password: String): Person
 }
 schema {
-  query: Query,
+  query: Query
   mutation: Mutation
 }
 `;

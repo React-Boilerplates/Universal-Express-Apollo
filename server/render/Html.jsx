@@ -39,6 +39,7 @@ export default (
   </head>
   <body ${bodyAttributes}>
     <div id="root">${html}</div>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
     <script>window.AMP = ${stringify(amp)}</script>
     ${process.env.HARD_CODED_SCRIPTS || ''}
     ${bodyScript}

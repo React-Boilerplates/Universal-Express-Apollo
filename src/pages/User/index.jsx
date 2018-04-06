@@ -1,5 +1,7 @@
 import loadable from 'loadable-components';
 
-const User = loadable(() => import(/* webpackChunkName: "user" */ './User'));
+const UserPage = loadable(() =>
+  import(/* webpackChunkName: "user" */ './UserPage')
+);
 
-export default User;
+export default UserPage;

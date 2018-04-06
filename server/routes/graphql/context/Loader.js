@@ -15,7 +15,7 @@ module.exports = (user, db) => {
       })
         .then(list => list.map(value => value.get({ plain: true })))
         .then(groupById);
-      return ids.map(id => result[id]);
+      return ids.map(id => result[id] || null);
     },
     genPersons: async ids => {
       const result = await db.models.User.findAll({
@@ -25,7 +25,7 @@ module.exports = (user, db) => {
       })
         .then(list => list.map(value => value.get({ plain: true })))
         .then(groupById);
-      return ids.map(id => result[id]);
+      return ids.map(id => result[id] || null);
     }
   };
   return Loader;

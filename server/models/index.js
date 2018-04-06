@@ -1,4 +1,6 @@
 const Sequelize = require('sequelize');
+
+const force = process.env.NODE_ENV !== 'production';
 /* eslint-disable global-require */
 const db = {
   objects: {
@@ -8,18 +10,17 @@ const db = {
 };
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  // storage: './database.sqlite',
+  storage: './database.sqlite',
   logging: false
 });
 
 const buildRelationships = async (objects, models, s) => {
   const relationships = {};
-  if (process.env.NODE_ENV !== 'production') await s.sync({ force: true });
 
-  await Object.entries(objects).forEach(async ([key, object]) => {
+  await Object.entries(models).forEach(async ([key, model]) => {
     relationships[key] = {};
-    if (object.connections) {
-      relationships[key] = object.connections(models);
+    if (model.associations) {
+      relationships[key] = model.associations(models);
     }
   });
   await Object.values(objects).forEach(async object => {
@@ -27,6 +28,7 @@ const buildRelationships = async (objects, models, s) => {
       await object.postSetup(models, relationships);
     }
   });
+  await s.sync({ force });
   return relationships;
 };
 

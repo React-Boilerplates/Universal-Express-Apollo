@@ -22,7 +22,20 @@ const resolvers = {
         ),
         args
       ),
-    post: async (parent, args, context) => context.loader.posts.load(args.id)
+    post: async (parent, args, context) => context.loader.posts.load(args.id),
+    user: async (parent, args, context) => context.loader.users.load(args.id),
+    users: async (parent, args, context) =>
+      connectionFromPromisedArray(
+        context.models.User.findAll({
+          order: [['createdAt', 'DESC']]
+        }).then(list =>
+          list.map(v =>
+            // if (userId) context.loader.users.load(userId);
+            v.get()
+          )
+        ),
+        args
+      )
   },
   Mutation: {
     signOn: async (parent, { password, ...where }, context) => {
@@ -38,7 +51,6 @@ const resolvers = {
     },
     signOnJwt: async (parent, { password, ...where }, context) => {
       const user = await context.models.User.findOne({ where });
-      console.log(user.toJSON());
       if (!user) throw new Error('No User By those Criteria');
       const match = await user.authenticate(password);
       if (!match)
@@ -65,7 +77,7 @@ const resolvers = {
   },
   Post: {
     author: async (parent, args, context) =>
-      context.loader.users.load(parent.userId)
+      parent.userId ? context.loader.users.load(parent.userId) : null
   }
 };
 

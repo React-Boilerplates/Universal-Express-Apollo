@@ -1,6 +1,8 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 // const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 
@@ -89,6 +91,7 @@ module.exports = {
         toType: 'template'
       }
     ]),
+    new CleanWebpackPlugin(['build', 'public']),
     assetsPluginInstance
   ],
   target: 'web'

@@ -1,5 +1,6 @@
 import morgan from 'morgan';
 import helmet from 'helmet';
+import csp from 'helmet-csp';
 import cookieParser from 'cookie-parser';
 import db from '../models';
 
@@ -35,6 +36,22 @@ const func = app => {
   );
   app.use(morgan('combined'));
   app.use(helmet());
+  app.use(
+    csp({
+      directives: {
+        defaultSrc: false,
+        scriptSrc: false,
+        styleSrc: false,
+        fontSrc: false,
+        imgSrc: false,
+        sandbox: false,
+        reportUri: false,
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: false,
+        workerSrc: false
+      }
+    })
+  );
   app.get('/jwt', (req, res) =>
     Promise.resolve().then(() =>
       req.db.models

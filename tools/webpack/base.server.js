@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: './server/index.jsx',
@@ -39,6 +40,6 @@ module.exports = {
       }
     }
   },
-  plugins: [],
+  plugins: [new CleanWebpackPlugin(['build', 'public'])],
   target: 'node'
 };

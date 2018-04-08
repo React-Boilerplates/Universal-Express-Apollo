@@ -1,10 +1,10 @@
 /* eslint-env jest */
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
 
 const assetsPath = path.join(process.cwd(), 'assets.json');
-const assetFile = require(assetsPath);
+const assetFile = require(assetsPath); // eslint-disable-line import/no-dynamic-require
 
 describe('Assets', () => {
   it('should exist', () => {

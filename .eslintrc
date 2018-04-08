@@ -35,6 +35,8 @@
         "import/no-extraneous-dependencies": ["error", {
             "devDependencies": [
                 "**/*.test.js",
+                "**/*.dev.js",
+                "**/dev.js",
                 "**/*.test.jsx",
                 "**/*.spec.js",
                 "**/*.spec.jsx",

@@ -24,7 +24,7 @@ const Post = props => (
         <Helmet>
           <title>{data.post.title}</title>
         </Helmet>
-        <h1>{data.post.title}</h1>
+        <h2>{data.post.title}</h2>
         <Link to={`/user/${data.post.author.id}`}>
           <div>{`${data.post.author.name}`}</div>
         </Link>

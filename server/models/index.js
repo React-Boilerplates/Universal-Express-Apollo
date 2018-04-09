@@ -16,19 +16,25 @@ const sequelize = new Sequelize({
 
 const buildRelationships = async (objects, models, s) => {
   const relationships = {};
+  try {
+    let promise = Promise.resolve();
+    await Object.entries(models).forEach(async ([key, model]) => {
+      relationships[key] = {};
+      if (model.associations) {
+        relationships[key] = await model.associations(models);
+      }
+    });
 
-  await Object.entries(models).forEach(async ([key, model]) => {
-    relationships[key] = {};
-    if (model.associations) {
-      relationships[key] = model.associations(models);
-    }
-  });
-  await Object.values(objects).forEach(async object => {
-    if (object.postSetup) {
-      await object.postSetup(models, relationships);
-    }
-  });
-  await s.sync({ force });
+    promise = Object.values(objects).map(object => {
+      if (!object.postSetup) promise = promise.then(() => ({}));
+      promise = promise.then(() => object.postSetup(models, relationships));
+      return promise;
+    });
+    await promise;
+    await s.sync({ force });
+  } catch (e) {
+    console.log(e);
+  }
   return relationships;
 };
 

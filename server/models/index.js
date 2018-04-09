@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 
-const force = process.env.NODE_ENV !== 'production';
 /* eslint-disable global-require */
 const db = {
   objects: {
@@ -14,24 +13,22 @@ const sequelize = new Sequelize({
   logging: false
 });
 
-const buildRelationships = async (objects, models, s) => {
+const buildRelationships = async (objects, models) => {
   const relationships = {};
   try {
-    let promise = Promise.resolve();
-    await Object.entries(models).forEach(async ([key, model]) => {
+    Object.entries(models).forEach(async ([key, model]) => {
       relationships[key] = {};
       if (model.associations) {
-        relationships[key] = await model.associations(models);
+        relationships[key] = model.associations(models);
       }
     });
-
-    promise = Object.values(objects).map(object => {
-      if (!object.postSetup) promise = promise.then(() => ({}));
-      promise = promise.then(() => object.postSetup(models, relationships));
-      return promise;
+    const promises = [];
+    Object.values(objects).forEach(object => {
+      console.log(object.postSetup);
+      if (!object.postSetup) return;
+      promises.push(object.postSetup(models, relationships));
     });
-    await promise;
-    await s.sync({ force });
+    await Promise.all(promises);
   } catch (e) {
     console.log(e);
   }

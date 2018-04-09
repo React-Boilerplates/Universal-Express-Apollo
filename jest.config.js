@@ -6,7 +6,14 @@ module.exports = {
     '**/*.{js,jsx}',
     '!**/node_modules/**',
     '!**/vendor/**',
-    '!**/coverage/**'
+    '!**/coverage/**',
+    '!**/public/**',
+    '!**/build/**',
+    '!**/static/**',
+    '!**/tools/**',
+    '!**/jest.*.js',
+    '!**/dev.*.js',
+    '!**/dev.js'
   ],
   snapshotSerializers: ['enzyme-to-json/serializer'],
   coverageDirectory: '<rootDir>/coverage',

@@ -77,57 +77,7 @@ const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
   User.beforeUpdate(
     async user => (!user.password ? null : User.hasSecurePassword(user))
   );
-  User.postSetup = async (models, relationships) => {
-    const range = length => [...Array(length).keys()];
-    if (force) {
-      try {
-        await models.User.sync({ force });
-        console.log('Building Model');
-        const casual = require('casual'); // eslint-disable-line global-require, import/no-extraneous-dependencies
-        await models.User.create(
-          {
-            firstName: 'Craig',
-            lastName: 'Couture',
-            email: 'couturecraigj@gmail.com',
-            password: 'password',
-            password_confirmation: 'password',
-            posts: range(5).map(() => ({
-              title: casual.title,
-              description: casual.description
-            }))
-          },
-          {
-            include: [relationships.User.Post]
-          }
-        );
 
-        await Promise.all(
-          range(30).map(async () => {
-            const { password } = casual;
-            console.log(password);
-            const user = await models.User.create(
-              {
-                firstName: casual.first_name,
-                lastName: casual.last_name,
-                password,
-                password_confirmation: password,
-                posts: range(5).map(() => ({
-                  title: casual.title,
-                  description: casual.description
-                }))
-              },
-              {
-                include: [relationships.User.Post]
-              }
-            );
-            return user;
-          })
-        );
-      } catch (e) {
-        console.log(e);
-      }
-    } else await models.User.sync({ force });
-  };
   return User;
 };
 

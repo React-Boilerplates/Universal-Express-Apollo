@@ -12,16 +12,18 @@ export const query = gql`
   }
 `;
 
+export const User = data => (
+  <div>
+    <Helmet>
+      <title>{data.user.name}</title>
+    </Helmet>
+    <p>{`${data.user.name}`}</p>
+  </div>
+);
+
 const UserPage = props => (
   <Page query={query} match={props.match}>
-    {data => (
-      <div>
-        <Helmet>
-          <title>{data.user.name}</title>
-        </Helmet>
-        <p>{`${data.user.name}`}</p>
-      </div>
-    )}
+    {data => <User {...data} />}
   </Page>
 );
 

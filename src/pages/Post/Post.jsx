@@ -17,23 +17,25 @@ export const query = gql`
   }
 `;
 
-const Post = props => (
+export const Post = data => (
+  <div>
+    <Helmet>
+      <title>{data.post.title}</title>
+    </Helmet>
+    <h2>{data.post.title}</h2>
+    <Link to={`/user/${data.post.author.id}`}>
+      <div>{`${data.post.author.name}`}</div>
+    </Link>
+  </div>
+);
+
+const PostPage = props => (
   <Page query={query} match={props.match}>
-    {data => (
-      <div>
-        <Helmet>
-          <title>{data.post.title}</title>
-        </Helmet>
-        <h2>{data.post.title}</h2>
-        <Link to={`/user/${data.post.author.id}`}>
-          <div>{`${data.post.author.name}`}</div>
-        </Link>
-      </div>
-    )}
+    {data => <Post {...data} />}
   </Page>
 );
 
-Post.propTypes = {
+PostPage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
@@ -41,4 +43,4 @@ Post.propTypes = {
   }).isRequired
 };
 
-export default Post;
+export default PostPage;

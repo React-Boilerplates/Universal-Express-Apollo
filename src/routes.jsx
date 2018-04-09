@@ -6,7 +6,6 @@ import Post from './pages/Post';
 import User from './pages/User';
 import Users from './pages/Users';
 import Posts from './pages/Posts';
-import Something from './pages/Something';
 import NoMatch from './pages/NoMatch';
 
 const Routes = [
@@ -54,11 +53,6 @@ const Routes = [
     exact: true,
     path: '/users',
     component: Users
-  },
-  {
-    exact: true,
-    path: '/something',
-    component: Something
   },
   {
     exact: true,

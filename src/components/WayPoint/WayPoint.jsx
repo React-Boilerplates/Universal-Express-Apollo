@@ -3,7 +3,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class WayPoint extends React.Component {
+  constructor(props) {
+    super(props);
+    this.style = {};
+  }
   componentDidMount() {
+    this.style = { visibility: 'hidden' };
     this.observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
@@ -22,13 +27,16 @@ class WayPoint extends React.Component {
   render() {
     const { onEnter, onExit, ...props } = this.props;
     return (
-      <div
+      <button
         ref={div => {
           this.div = div;
         }}
         {...props}
-        style={{ visibility: 'hidden' }}
-      />
+        style={this.style}
+        onClick={onEnter}
+      >
+        Load More
+      </button>
     );
   }
 }

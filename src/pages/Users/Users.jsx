@@ -24,18 +24,22 @@ const query = gql`
   }
 `;
 
-const Users = () => (
+export const Users = data => (
+  <React.Fragment>
+    {data.users.edges.map(({ node }) => node).map(({ id, name }) => (
+      <div key={id}>
+        <Link to={`/user/${id}`} onMouseOver={Post.load} onFocus={Post.load}>
+          <div>{`${name}`}</div>
+        </Link>
+      </div>
+    ))}
+  </React.Fragment>
+);
+
+const UsersPage = () => (
   <Page title="Users" query={query} paginate root="users">
-    {data =>
-      data.users.edges.map(({ node }) => node).map(({ id, name }) => (
-        <div key={id}>
-          <Link to={`/user/${id}`} onMouseOver={Post.load} onFocus={Post.load}>
-            <div>{`${name}`}</div>
-          </Link>
-        </div>
-      ))
-    }
+    {data => <Users {...data} />}
   </Page>
 );
 
-export default Users;
+export default UsersPage;

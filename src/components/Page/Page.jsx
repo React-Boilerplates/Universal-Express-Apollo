@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import Helmet from 'react-helmet';
 import ErrorBoundary from '../ErrorBoundary';
 import Loading from '../InnerPageLoader';
-import OnEnter from '../OnEnter';
+import WayPoint from '../WayPoint';
 
 const Page = ({ query, match, title, children, root, paginate }) => (
   <ErrorBoundary>
@@ -22,7 +22,7 @@ const Page = ({ query, match, title, children, root, paginate }) => (
             {children(data)}
             {paginate &&
               root && (
-                <OnEnter
+                <WayPoint
                   onEnter={() => {
                     const { endCursor: after, hasNextPage: exec } = data[
                       root

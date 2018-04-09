@@ -8,12 +8,12 @@ const path = require('path');
 
 const assetsPath = path.join(process.cwd(), 'assets.json');
 
-describe('Assets', () => {
+describe.skip('Assets', () => {
   it('should exist', () => {
     // expect(assetsPath).toEqual(1);
     expect(fs.existsSync(assetsPath)).toEqual(true);
   });
-  it.skip('should have the right assets', done => {
+  it('should have the right assets', done => {
     webpack(config, () => {
       const assetFile = require(assetsPath); // eslint-disable-line import/no-dynamic-require, global-require
       expect(assetFile).toEqual({

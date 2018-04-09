@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class OnEnter extends React.Component {
+class WayPoint extends React.Component {
   componentDidMount() {
     this.observer = new IntersectionObserver(
       entries => {
@@ -33,14 +33,14 @@ class OnEnter extends React.Component {
   }
 }
 
-OnEnter.propTypes = {
+WayPoint.propTypes = {
   onEnter: PropTypes.func,
   onExit: PropTypes.func
 };
 
-OnEnter.defaultProps = {
+WayPoint.defaultProps = {
   onEnter: () => console.log('onEnter'),
   onExit: () => console.log('onExit')
 };
 
-export default OnEnter;
+export default WayPoint;

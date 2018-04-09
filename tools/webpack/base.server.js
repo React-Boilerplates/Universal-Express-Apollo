@@ -40,6 +40,6 @@ module.exports = {
       }
     }
   },
-  plugins: [new CleanWebpackPlugin(['build', 'public'])],
+  plugins: [new CleanWebpackPlugin(['build'])],
   target: 'node'
 };

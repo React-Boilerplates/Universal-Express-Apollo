@@ -91,7 +91,7 @@ module.exports = {
         toType: 'template'
       }
     ]),
-    new CleanWebpackPlugin(['build', 'public']),
+    new CleanWebpackPlugin(['public']),
     assetsPluginInstance
   ],
   target: 'web'

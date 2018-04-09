@@ -1,7 +1,7 @@
 import loadable from 'loadable-components';
 
-const OnEnter = loadable(() =>
-  import(/* webpackChunkName: "onEnter" */ './OnEnter')
+const WayPoint = loadable(() =>
+  import(/* webpackChunkName: "onEnter" */ './WayPoint')
 );
 
-export default OnEnter;
+export default WayPoint;

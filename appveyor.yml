@@ -22,7 +22,6 @@ build: off
 
 cache:
   - node_modules                        # local npm modules
-  - '%APPDATA%\npm-cache'               # npm cache
   - '%USERPROFILE%\.nuget\packages -> **\project.json'  # project.json cache
 
 

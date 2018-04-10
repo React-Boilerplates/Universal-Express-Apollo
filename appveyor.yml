@@ -19,3 +19,8 @@ test_script:
 
 # Don't actually build.
 build: off
+
+skip_commits:
+  files:
+    - '*.md'
+    - '**/*.md'

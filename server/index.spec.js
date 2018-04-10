@@ -3,7 +3,7 @@ import chai from 'chai';
 import webpack from 'webpack';
 import chaiHttp from 'chai-http';
 
-import config from '../tools/webpack/development.client';
+import config from '../tools/webpack/base.test';
 
 chai.use(chaiHttp);
 

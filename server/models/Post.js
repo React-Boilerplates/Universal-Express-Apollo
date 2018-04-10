@@ -1,4 +1,5 @@
 const force = process.env.NODE_ENV === 'development';
+
 // eslint-disable-next-line global-require
 const createPostModel = (Sequelize = require('sequelize'), sequelize) => {
   const Post = sequelize.define('post', {

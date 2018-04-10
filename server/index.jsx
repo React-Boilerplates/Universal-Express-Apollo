@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import { ServerStyleSheet } from 'styled-components';
 import fetch from 'isomorphic-unfetch';
 
+import logger from './logger';
 import createStore from '../src/createStore';
 import createClient from './client';
 import Html from './render/Html';
@@ -85,7 +86,7 @@ export const createServer = () => {
     });
   } else {
     server = app.listen(processPort, () => {
-      console.log(`App 🚀  @ http://localhost:${processPort}/`);
+      logger.log(`App 🚀  @ http://localhost:${processPort}/`);
     });
   }
 

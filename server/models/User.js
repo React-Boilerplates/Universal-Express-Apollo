@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 
+const logger = require('../logger');
+
 const force = process.env.NODE_ENV === 'development';
 
 // eslint-disable-next-line global-require
@@ -86,7 +88,7 @@ createUserModel.postSetup = async (models, relationships) => {
   if (force) {
     try {
       await models.User.sync({ force });
-      console.log('Building Model');
+      logger.log('Building Model');
       const casual = require('casual'); // eslint-disable-line global-require, import/no-extraneous-dependencies
       await models.User.create(
         {
@@ -127,7 +129,7 @@ createUserModel.postSetup = async (models, relationships) => {
         })
       );
     } catch (e) {
-      console.log(e);
+      logger.log(e);
     }
   } else await models.User.sync({ force });
 };

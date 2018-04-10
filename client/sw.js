@@ -1,6 +1,6 @@
 /* eslint-env serviceworker */
 /* global fetch */
-/* eslint no-restricted-globals: ["error"] */
+/* eslint-disable no-restricted-globals */
 import 'babel-polyfill';
 
 const ASSET_CACHE = '1';

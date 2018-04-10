@@ -1,6 +1,7 @@
 /* globals IntersectionObserver */
 import React from 'react';
 import PropTypes from 'prop-types';
+import logger from '../../logger';
 
 class WayPoint extends React.Component {
   constructor(props) {
@@ -47,8 +48,8 @@ WayPoint.propTypes = {
 };
 
 WayPoint.defaultProps = {
-  onEnter: () => console.log('onEnter'),
-  onExit: () => console.log('onExit')
+  onEnter: () => logger.log('onEnter'),
+  onExit: () => logger.log('onExit')
 };
 
 export default WayPoint;

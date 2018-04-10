@@ -17,6 +17,12 @@ module.exports = {
     '!**/mocks.*.js',
     '!**/mocks.js'
   ],
+  moduleNameMapper: {
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+      '<rootDir>/tools/jest/fileTransformer.js',
+    '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
+    'sw-loader!./sw': '<rootDir>/tools/jest/fileTransformer.js'
+  },
   snapshotSerializers: ['enzyme-to-json/serializer'],
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['json', 'lcov']

@@ -1,3 +1,3 @@
-const logger = console;
+const winston = require('winston');
 
-export default logger;
+export default winston;

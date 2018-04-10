@@ -1,6 +1,7 @@
 environment:
   nodejs_version: "8"
-
+init:
+  - echo '{"app":{"js":"/assets/app.ca83982d2615c67aa736.js"},"vendor":{"js":"/assets/vendor.ca83982d2615c67aa736.js"}}' > assets.json
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js or io.js

@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - "8"
+before_install:
+  - echo "{"app":{"js":"/assets/app.ca83982d2615c67aa736.js"},"vendor":{"js":"/assets/vendor.ca83982d2615c67aa736.js"}}" > assets.json
 install:
   - npm install
   - npm install -g codecov

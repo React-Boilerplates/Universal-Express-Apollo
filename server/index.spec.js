@@ -1,31 +1,22 @@
 /* eslint-env jest */
 import chai from 'chai';
-import webpack from 'webpack';
+// import webpack from 'webpack';
 import chaiHttp from 'chai-http';
 
-import config from '../tools/webpack/base.test';
+// import config from '../tools/webpack/base.testing';
 
 chai.use(chaiHttp);
-
-global.server = undefined;
+process.env.COOKIE_SECRET = 'abc';
+process.env.PORT = 3001;
+const server = require('.').createServer();
 
 describe.only('Server', () => {
-  beforeAll(done => {
-    process.env.COOKIE_SECRET = 'abc';
-    process.env.PORT = 3001;
-    webpack(config, err => {
-      if (err) console.log(err);
-      // eslint-disable-next-line global-require
-      global.server = require('.').createServer();
-      done();
-    });
-  });
   beforeEach(() => {
     jest.resetModules();
   });
   it('should test express', done => {
     chai
-      .request(global.server)
+      .request(server)
       .post('/graphql')
       .send({
         query: '{users{pageInfo{hasPreviousPage}}}'
@@ -40,7 +31,7 @@ describe.only('Server', () => {
   });
   it('should test express', done => {
     chai
-      .request(global.server)
+      .request(server)
       .post('/graphql')
       .send({
         query:
@@ -63,7 +54,7 @@ describe.only('Server', () => {
     jest.mock('styled-components');
     // StyleSheet.reset(true);
     chai
-      .request(global.server)
+      .request(server)
       .get('/')
       .end((err, res) => {
         // console.log(res.text);

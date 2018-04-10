@@ -4,6 +4,8 @@ import csp from 'helmet-csp';
 import cookieParser from 'cookie-parser';
 import db from '../models';
 
+const logger = require('../logger');
+
 const compression = require('compression');
 const session = require('express-session');
 const jwtMiddleware = require('express-jwt');
@@ -14,7 +16,7 @@ const express = require('express');
 const cookieSecret = process.env.COOKIE_SECRET;
 
 const func = app => {
-  console.log('Applying Production Middleware!');
+  logger.log('Applying Production Middleware!');
   app.use(compression());
   app.use((req, res, next) => {
     req.db = db;

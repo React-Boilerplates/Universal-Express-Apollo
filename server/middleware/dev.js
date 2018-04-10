@@ -2,6 +2,7 @@
 const webpack = require('webpack');
 const webpackDev = require('webpack-dev-middleware');
 const webpackHot = require('webpack-hot-middleware');
+const logger = require('../logger');
 // const chokidar = require('chokidar');
 /* eslint-enable import/no-extraneous-dependencies */
 const compression = require('compression');
@@ -34,7 +35,7 @@ const func = app => {
   //     });
   //   });
   // });
-  console.log('Applying Development Middleware!');
+  logger.log('Applying Development Middleware!');
   app.use(compression());
   app.use(express.static('public'));
   app.use(

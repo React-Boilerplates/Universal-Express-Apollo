@@ -3,6 +3,7 @@ import React from 'react';
 import swURL from 'sw-loader!./sw'; // eslint-disable-line
 import ReactDOM from 'react-dom';
 import { loadComponents } from 'loadable-components';
+import logger from './logger';
 import App from './App';
 
 const rootElement = document.getElementById('root');
@@ -14,6 +15,6 @@ loadComponents().then(() => {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register(swURL)
-    .catch(err => console.error(err))
-    .then(response => console.log(response));
+    .catch(err => logger.error(err))
+    .then(response => logger.log(response));
 }

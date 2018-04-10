@@ -1,3 +1,5 @@
+import logger from '../logger';
+
 const Sequelize = require('sequelize');
 
 /* eslint-disable global-require */
@@ -29,7 +31,7 @@ const buildRelationships = async (objects, models) => {
     });
     await Promise.all(promises);
   } catch (e) {
-    console.log(e);
+    logger.log(e);
   }
   return relationships;
 };

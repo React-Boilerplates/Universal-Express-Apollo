@@ -1,6 +1,7 @@
 import { MockList } from 'graphql-tools';
 import casual from 'casual';
 import DataLoader from 'dataloader';
+import logger from '../../../logger';
 
 const sleep = ms =>
   new Promise(resolve => {
@@ -11,11 +12,11 @@ const sleep = ms =>
 const createLoaders = authToken => {
   const Loader = {
     posts: new DataLoader(keys => {
-      console.log('Loading Posts!');
+      logger.log('Loading Posts!');
       return Loader.genPosts(keys);
     }),
     users: new DataLoader(keys => {
-      console.log('Loading Persons!');
+      logger.log('Loading Persons!');
       return Loader.genPersons(keys);
     }),
     genPosts: ids =>

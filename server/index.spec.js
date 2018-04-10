@@ -2,19 +2,21 @@
 import chai from 'chai';
 import webpack from 'webpack';
 import chaiHttp from 'chai-http';
-import { createServer } from '.';
+
 import config from '../tools/webpack/development.client';
 
 chai.use(chaiHttp);
 
 process.env.COOKIE_SECRET = 'abc';
 process.env.PORT = 3001;
-const server = createServer();
+let server;
 
 describe.only('Server', () => {
   beforeAll(done => {
     webpack(config, err => {
       if (err) console.log(err);
+      // eslint-disable-next-line global-require
+      server = require('.').createServer();
       done();
     });
   });

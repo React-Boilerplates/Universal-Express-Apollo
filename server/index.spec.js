@@ -7,16 +7,16 @@ import config from '../tools/webpack/development.client';
 
 chai.use(chaiHttp);
 
-process.env.COOKIE_SECRET = 'abc';
-process.env.PORT = 3001;
-let server;
+global.server = undefined;
 
 describe.only('Server', () => {
   beforeAll(done => {
+    process.env.COOKIE_SECRET = 'abc';
+    process.env.PORT = 3001;
     webpack(config, err => {
       if (err) console.log(err);
       // eslint-disable-next-line global-require
-      server = require('.').createServer();
+      global.server = require('.').createServer();
       done();
     });
   });
@@ -25,7 +25,7 @@ describe.only('Server', () => {
   });
   it('should test express', done => {
     chai
-      .request(server)
+      .request(global.server)
       .post('/graphql')
       .send({
         query: '{users{pageInfo{hasPreviousPage}}}'
@@ -40,7 +40,7 @@ describe.only('Server', () => {
   });
   it('should test express', done => {
     chai
-      .request(server)
+      .request(global.server)
       .post('/graphql')
       .send({
         query:
@@ -63,7 +63,7 @@ describe.only('Server', () => {
     jest.mock('styled-components');
     // StyleSheet.reset(true);
     chai
-      .request(server)
+      .request(global.server)
       .get('/')
       .end((err, res) => {
         // console.log(res.text);

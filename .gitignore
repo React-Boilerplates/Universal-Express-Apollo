@@ -64,4 +64,5 @@ assets.json
 *.sqlite
 database.*
 *.db
+.vscode/temp.sql
 

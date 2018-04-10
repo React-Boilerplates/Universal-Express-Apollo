@@ -8,9 +8,11 @@ I was trying to use other cli/generators and was coming up against some blockers
 
 ### Technology
 
+- Express
 - React
   - React-hot-loader
   - React-Helmet
+  - React-Router
 - Redux
   - Redux-Form
 - Apollo
@@ -25,5 +27,7 @@ I was trying to use other cli/generators and was coming up against some blockers
 - DataLoader
 - Code-Splitting
   - Loadable-Components
+- Server-Side-Render
+- Production-Ready
 
 Take a look and contribute if you would like.  The goal of this is to use modern standards.

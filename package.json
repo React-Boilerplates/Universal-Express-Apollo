@@ -3,6 +3,10 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/React-Boilerplates/Universal-Express-Apollo.git"
+    },
     "scripts": {
         "test": "jest",
         "build:server": "cross-env NODE_ENV=production BABEL_ENV=server:prod webpack --mode production --config tools/webpack/production.server.js",
@@ -20,8 +24,11 @@
         "start": "cross-env NODE_ENV=development BABEL_ENV=server babel-node server/dev.js",
         "heroku-postbuild": "npm run build"
     },
+    "bugs": {
+        "url": "https://github.com/React-Boilerplates/Universal-Express-Apollo/issues"
+    },
     "author": "Craig Couture <craigjcouture@gmail.com>",
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
         "apollo-cache-inmemory": "^1.1.12",
         "apollo-client": "^2.2.8",

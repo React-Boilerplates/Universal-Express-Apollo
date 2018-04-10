@@ -13,7 +13,9 @@ module.exports = {
     '!**/tools/**',
     '!**/jest.*.js',
     '!**/dev.*.js',
-    '!**/dev.js'
+    '!**/dev.js',
+    '!**/mocks.*.js',
+    '!**/mocks.js'
   ],
   snapshotSerializers: ['enzyme-to-json/serializer'],
   coverageDirectory: '<rootDir>/coverage',

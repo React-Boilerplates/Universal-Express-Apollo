@@ -24,7 +24,6 @@ const buildRelationships = async (objects, models) => {
     });
     const promises = [];
     Object.values(objects).forEach(object => {
-      console.log(object.postSetup);
       if (!object.postSetup) return;
       promises.push(object.postSetup(models, relationships));
     });

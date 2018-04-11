@@ -8,10 +8,12 @@ const airbrake = new AirbrakeClient({
 
 const logger = {
   error: (error, ...info) =>
-    airbrake.notify({
-      error,
-      params: { info }
-    }),
+    process.env.NODE_ENV === 'production'
+      ? airbrake.notify({
+          error,
+          params: { info }
+        })
+      : Promise.resolve(console.error(error, ...info)),
   log: (...args) => Promise.resolve(console.log(...args)),
   info: (...args) => Promise.resolve(console.info(...args))
 };

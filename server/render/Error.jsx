@@ -3,10 +3,10 @@ import Layout from '../../src/components/Layout';
 import ErrorPage from '../../src/pages/Error/Error';
 import Helmet from '../../src/Helmet/Helmet';
 
-const RoutedError = () => (
+const RoutedError = props => (
   <Layout plain>
     <Helmet />
-    <ErrorPage />
+    <ErrorPage {...props} />
   </Layout>
 );
 

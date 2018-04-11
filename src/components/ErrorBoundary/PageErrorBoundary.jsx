@@ -10,16 +10,14 @@ class PageErrorBoundary extends React.Component {
     };
   }
   componentDidCatch(error, info) {
-    import(/* webpackChunkName: "errorReportingService" */ './errorReportingService').then(
-      reporter => {
-        reporter.default(error, info).then(notice => {
-          console.log(notice);
+    return import(/* webpackChunkName: "errorReportingService" */ './errorReportingService').then(
+      reporter =>
+        reporter.default(error, info).then((notice = {}) =>
           this.setState({
-            errorId: notice?.id,
+            errorId: notice.id,
             hasError: true
-          });
-        });
-      }
+          })
+        )
     );
   }
   render() {

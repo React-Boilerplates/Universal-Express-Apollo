@@ -8,19 +8,18 @@ import App from './App';
 
 const rootElement = document.getElementById('root');
 
-const render = () => {
-  loadComponents().then(() => {
-    ReactDOM.hydrate(<App />, rootElement);
-  });
-
+const render = element => {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register(swURL)
       .catch(err => logger.error(err))
       .then(response => logger.log(response));
   }
+  return loadComponents().then(() => {
+    ReactDOM.hydrate(<App />, element);
+  });
 };
 
-export default render;
+render(rootElement);
 
-render();
+export default render;

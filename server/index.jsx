@@ -41,70 +41,83 @@ export const createServer = () => {
   }) => {
     const fullUrl = `${req.protocol}://${req.get('host')}`;
     const styleUrl = `${fullUrl}/assets/styles.css`; // canceling poor styling ``
-    const [sheet, loadableState] = await Promise.all([
-      new ServerStyleSheet(),
-      !plain && getLoadableState(component)
-    ]);
-    const [style] = await Promise.all([
-      amp
-        ? fetch(styleUrl).then(response => response.text())
-        : Promise.resolve(''),
-      !plain && getDataFromTree(component)
-    ]);
+    try {
+      const [sheet, loadableState] = await Promise.all([
+        new ServerStyleSheet(),
+        !plain && getLoadableState(component)
+      ]);
+      const [style] = await Promise.all([
+        amp
+          ? fetch(styleUrl).then(response => response.text())
+          : Promise.resolve(''),
+        !plain && getDataFromTree(component)
+      ]);
 
-    const html = ReactDOMServer.renderToString(sheet.collectStyles(component));
-    const helmet = Helmet.renderStatic();
-    const styles = sheet.getStyleTags();
-    return [
-      html,
-      {
-        title: helmet.title.toString(),
-        meta: helmet.meta.toString(),
-        link: helmet.link.toString(),
-        amp,
-        path: req.path,
-        style: `${styles}<style>${style}</style>`,
-        htmlAttributes: helmet.htmlAttributes.toString(),
-        bodyAttributes: helmet.bodyAttributes.toString(),
-        bodyScript: `<script>window.__REDUX__ = ${
-          store ? JSON.stringify(store.getState()) : '{}'
-        }</script>${loadableState ? loadableState.getScriptTag() : ''}`,
-        cache: client ? client.cache : false
-      }
-    ];
+      const html = ReactDOMServer.renderToString(
+        sheet.collectStyles(component)
+      );
+      const helmet = Helmet.renderStatic();
+      const styles = sheet.getStyleTags();
+      return [
+        html,
+        {
+          title: helmet.title.toString(),
+          meta: helmet.meta.toString(),
+          link: helmet.link.toString(),
+          amp,
+          path: req.path,
+          style: `${styles}<style>${style}</style>`,
+          htmlAttributes: helmet.htmlAttributes.toString(),
+          bodyAttributes: helmet.bodyAttributes.toString(),
+          bodyScript: `<script>window.__REDUX__ = ${
+            store ? JSON.stringify(store.getState()) : '{}'
+          }</script>${loadableState ? loadableState.getScriptTag() : ''}`,
+          cache: client ? client.cache : false
+        }
+      ];
+    } catch (e) {
+      throw e;
+    }
   };
 
-  app.get('*', async (req, res, next) => {
-    try {
-      const amp = req.path.startsWith('/amp');
-      const context = {};
-      const client = createClient(req);
-      const store = createStore();
-      const page = await getPage({
-        req,
-        amp,
-        client,
-        component: (
-          <App req={req} context={context} client={client} store={store} />
-        )
-      });
-
-      res.send(Html(...page));
-    } catch (e) {
-      logger.log(e);
-
+  app.get('*', (req, res, next) =>
+    Promise.resolve().then(async () => {
       try {
+        const amp = req.path.startsWith('/amp');
+        const context = {};
+        const client = createClient(req);
+        const store = createStore();
+        const page = await getPage({
+          req,
+          amp,
+          client,
+          component: (
+            <App req={req} context={context} client={client} store={store} />
+          )
+        });
+
+        return res.send(Html(...page));
+      } catch (e) {
+        return next(e);
+      }
+    })
+  );
+  app.use((err, req, res) =>
+    Promise.resolve().then(async () => {
+      try {
+        const notice = (await logger.error(err)) || {};
+
         const page = await getPage({
           plain: true,
           req,
-          component: <ErrorPage />
+          component: <ErrorPage errorId={notice.id} />
         });
-        res.send(Html(...page));
+        return res.send(Html(...page));
       } catch (error) {
-        next(error);
+        return res.status(404).send("Sorry can't find that!");
       }
-    }
-  });
+    })
+  );
   let server;
   if (process.env.APOLLO_ENGINE_API_KEY) {
     const engine = new ApolloEngine({

@@ -57,6 +57,7 @@ describe.only('Server', () => {
       .request(server)
       .get('/')
       .end((err, res) => {
+        server.close();
         // console.log(res.text);
         expect(res.text.startsWith('<!DOCTYPE html>'));
         jest.unmock('styled-components');

@@ -1,9 +1,6 @@
 /* eslint-env jest */
 import chai from 'chai';
-// import webpack from 'webpack';
 import chaiHttp from 'chai-http';
-
-// import config from '../tools/webpack/base.testing';
 
 chai.use(chaiHttp);
 process.env.COOKIE_SECRET = 'abc';

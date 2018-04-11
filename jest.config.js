@@ -1,5 +1,6 @@
 module.exports = {
   setupFiles: ['<rootDir>tools/jest/setupTests.js'],
+  globalSetup: '<rootDir>tools/jest/globalSetup.js',
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   collectCoverage: true,
   collectCoverageFrom: [

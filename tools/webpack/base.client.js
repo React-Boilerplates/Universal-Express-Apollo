@@ -60,10 +60,8 @@ module.exports = {
   },
   plugins: [
     new MakeDirWebpackPlugin({
-      dirs: [
-        { path: './logs' }
-      ]
-    })
+      dirs: [{ path: './logs' }]
+    }),
     new ManifestPlugin({
       fileName: 'assets-manifest.json'
     }),

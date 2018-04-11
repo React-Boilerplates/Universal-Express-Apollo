@@ -5,8 +5,8 @@ const AirbrakeClient =
     : window.airbrakeJs.Client;
 
 const airbrake = new AirbrakeClient({
-  projectId: process.env.AIRBRAKE_ID,
-  projectKey: process.env.AIRBRAKE_KEY
+  projectId: process.env.AIRBRAKE_ID || 123,
+  projectKey: process.env.AIRBRAKE_KEY || 'abc'
 });
 
 const logger = {

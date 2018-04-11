@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const MakeDirWebpackPlugin = require('make-dir-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
@@ -58,6 +59,11 @@ module.exports = {
     ]
   },
   plugins: [
+    new MakeDirWebpackPlugin({
+      dirs: [
+        { path: './logs' }
+      ]
+    })
     new ManifestPlugin({
       fileName: 'assets-manifest.json'
     }),

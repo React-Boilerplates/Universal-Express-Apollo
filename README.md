@@ -9,6 +9,9 @@ I was trying to use other cli/generators and was coming up against some blockers
 ### Technology
 
 - Express
+  - Logging
+    - Winston
+    - AirBrake
 - React
   - React-hot-loader
   - React-Helmet

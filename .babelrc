@@ -8,6 +8,7 @@
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
                 "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-optional-chaining",
                 "@babel/plugin-proposal-object-rest-spread",
                 "babel-plugin-dynamic-import-node",
                 "loadable-components/babel",
@@ -26,6 +27,7 @@
             ],
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
+                "@babel/plugin-proposal-optional-chaining",
                 "@babel/plugin-syntax-dynamic-import",
                 "@babel/plugin-proposal-object-rest-spread",
                 "babel-plugin-dynamic-import-node",
@@ -48,6 +50,7 @@
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
                 "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-optional-chaining",
                 "@babel/plugin-proposal-object-rest-spread",
                 "babel-plugin-dynamic-import-node",
                 "loadable-components/babel",
@@ -68,6 +71,7 @@
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
                 "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-optional-chaining",
                 "@babel/plugin-proposal-object-rest-spread",
                 "loadable-components/babel",
                 "react-hot-loader/babel",
@@ -86,6 +90,7 @@
                 "graphql-tag",
                 "@babel/plugin-transform-react-jsx",
                 "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-optional-chaining",
                 "@babel/plugin-proposal-object-rest-spread",
                 "loadable-components/babel",
                 "react-hot-loader/babel", ["babel-plugin-styled-components", {

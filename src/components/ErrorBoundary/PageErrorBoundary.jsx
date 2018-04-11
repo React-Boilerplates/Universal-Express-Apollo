@@ -5,20 +5,26 @@ class PageErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasError: false
+      hasError: false,
+      errorId: null
     };
   }
   componentDidCatch(error, info) {
-    this.setState(() => ({ hasError: true }));
     import(/* webpackChunkName: "errorReportingService" */ './errorReportingService').then(
       reporter => {
-        reporter.default(error, info);
+        reporter.default(error, info).then(notice => {
+          console.log(notice);
+          this.setState({
+            errorId: notice?.id,
+            hasError: true
+          });
+        });
       }
     );
   }
   render() {
     if (this.state.hasError) {
-      return <ErrorPage />;
+      return <ErrorPage {...this.state} />;
     }
     return this.props.children;
   }

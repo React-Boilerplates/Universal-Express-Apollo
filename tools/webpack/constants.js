@@ -41,6 +41,8 @@ const envVariables = JSON.stringify(
       BING_SITE_VERIFICATION: '',
       HARD_CODED_SCRIPTS:
         process.env.NODE_ENV === 'production' ? hardScripts : '',
+      AIRBRAKE_ID: 179755,
+      AIRBRAKE_KEY: 'cae7f5949eaf243d0cccfa1329f092d8',
       COOKIE_SECRET: ''
     },
     variables

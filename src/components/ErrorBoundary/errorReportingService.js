@@ -1,8 +1,5 @@
 const logger = require('../../logger').default;
 
-const errorReportingService = (error, info) => {
-  logger.log(error);
-  logger.log(info);
-};
+const errorReportingService = (error, info) => logger.log(error, info);
 
 export default errorReportingService;

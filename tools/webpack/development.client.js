@@ -10,6 +10,9 @@ config.plugins.unshift(
     'process.env': envVariables
   })
 );
+config.node = {
+  fs: 'empty'
+};
 config.mode = 'development';
 // config.devServer = {
 //   host: 'localhost',

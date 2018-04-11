@@ -35,7 +35,8 @@ config.externals = {
   'react-router-dom': 'ReactRouterDOM',
   'react-router': 'ReactRouter',
   'styled-components': 'styled',
-  'babel-polyfill': '_babelPolyfill'
+  'babel-polyfill': '_babelPolyfill',
+  'airbrake-js': 'airbrakeJs'
   // 'react-apollo': '"react-apollo"'
   /*
   'zen-observable': 'apolloLink.zenObservable',

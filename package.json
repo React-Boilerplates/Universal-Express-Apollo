@@ -30,6 +30,7 @@
     "author": "Craig Couture <craigjcouture@gmail.com>",
     "license": "MIT",
     "dependencies": {
+        "airbrake-js": "^1.1.0",
         "apollo-cache-inmemory": "^1.1.12",
         "apollo-client": "^2.2.8",
         "apollo-engine": "^1.0.4",

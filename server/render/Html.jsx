@@ -14,7 +14,7 @@ export default (
     style = '',
     link = '',
     amp = false,
-    cache
+    cache = false
   }
 ) => `
 <!doctype html>
@@ -44,7 +44,13 @@ export default (
     ${process.env.HARD_CODED_SCRIPTS || ''}
     ${bodyScript}
     <script defer async src="${assets.vendor.js}"></script>
-    <script>window.__APOLLO_STATE__ = ${stringify(cache.extract())}</script>
+    ${
+      cache
+        ? `<script>window.__APOLLO_STATE__ = ${stringify(
+            cache.extract()
+          )}</script>`
+        : ''
+    }
     <script defer async src="${assets.app.js}"></script>
   </body>
 </html>

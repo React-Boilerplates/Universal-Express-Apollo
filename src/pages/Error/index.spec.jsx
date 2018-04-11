@@ -1,11 +1,11 @@
 /* eslint-env jest */
 import React from 'react';
 import { shallow } from 'enzyme';
-import Error from './Error';
+import ErrorPage from './Error';
 
 describe('ErrorPage', () => {
   it('should render', () => {
-    const post = shallow(<Error />);
+    const post = shallow(<ErrorPage />);
     expect(post).toBeDefined();
   });
 });

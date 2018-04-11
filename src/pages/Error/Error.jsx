@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-const Error = () => (
+const ErrorPage = () => (
   <div>
     <Helmet>
       <title>Error Page</title>
@@ -11,4 +11,4 @@ const Error = () => (
   </div>
 );
 
-export default Error;
+export default ErrorPage;

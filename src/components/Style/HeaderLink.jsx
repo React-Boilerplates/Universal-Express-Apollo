@@ -13,4 +13,16 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
+export const A = styled.a`
+  color: palevioletred;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 1rem;
+  transition: all 0.4s;
+  &.active {
+    color: #a32952;
+    text-decoration: underline;
+  }
+`;
+
 export default StyledLink;

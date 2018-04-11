@@ -2,6 +2,7 @@
   "eslint.enable": true,
   "git.ignoreLimitWarning": true,
   "cSpell.words": [
+    "airbrake",
     "msvalidate",
     "precss"
   ]

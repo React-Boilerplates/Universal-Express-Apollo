@@ -36,7 +36,11 @@ const func = app => {
       }
     })
   );
-  app.use(morgan('combined'));
+  app.use(
+    morgan('combined', {
+      stream: logger.stream
+    })
+  );
   app.use(helmet());
   app.use(
     csp({

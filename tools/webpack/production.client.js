@@ -24,6 +24,10 @@ config.plugins.unshift(
   })
 );
 
+config.node = {
+  fs: 'empty'
+};
+
 config.externals = {
   react: 'React',
   'react-dom': 'ReactDOM',

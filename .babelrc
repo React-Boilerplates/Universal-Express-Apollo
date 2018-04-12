@@ -13,16 +13,32 @@
                 "babel-plugin-dynamic-import-node",
                 "loadable-components/babel",
                 "react-hot-loader/babel",
-                "babel-plugin-styled-components"
+                "babel-plugin-styled-components",
+                [
+                    "babel-plugin-transform-require-ignore",
+                    {
+                        "extensions": [
+                            ".less",
+                            ".sass",
+                            ".css",
+                            "jpg",
+                            "jpeg",
+                            "png"
+                        ]
+                    }
+                ]
             ]
         },
         "server": {
             "presets": [
-                ["@babel/preset-env", {
-                    "targets": {
-                        "node": "current"
+                [
+                    "@babel/preset-env",
+                    {
+                        "targets": {
+                            "node": "current"
+                        }
                     }
-                }],
+                ],
                 "@babel/preset-react"
             ],
             "plugins": [
@@ -32,19 +48,39 @@
                 "@babel/plugin-proposal-object-rest-spread",
                 "babel-plugin-dynamic-import-node",
                 "loadable-components/babel",
-                "react-hot-loader/babel", ["babel-plugin-styled-components", {
-                    "ssr": true
-                }],
+                "react-hot-loader/babel",
+                [
+                    "babel-plugin-styled-components",
+                    {
+                        "ssr": true
+                    }
+                ],
+                [
+                    "babel-plugin-transform-require-ignore",
+                    {
+                        "extensions": [
+                            ".less",
+                            ".sass",
+                            ".css",
+                            "jpg",
+                            "jpeg",
+                            "png"
+                        ]
+                    }
+                ],
                 "transform-react-remove-prop-types"
             ]
         },
         "server:prod": {
             "presets": [
-                ["@babel/preset-env", {
-                    "targets": {
-                        "node": "current"
+                [
+                    "@babel/preset-env",
+                    {
+                        "targets": {
+                            "node": "current"
+                        }
                     }
-                }],
+                ],
                 "@babel/preset-react"
             ],
             "plugins": [
@@ -54,19 +90,30 @@
                 "@babel/plugin-proposal-object-rest-spread",
                 "babel-plugin-dynamic-import-node",
                 "loadable-components/babel",
-                "react-hot-loader/babel", ["babel-plugin-styled-components", {
-                    "displayName": false
-                }],
+                "react-hot-loader/babel",
+                [
+                    "babel-plugin-styled-components",
+                    {
+                        "displayName": false
+                    }
+                ],
                 "transform-react-remove-prop-types"
             ]
         },
         "client": {
             "presets": [
-                ["@babel/preset-env", {
-                    "targets": {
-                        "browsers": ["last 2 versions", "safari >= 7"]
+                [
+                    "@babel/preset-env",
+                    {
+                        "targets": {
+                            "browsers": [
+                                "last 2 versions",
+                                "safari >= 7"
+                            ]
+                        }
                     }
-                }], "@babel/preset-react"
+                ],
+                "@babel/preset-react"
             ],
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
@@ -80,11 +127,18 @@
         },
         "client:prod": {
             "presets": [
-                ["@babel/preset-env", {
-                    "targets": {
-                        "browsers": ["last 2 versions", "safari >= 7"]
+                [
+                    "@babel/preset-env",
+                    {
+                        "targets": {
+                            "browsers": [
+                                "last 2 versions",
+                                "safari >= 7"
+                            ]
+                        }
                     }
-                }], "@babel/preset-react"
+                ],
+                "@babel/preset-react"
             ],
             "plugins": [
                 "graphql-tag",
@@ -93,9 +147,13 @@
                 "@babel/plugin-proposal-optional-chaining",
                 "@babel/plugin-proposal-object-rest-spread",
                 "loadable-components/babel",
-                "react-hot-loader/babel", ["babel-plugin-styled-components", {
-                    "displayName": false
-                }],
+                "react-hot-loader/babel",
+                [
+                    "babel-plugin-styled-components",
+                    {
+                        "displayName": false
+                    }
+                ],
                 "transform-react-remove-prop-types"
             ]
         }

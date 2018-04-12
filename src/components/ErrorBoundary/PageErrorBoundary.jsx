@@ -1,4 +1,7 @@
 import React from 'react';
+
+import './style.css';
+
 import ErrorPage from '../../pages/Error';
 
 class PageErrorBoundary extends React.Component {

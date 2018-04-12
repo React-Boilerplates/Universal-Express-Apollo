@@ -1,14 +1,14 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const MakeDirWebpackPlugin = require('make-dir-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MakeDirWebpackPlugin = require('make-dir-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const path = require('path');
 
 // const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 
-const jsTransformer = require('./transformer/js');
 const cssTransformer = require('./transformer/css');
+const jsTransformer = require('./transformer/js');
 
 const assetsPluginInstance = new AssetsPlugin({ filename: 'assets.json' });
 
@@ -54,6 +54,14 @@ module.exports = {
               env: 'client'
             }
           }
+        }
+      },
+      {
+        test: /\.(jpe?g|png)$/i,
+        loader: 'responsive-loader',
+        options: {
+          // eslint-disable-next-line global-require
+          adapter: require('responsive-loader/sharp')
         }
       }
     ]

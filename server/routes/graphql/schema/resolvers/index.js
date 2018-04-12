@@ -2,6 +2,7 @@ import {
   connectionFromPromisedArray
   // connectionFromArray
 } from 'graphql-relay';
+import { GraphQLUpload } from 'apollo-upload-server';
 
 const jwt = require('jsonwebtoken');
 
@@ -63,6 +64,7 @@ const resolvers = {
       };
     }
   },
+  Upload: GraphQLUpload,
   Person: {
     posts: async (parent, args, context) =>
       connectionFromPromisedArray(

@@ -9,7 +9,6 @@ install:
   - ps: Install-Product node $env:nodejs_version x64
   # install modules
   - npm install
-  - npm install sharp@0.11.4 --save-dev --arch=ia32
 
 # Post-install test scripts.
 test_script:

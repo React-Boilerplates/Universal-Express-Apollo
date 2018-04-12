@@ -1,34 +1,50 @@
 /* eslint-env jest */
-import chai from 'chai';
-import chaiHttp from 'chai-http';
+import 'jest-styled-components';
+import request from 'supertest';
+import { Helmet } from 'react-helmet';
+import { __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS as styledTools } from 'styled-components';
 
-chai.use(chaiHttp);
+const op = require('openport');
+
 process.env.COOKIE_SECRET = 'abc';
-process.env.PORT = 3001;
+// process.env.PORT = 3002;
 const server = require('.').createServer();
 
 describe.only('Server', () => {
   beforeEach(() => {
     jest.resetModules();
+    Helmet.canUseDOM = false;
+    styledTools.StyleSheet.reset(true);
   });
-  it('should test express', done => {
-    chai
-      .request(server)
+  afterEach(() => {
+    jest.resetModules();
+    Helmet.canUseDOM = true;
+    styledTools.StyleSheet.reset(false);
+  });
+  it('should allow us to start', done => {
+    op.find((err, port) =>
+      // eslint-disable-next-line global-require
+      require('.').startServer(
+        port,
+        () => done()
+        // innerServer.close();
+      )
+    );
+  });
+
+  it('should test express', async () => {
+    const result = await request(server)
       .post('/graphql')
       .send({
         query: '{users{pageInfo{hasPreviousPage}}}'
-      })
-      .end((err, res) => {
-        expect(err).toBe(null);
-        expect(res.body).toEqual({
-          data: { users: { pageInfo: { hasPreviousPage: false } } }
-        });
-        done();
       });
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toEqual({
+      data: { users: { pageInfo: { hasPreviousPage: false } } }
+    });
   });
-  it('should test express', done => {
-    chai
-      .request(server)
+  it('should test express', async () => {
+    const result = await request(server)
       .post('/graphql')
       .send({
         query:
@@ -37,29 +53,19 @@ describe.only('Server', () => {
           email: 'Craig@couture.com',
           password: 'String'
         }
-      })
-      .end((err, res) => {
-        expect(err).toBe(null);
-        expect(res.body.data).toEqual({
-          signOn: null
-        });
-        expect(res.body.errors.length).toBe(1);
-        done();
       });
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body.data).toEqual({
+      signOn: null
+    });
+    expect(result.body.errors.length).toBe(1);
   });
-  it('should test express', done => {
-    jest.mock('styled-components');
-    // StyleSheet.reset(true);
-    chai
-      .request(server)
+  it('should test express', async () => {
+    const result = await request(server)
       .get('/')
-      .end((err, res) => {
-        server.close();
-        // console.log(res.text);
-        expect(res.text.startsWith('<!DOCTYPE html>'));
-        jest.unmock('styled-components');
-        // expect(res.status).toBe(200);
-        done();
-      });
+      .expect(200);
+    expect(result.text.includes('{"id":"./Home",'));
+    expect(result.status).toBe(200);
   });
 });

@@ -5,5 +5,6 @@ import config from '../tools/webpack/development.client';
 
 webpack(config, err => {
   if (err) logger.log(err);
-  require('./index').createServer(); // eslint-disable-line global-require
+  const processPort = process.env.PORT;
+  require('.').startServer(processPort); // eslint-disable-line global-require
 });

@@ -22,9 +22,10 @@ const express = require('express');
 // eslint-disable-next-line import/prefer-default-export
 export const createServer = () => {
   const middleware = __DEV__
-    ? require('./middleware/dev.js') // eslint-disable-line global-require
+    ? // eslint-disable-next-line node/no-unpublished-require
+      require('./middleware/dev.js') // eslint-disable-line global-require
     : require('./middleware/prod.js'); // eslint-disable-line global-require
-  const processPort = process.env.PORT;
+
   const app = express();
 
   middleware(app);
@@ -120,25 +121,37 @@ export const createServer = () => {
   );
   let server;
   if (process.env.APOLLO_ENGINE_API_KEY) {
-    const engine = new ApolloEngine({
-      apiKey: process.env.APOLLO_ENGINE_API_KEY
-    });
-
-    // Call engine.listen instead of app.listen(port)
-    server = engine.listen({
-      port: 3000,
-      expressApp: app
-    });
+    server = {
+      listen(port) {
+        this.engine = new ApolloEngine({
+          apiKey: process.env.APOLLO_ENGINE_API_KEY
+        });
+        this.engine.listen({
+          port,
+          expressApp: app
+        });
+      },
+      close() {
+        this.engine.close();
+      }
+    };
   } else {
-    server = app.listen(processPort, () => {
-      logger.log(`App 🚀  @ http://localhost:${processPort}/`);
-    });
+    server = app;
   }
 
   return server;
 };
+export const startServer = (port, callback) => {
+  const server = createServer();
+  server.listen(port, () => {
+    logger.log(`App 🚀  @ http://localhost:${port}/`);
+    callback(server);
+  });
+  return server;
+};
 if (require.main === module) {
+  const processPort = process.env.PORT;
   // eslint-disable-next-line global-require
   require('dotenv').config();
-  createServer();
+  startServer(processPort);
 }

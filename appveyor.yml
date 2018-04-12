@@ -7,8 +7,8 @@ install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # install modules
-  - npm install sharp
   - npm install
+  - npm install sharp@0.11.4 --save-dev --arch=ia32
 
 # Post-install test scripts.
 test_script:

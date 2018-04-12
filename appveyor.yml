@@ -9,7 +9,7 @@ install:
   - ps: Install-Product node $env:nodejs_version x64
   # install modules
   - npm install
-  - npm rebuild
+  # - npm rebuild
 
 # Post-install test scripts.
 test_script:
@@ -23,7 +23,7 @@ test_script:
 build: off
 
 cache:
-  # - node_modules                        # local npm modules
+  - node_modules                        # local npm modules
 
 
 skip_commits:

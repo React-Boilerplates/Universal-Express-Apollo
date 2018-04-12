@@ -22,9 +22,6 @@ test_script:
 # Don't actually build.
 build: off
 
-before_test:
-  - node-gyp rebuild
-
 cache:
   - node_modules                        # local npm modules
 

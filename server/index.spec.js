@@ -1,4 +1,5 @@
 /* eslint-env jest */
+import 'jest-styled-components';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 
@@ -49,6 +50,7 @@ describe.only('Server', () => {
   });
   it('should test express', done => {
     jest.mock('styled-components');
+    jest.mock('react-helmet');
     // StyleSheet.reset(true);
     chai
       .request(server)
@@ -57,7 +59,9 @@ describe.only('Server', () => {
         server.close();
         // console.log(res.text);
         expect(res.text.startsWith('<!DOCTYPE html>'));
+        console.log(res.text);
         jest.unmock('styled-components');
+        jest.unmock('react-helmet');
         // expect(res.status).toBe(200);
         done();
       });

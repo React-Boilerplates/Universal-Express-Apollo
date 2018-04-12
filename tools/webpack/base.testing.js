@@ -1,6 +1,6 @@
+const baseClient = require('./base.client');
 const webpack = require('webpack');
 const { envVariables } = require('./constants');
-const baseClient = require('./base.client');
 
 baseClient.plugins.unshift(
   new webpack.DefinePlugin({

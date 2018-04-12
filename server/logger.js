@@ -2,10 +2,20 @@
 const AirbrakeClient = require('airbrake-js');
 const winston = require('winston');
 
-const airbrake = new AirbrakeClient({
-  projectId: process.env.AIRBRAKE_ID || 123,
-  projectKey: process.env.AIRBRAKE_KEY || 'abc'
-});
+const __TEST__ = process.env.NODE_ENV === 'test';
+
+let airbrake;
+
+if (!__TEST__) {
+  airbrake = new AirbrakeClient({
+    projectId: process.env.AIRBRAKE_ID || 123,
+    projectKey: process.env.AIRBRAKE_KEY || 'abc'
+  });
+} else {
+  airbrake = {
+    notify: (...args) => Promise.resolve(console.log(...args))
+  };
+}
 
 const Console = new winston.Logger({
   transports: [

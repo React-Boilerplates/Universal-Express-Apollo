@@ -141,10 +141,11 @@ export const createServer = () => {
 
   return server;
 };
-export const startServer = port => {
+export const startServer = (port, callback) => {
   const server = createServer();
   server.listen(port, () => {
     logger.log(`App 🚀  @ http://localhost:${port}/`);
+    callback(server);
   });
   return server;
 };

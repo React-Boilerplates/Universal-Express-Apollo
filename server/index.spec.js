@@ -20,17 +20,14 @@ describe.only('Server', () => {
     styledTools.StyleSheet.reset(false);
   });
   it('should allow us to start', () => {
-    try {
-      const innerServer = require('.').startServer(
-        Math.round(Math.random() * 5000)
-      );
-      setTimeout(() => {
-        innerServer.close();
-      }, 2000);
-      // innerServer.close();
-    } catch (e) {
-      console.log(e);
-    }
+    // eslint-disable-next-line global-require
+    const innerServer = require('.').startServer(
+      Math.round(Math.random() * 5000)
+    );
+    setTimeout(() => {
+      innerServer.close();
+    }, 2000);
+    // innerServer.close();
   });
 
   it('should test express', async () => {

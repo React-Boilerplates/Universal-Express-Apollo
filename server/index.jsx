@@ -22,7 +22,8 @@ const express = require('express');
 // eslint-disable-next-line import/prefer-default-export
 export const createServer = () => {
   const middleware = __DEV__
-    ? require('./middleware/dev.js') // eslint-disable-line global-require
+    ? // eslint-disable-next-line node/no-unpublished-require
+      require('./middleware/dev.js') // eslint-disable-line global-require
     : require('./middleware/prod.js'); // eslint-disable-line global-require
 
   const app = express();

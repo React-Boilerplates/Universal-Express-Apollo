@@ -1,5 +1,6 @@
 environment:
   nodejs_version: "8"
+platform: x64
 
 # Install scripts. (runs after repo cloning)
 install:

@@ -130,6 +130,7 @@ export const createServer = () => {
           port,
           expressApp: app
         });
+        return this.engine;
       },
       close() {
         this.engine.close();
@@ -142,8 +143,8 @@ export const createServer = () => {
   return server;
 };
 export const startServer = (port, callback) => {
-  const server = createServer();
-  server.listen(port, () => {
+  const app = createServer();
+  const server = app.listen(port, () => {
     logger.log(`App 🚀  @ http://localhost:${port}/`);
     callback(server);
   });

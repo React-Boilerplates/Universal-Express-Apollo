@@ -23,7 +23,7 @@ test_script:
 build: off
 
 cache:
-  - node_modules                        # local npm modules
+  # - node_modules                        # local npm modules
 
 
 skip_commits:

@@ -6,7 +6,7 @@ platform: x64
 install:
   - echo {"app":{"js":"/assets/app.ca83982d2615c67aa736.js"},"vendor":{"js":"/assets/vendor.ca83982d2615c67aa736.js"}} > assets.json
   # Get the latest stable version of Node.js or io.js
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
   # install modules
   - npm install
   - npm install sharp@0.11.4 --save-dev --arch=ia32
@@ -22,9 +22,11 @@ test_script:
 # Don't actually build.
 build: off
 
-cache:
+- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - projectA\libs
   - node_modules                        # local npm modules
-
+  - '%APPDATA%\npm-cache'               # npm cache
+  - '%USERPROFILE%\.nuget\packages -> **\project.json'
 
 skip_commits:
   files:

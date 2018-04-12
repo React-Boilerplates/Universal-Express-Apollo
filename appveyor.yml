@@ -8,7 +8,7 @@ install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version x64
   # install modules
-  - rd -r node_modules
+  # - rd -r node_modules
   - npm install
   - npm rebuild
 

@@ -19,6 +19,20 @@ describe.only('Server', () => {
     Helmet.canUseDOM = true;
     styledTools.StyleSheet.reset(false);
   });
+  it('should allow us to start', () => {
+    try {
+      const innerServer = require('.').startServer(
+        Math.round(Math.random() * 5000)
+      );
+      setTimeout(() => {
+        innerServer.close();
+      }, 2000);
+      // innerServer.close();
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
   it('should test express', async () => {
     const result = await request(server)
       .post('/graphql')

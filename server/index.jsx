@@ -145,6 +145,7 @@ export const startServer = port => {
   server.listen(port, () => {
     logger.log(`App 🚀  @ http://localhost:${port}/`);
   });
+  return server;
 };
 if (require.main === module) {
   const processPort = process.env.PORT;

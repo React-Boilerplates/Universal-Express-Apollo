@@ -22,11 +22,9 @@ test_script:
 # Don't actually build.
 build: off
 
-- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-  - projectA\libs
+cache:
   - node_modules                        # local npm modules
-  - '%APPDATA%\npm-cache'               # npm cache
-  - '%USERPROFILE%\.nuget\packages -> **\project.json'
+
 
 skip_commits:
   files:

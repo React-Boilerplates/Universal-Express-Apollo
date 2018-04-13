@@ -1,13 +1,23 @@
 # TODOs
 
-- Add Session Storage
+- Add Sessions ✔
+  - Add Session Storage
 - Refactor
 - Move more modules to External for production
 - add Dynamic relative image handling ✔
 - add Dynamic relative css handling
 - add Responsive/Progressive Image component
 - add StyleLint ✔
-- rebuild server/side jest
+- rebuild server/side jest ✔
 - Integrate with Travis CI ✔
 - Add GraphQL File Handling ✔
 - Add Stripe Api to GraphQL
+- Add Custom Schema Directives
+  - Auth
+  - HasRole
+  - ReadOnly
+  - Unique
+- Add a Custom Image Loader
+  - Uses `node-potrace` for SVG Path
+  - Uses Data:URL for inline
+  - Uses `sharp` or `jimp` for image resizing

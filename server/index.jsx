@@ -146,7 +146,7 @@ export const startServer = (port, callback) => {
   const app = createServer();
   const server = app.listen(port, () => {
     logger.log(`App 🚀  @ http://localhost:${port}/`);
-    callback(server);
+    if (callback) callback(server);
   });
   return server;
 };

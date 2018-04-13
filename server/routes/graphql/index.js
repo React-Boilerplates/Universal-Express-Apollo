@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import { apolloUploadExpress } from 'apollo-upload-server';
 import { graphqlExpress } from 'apollo-server-express';
-import schema from './schema';
+import schema, { internalSchema } from './schema';
 import context from './context';
 
 export default app => {
@@ -11,7 +11,7 @@ export default app => {
     apolloUploadExpress(/* Options */),
     graphqlExpress(req => ({
       schema,
-      context: context(req),
+      context: context(req, internalSchema),
       cacheControl: process.env.NODE_ENV === 'production',
       tracing: process.env.NODE_ENV === 'production'
     }))

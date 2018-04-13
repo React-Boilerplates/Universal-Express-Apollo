@@ -13,10 +13,11 @@
 - Add GraphQL File Handling ✔
 - Add Stripe Api to GraphQL
 - Add Custom Schema Directives
-  - Auth
-  - HasRole
+  - Auth ✔
   - ReadOnly
   - Unique
+  - deprecated ✔
+  - lower ✔
 - Add a Custom Image Loader
   - Uses `node-potrace` for SVG Path
   - Uses Data:URL for inline

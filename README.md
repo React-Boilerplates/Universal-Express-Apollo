@@ -35,6 +35,7 @@ I was trying to use other cli/generators and was coming up against some blockers
       - Winston
       - AirBrake
   - Apollo-Server
+  - Apollo-Upload-Server
   - Sequelize
   - Session-Storage
   - DataLoader

@@ -1,6 +1,7 @@
 # Universal-Express-Apollo
 
-[![Build Status](https://travis-ci.org/React-Boilerplates/Universal-Express-Apollo.svg?branch=master)](https://travis-ci.org/React-Boilerplates/Universal-Express-Apollo) [![Build status](https://ci.appveyor.com/api/projects/status/pdc5fmop0d0humdr?svg=true)](https://ci.appveyor.com/project/couturecraigj/universal-express-apollo)
+[![Build Status](https://travis-ci.org/React-Boilerplates/Universal-Express-Apollo.svg?branch=master)](https://travis-ci.org/React-Boilerplates/Universal-Express-Apollo) [![Build status](https://ci.appveyor.com/api/projects/status/pdc5fmop0d0humdr?svg=true)](https://ci.appveyor.com/project/couturecraigj/universal-express-apollo) [![codecov](https://codecov.io/gh/React-Boilerplates/Universal-Express-Apollo/branch/master/graph/badge.svg)](https://codecov.io/gh/React-Boilerplates/Universal-Express-Apollo) [![Known Vulnerabilities](https://snyk.io/test/github/react-boilerplates/universal-express-apollo/badge.svg?targetFile=package.json)](https://snyk.io/test/github/react-boilerplates/universal-express-apollo?targetFile=package.json) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/33dd062391a446d7b98762803b1cd5ef)](https://www.codacy.com/app/couturecraigj/Universal-Express-Apollo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=React-Boilerplates/Universal-Express-Apollo&amp;utm_campaign=Badge_Grade)
+
 
 ## Install
 

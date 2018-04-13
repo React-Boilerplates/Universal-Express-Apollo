@@ -24,11 +24,10 @@ describe.only('Server', () => {
   it('should allow us to start', done => {
     op.find((err, port) =>
       // eslint-disable-next-line global-require
-      require('.').startServer(
-        port,
-        () => done()
-        // innerServer.close();
-      )
+      require('.').startServer(port, innerServer => {
+        done();
+        innerServer.close();
+      })
     );
   });
 

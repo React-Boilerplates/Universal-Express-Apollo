@@ -22,3 +22,7 @@
   - Uses `node-potrace` for SVG Path
   - Uses Data:URL for inline
   - Uses `sharp` or `jimp` for image resizing
+
+## Previously
+
+- Finish setting up Stripe API GraphQL Types

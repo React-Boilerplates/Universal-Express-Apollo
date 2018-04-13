@@ -18,7 +18,7 @@ const internalSchema = mergeSchemas({
     schema,
     makeExecutableSchema({
       typeDefs: internalTypeDefs,
-      // schemaDirectives,
+      schemaDirectives,
       resolvers: internalResolvers
     })
   ]

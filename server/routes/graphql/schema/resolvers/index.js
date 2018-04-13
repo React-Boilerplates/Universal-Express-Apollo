@@ -7,6 +7,15 @@ import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 
 const jwt = require('jsonwebtoken');
+const sgMail = require('@sendgrid/mail');
+const Twilio = require('twilio');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const twilioClient = new Twilio(
+  process.env.TWILIO_ACCT_ID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 const cookieSecret = process.env.COOKIE_SECRET;
 
@@ -103,4 +112,34 @@ const resolvers = {
 
 export default resolvers;
 
-export const internalResolvers = {};
+export const internalResolvers = {
+  Mutation: {
+    sendSms: async (
+      parent,
+      { message: { from = process.env.TWILIO_FROM_NUMBER, ...msg } }
+    ) => {
+      const message = await twilioClient.messages.create({
+        from,
+        ...msg
+      });
+      return message.sid;
+    },
+    sendEmail: async (
+      parent,
+      {
+        message: {
+          from = process.env.DEFAULT_EMAIL_REPLY_TO,
+          replyTo = process.env.DEFAULT_EMAIL_REPLY_TO,
+          ...message
+        }
+      }
+    ) => {
+      await sgMail.send({
+        from,
+        replyTo,
+        ...message
+      });
+      return 'Success!';
+    }
+  }
+};

@@ -11,7 +11,6 @@ const sgMail = require('@sendgrid/mail');
 const Twilio = require('twilio');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || 'abc');
-
 const twilioClient = new Twilio(
   process.env.TWILIO_ACCT_ID || 'abc',
   process.env.TWILIO_AUTH_TOKEN || 'abc'

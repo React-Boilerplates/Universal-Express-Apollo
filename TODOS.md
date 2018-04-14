@@ -22,6 +22,9 @@
   - Uses `node-potrace` for SVG Path
   - Uses Data:URL for inline
   - Uses `sharp` or `jimp` for image resizing
+- Build a function that will compress GraphQL Schema Strings
+- Move Server Side GraphQL into Graphiql
+- Make Server side Graphql different from client-side
 
 ## Previously
 

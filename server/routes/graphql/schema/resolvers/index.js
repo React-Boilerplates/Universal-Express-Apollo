@@ -10,11 +10,11 @@ const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
 const Twilio = require('twilio');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || ' ');
 
 const twilioClient = new Twilio(
-  process.env.TWILIO_ACCT_ID,
-  process.env.TWILIO_AUTH_TOKEN
+  process.env.TWILIO_ACCT_ID || ' ',
+  process.env.TWILIO_AUTH_TOKEN || ' '
 );
 
 const cookieSecret = process.env.COOKIE_SECRET;

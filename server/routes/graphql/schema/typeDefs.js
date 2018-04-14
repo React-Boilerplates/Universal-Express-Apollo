@@ -1,120 +1,128 @@
-const typeDefs = /* GraphQL */ `
-directive @lower on FIELD_DEFINITION
-directive @date(
-  defaultFormat: String = "mmmm d, yyyy"
-) on FIELD_DEFINITION
-directive @auth(
-  requires: [Role] = [ADMIN],
-) on OBJECT | FIELD_DEFINITION
+const gql = (strings, ...values) =>
+  strings
+    .map((string, index) => string || `${values[index]}` || '')
+    .join()
+    .replace(
+      // TODO: Make it so that the Schemas are compressed
+      // /( {2} +)|\t|(\n)/g
+      ' ',
+      ' '
+    );
 
-scalar Date
+const typeDefs = /* GraphQL */ gql`
+  directive @lower on FIELD_DEFINITION
 
-enum Role {
-  ADMIN
-  REVIEWER
-  USER
-  UNKNOWN
-}
+  directive @date(defaultFormat: String = "mmmm d, yyyy") on FIELD_DEFINITION
 
-scalar Upload
+  directive @auth(requires: [Role] = [ADMIN]) on OBJECT | FIELD_DEFINITION
 
-interface Node {
-  id: ID!
-}
+  scalar Date
 
-type File implements Node {
-  id: ID!
-  path: String!
-  filename: String!
-  mimetype: String!
-  encoding: String!
-}
+  enum Role {
+    ADMIN
+    REVIEWER
+    USER
+    UNKNOWN
+  }
 
-type Attachment implements Node {
-  id: ID!
-  filename: String!
-  type: String!
+  scalar Upload
 
-}
+  interface Node {
+    id: ID!
+  }
 
-type Post implements Node {
-  id: ID!
-  title: String!
-  description: String!
-  author: Person!
-}
+  type File implements Node {
+    id: ID!
+    path: String!
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
 
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
-}
+  type Attachment implements Node {
+    id: ID!
+    filename: String!
+    type: String!
+  }
 
-type PostEdge {
-  node: Post!
-  cursor: ID!
-}
+  type Post implements Node {
+    id: ID!
+    title: String!
+    description: String!
+    author: Person!
+  }
 
-type PostConnection {
-  pageInfo: PageInfo
-  edges: [PostEdge]
-}
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+  }
 
-type PersonEdge {
-  node: Person!
-  cursor: ID!
-}
+  type PostEdge {
+    node: Post!
+    cursor: ID!
+  }
 
-type PersonConnection {
-  pageInfo: PageInfo
-  edges: [PersonEdge]
-}
+  type PostConnection {
+    pageInfo: PageInfo
+    edges: [PostEdge]
+  }
 
-type JwtResponse {
-  token: String
-  user: Person
-}
+  type PersonEdge {
+    node: Person!
+    cursor: ID!
+  }
 
-type Person implements Node {
-  id: ID!
-  name: String!
-  posts: [Post]
-}
+  type PersonConnection {
+    pageInfo: PageInfo
+    edges: [PersonEdge]
+  }
 
-type Query {
-  uploads: [File]
-  posts(
-    first: Int = 10
-    after: String
-    last: Int
-    before: String
-  ): PostConnection
-  post(id: ID!): Post
-  user(id: ID!): Person
-  users(
-    first: Int = 10
-    after: String
-    last: Int
-    before: String
-  ): PersonConnection
-}
+  type JwtResponse {
+    token: String
+    user: Person
+  }
 
-type Mutation {
-  signOnJwt(email: String, password: String): JwtResponse
-  signOn(email: String, password: String): Person
-  singleUpload(file: Upload!): File!
-}
+  type Person implements Node {
+    id: ID!
+    name: String!
+    posts: [Post]
+  }
 
-schema {
-  query: Query
-  mutation: Mutation
-}
+  type Query {
+    uploads: [File]
+    posts(
+      first: Int = 10
+      after: String
+      last: Int
+      before: String
+    ): PostConnection
+    post(id: ID!): Post
+    user(id: ID!): Person
+    users(
+      first: Int = 10
+      after: String
+      last: Int
+      before: String
+    ): PersonConnection
+  }
+
+  type Mutation {
+    signOnJwt(email: String, password: String): JwtResponse
+    signOn(email: String, password: String): Person
+    singleUpload(file: Upload!): File!
+  }
+
+  schema {
+    query: Query
+    mutation: Mutation
+  }
 `;
 
 export default typeDefs;
 
-export const internalTypeDefs = /* GraphQL */ `
+export const internalTypeDefs = gql`
   directive @lower on FIELD_DEFINITION
 
   directive @date(defaultFormat: String = "mmmm d, yyyy") on FIELD_DEFINITION
@@ -125,7 +133,13 @@ export const internalTypeDefs = /* GraphQL */ `
     id: ID!
   }
 
-  type SourcesListObjectType {
+  interface StripeList {
+    object: String
+    url: String
+    has_more: Boolean
+  }
+
+  type SourcesListObjectType implements StripeList {
     object: String
     data: [CardType]
     has_more: Boolean
@@ -133,7 +147,39 @@ export const internalTypeDefs = /* GraphQL */ `
     url: String
   }
 
-  type SubscriptionListObjectType {
+  type SubscriptionItemListObjectType implements StripeList {
+    object: String
+    data: [SubscriptionItemType]
+    has_more: Boolean
+    total_count: Int
+    url: String
+  }
+
+  type SubscriptionItemType {
+    id: ID!
+    object: String
+    created: Int
+    quantity: Int
+    subscription: ID
+  }
+
+  type PlanType {
+    id: ID!
+    object: String
+    amount: Int
+    billing_scheme: String
+    created: Int
+    currency: Currency
+    interval: String
+    interval_count: Int
+    livemode: Boolean
+    nickname: String
+    product: ID
+    trial_period_days: Int
+    usage_type: String
+  }
+
+  type SubscriptionListObjectType implements StripeList {
     object: String
     data: [SubscriptionType]
     has_more: String
@@ -496,6 +542,44 @@ export const internalTypeDefs = /* GraphQL */ `
     from: String
   }
 
+  input SourceInput {
+    id: ID
+    card: CardInput
+  }
+
+  input CustomerInput {
+    account_balance: Int
+    business_vat_id: String
+    coupon: String
+    default_source: String
+    description: String
+    email: String
+    invoice_prefix: String
+    shipping: ShippingType
+    source: SourceInput
+  }
+
+  input SubscriptionInput {
+    customer: ID
+    application_fee_percent: Float
+    billing: String
+    billing_cycle_anchor: String
+    coupon: String
+    days_until_due: Int
+    prorate: Boolean
+    items: [SubscriptionItemInput]
+    source: SourceInput
+    tax_percent: Float
+    trial_end: Float
+    trail_from_plan: Boolean
+    trial_period_days: Int
+  }
+
+  input SubscriptionItemInput {
+    plan: ID!
+    quantity: Int
+  }
+
   type OrderItemType {
     object: String
     amount: Int
@@ -511,7 +595,24 @@ export const internalTypeDefs = /* GraphQL */ `
   }
 
   type Mutation {
-    createOrder(order: OrderInput): String
+    createCharge(input: ChargeInput): ChargeType
+    updateCharge(id: ID!, input: ChargeInput): ChargeType
+    createCustomer(input: CustomerInput): CustomerType
+    updateCustomer(id: ID!, input: CustomerInput): CustomerType
+    createSubscription(input: SubscriptionInput): SubscriptionType
+    updateSubscription(id: ID!, input: SubscriptionInput): SubscriptionType
+    # createProduct(input: ProductInput): ProductType
+    # updateProduct(id: ID!, input: ProductInput): ProductType
+    createOrder(input: OrderInput): OrderType
+    updateOrder(id: ID!, input: OrderInput): OrderType
+    # createPlan()
+    # updatePlan()
+    # createInvoice(input: InvoiceInput): InvoiceType
+    # updateInvoice(id: ID!, input: InvoiceInput): InvoiceType
+    # createCoupon(input: CouponInput): CouponType
+    # updateCoupon(id: ID!, input: CouponInput): CouponType
+    # createDiscount(input: DiscountInput): DiscountType
+    # updateDiscount(id: ID!, input: DiscountInput): DiscountType
     sendSms(message: SmsInput): String
     sendEmail(message: MailInput): String
   }

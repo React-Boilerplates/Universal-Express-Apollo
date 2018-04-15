@@ -26,6 +26,7 @@
 - Move Server Side GraphQL into Graphiql
 - Make Server side Graphql different from client-side
 - Setup Helmet-CSP
+- Setup Server-Timing API
 
 ## Previously
 

@@ -1,12 +1,6 @@
-// const sgMail = require('@sendgrid/mail');
+const sgMail = jest.genMockFromModule('@sendgrid/mail');
 
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY || 'abc')
-
-class sgMail {
-  static setApiKey(key) {
-    this.key = key;
-    // Do nothing
-  }
-}
+sgMail.setApiKey = jest.fn();
+sgMail.send = jest.fn(() => Promise.resolve());
 
 module.exports = sgMail;

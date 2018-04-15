@@ -15,12 +15,15 @@ describe.only('Server', () => {
     jest.resetModules();
     Helmet.canUseDOM = false;
     styledTools.StyleSheet.reset(true);
-    // jest.mock('twilio');
+    jest.mock('twilio');
+    jest.mock('@sendgrid/mail');
   });
   afterEach(() => {
     jest.resetModules();
     Helmet.canUseDOM = true;
     styledTools.StyleSheet.reset(false);
+    jest.unmock('twilio');
+    jest.unmock('@sendgrid/mail');
   });
   it('should allow us to start', done => {
     op.find((err, port) =>

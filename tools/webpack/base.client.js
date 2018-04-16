@@ -58,10 +58,13 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png)$/i,
-        loader: 'responsive-loader',
+        loader: path.resolve('./tools/webpack/loaders/image-loader.js'),
         options: {
-          // eslint-disable-next-line global-require
-          adapter: require('responsive-loader/sharp')
+          trace: {
+            threshold: 128,
+            color: '#880000'
+          },
+          sizes: [{ size: 500, fileType: '.png' }]
         }
       }
     ]

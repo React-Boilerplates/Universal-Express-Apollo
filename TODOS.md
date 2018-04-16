@@ -4,14 +4,8 @@
   - Add Session Storage
 - Refactor
 - Move more modules to External for production
-- add Dynamic relative image handling ✔
 - add Dynamic relative css handling
 - add Responsive/Progressive Image component
-- add StyleLint ✔
-- rebuild server/side jest ✔
-- Integrate with Travis CI ✔
-- Add GraphQL File Handling ✔
-- Add Stripe Api to GraphQL
 - Add Custom Schema Directives
   - Auth ✔
   - ReadOnly
@@ -23,12 +17,14 @@
   - Uses Data:URL for inline
   - Uses `sharp` or `jimp` for image resizing
 - Build a function that will compress GraphQL Schema Strings
-- Move Server Side GraphQL into Graphiql
-- Make Server side Graphql different from client-side
 - Setup Helmet-CSP
 - Setup Server-Timing API
 - Add a Rust and WebAssembly Loader
-
-## Previously
-
-- Finish setting up Stripe API GraphQL Types
+- add StyleLint ✔
+- rebuild server/side jest ✔
+- Integrate with Travis CI ✔
+- Add GraphQL File Handling ✔
+- Add Stripe Api to GraphQL ✔
+- Move Server Side GraphQL into Graphiql ✔
+- Make Server side Graphql different from client-side ✔
+- add Dynamic relative image handling ✔

@@ -9,6 +9,7 @@
     },
     "scripts": {
         "test": "jest",
+        "test:silent": "jest --silent",
         "build:server": "cross-env NODE_ENV=production BABEL_ENV=server:prod webpack --mode production --config tools/webpack/production.server.js",
         "build:client": "cross-env NODE_ENV=production BABEL_ENV=client:prod webpack --mode production --config tools/webpack/production.client.js",
         "dev:client": "cross-env NODE_ENV=development BABEL_ENV=client webpack --mode development --config tools/webpack/development.client.js",
@@ -121,6 +122,7 @@
         "jest": "22.4.3",
         "jest-styled-components": "5.0.1",
         "make-dir-webpack-plugin": "0.1.0",
+        "mock-env": "^0.2.0",
         "openport": "0.0.5",
         "postcss": "6.0.21",
         "precss": "3.1.2",

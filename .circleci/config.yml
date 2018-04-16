@@ -34,7 +34,7 @@ jobs:
 
       - run:
           name: Test Packages
-          command: ./scripts/circleci/test_entry_point.sh
+          command: npm test
 
       - save_cache:
           name: Save node_modules cache

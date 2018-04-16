@@ -121,6 +121,7 @@
         "jest": "22.4.3",
         "jest-styled-components": "5.0.1",
         "make-dir-webpack-plugin": "0.1.0",
+        "mock-env": "^0.2.0",
         "openport": "0.0.5",
         "postcss": "6.0.21",
         "precss": "3.1.2",

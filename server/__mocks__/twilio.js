@@ -1,13 +1,16 @@
 // const twil = jest.genMockFromModule('twilio');
 // console.log(twil);
-const twilio = (id, token) => ({
-  id,
-  token,
-  messages: {
-    create: jest.fn(() => ({ id: 'asdf' }))
+class Twilio {
+  constructor(id, token) {
+    this.id = id;
+    this.token = token;
   }
-});
 
-// const twilio = require('twilio');
+  messages = {
+    create: jest.fn(() => ({ id: 'asdf' }))
+  };
+}
 
-module.exports = twilio;
+// const Twilio = require('Twilio');
+
+module.exports = Twilio;

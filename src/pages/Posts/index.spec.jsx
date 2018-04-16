@@ -2,6 +2,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Posts } from './Posts';
+import PostsPage from '.';
 
 describe('Post', () => {
   it('should render', () => {
@@ -20,6 +21,11 @@ describe('Post', () => {
         }}
       />
     );
+    expect(post).toBeDefined();
+  });
+  it('should async load', async () => {
+    const App = await PostsPage.load();
+    const post = shallow(<App />);
     expect(post).toBeDefined();
   });
 });

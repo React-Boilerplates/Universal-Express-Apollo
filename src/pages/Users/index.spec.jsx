@@ -2,6 +2,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Users } from './Users';
+import Import from '.';
 
 describe('Users', () => {
   it('should render', () => {
@@ -20,6 +21,11 @@ describe('Users', () => {
         }}
       />
     );
+    expect(post).toBeDefined();
+  });
+  it('should async load', async () => {
+    const App = await Import.load();
+    const post = shallow(<App />);
     expect(post).toBeDefined();
   });
 });

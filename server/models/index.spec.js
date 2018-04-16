@@ -1,7 +1,7 @@
 /* eslint-env jest */
 
 process.env.COOKIE_SECRET = 'abc';
-describe.skip('Sequelize', () => {
+describe('Sequelize', () => {
   it('should test production', async () => {
     process.env.NODE_ENV = 'production';
     const db = await require('.').default; // eslint-disable-line global-require

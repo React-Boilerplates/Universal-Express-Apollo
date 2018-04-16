@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
+const logger = require('../logger');
 const webpack = require('webpack');
 const webpackDev = require('webpack-dev-middleware');
 const webpackHot = require('webpack-hot-middleware');
-const logger = require('../logger');
 // const chokidar = require('chokidar');
 /* eslint-enable import/no-extraneous-dependencies */
 const compression = require('compression');

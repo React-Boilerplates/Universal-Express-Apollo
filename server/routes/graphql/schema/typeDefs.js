@@ -182,7 +182,7 @@ export const internalTypeDefs = gql`
   type SubscriptionListObjectType implements StripeList {
     object: String
     data: [SubscriptionType]
-    has_more: String
+    has_more: Boolean
     total_count: Int
     url: String
   }
@@ -513,7 +513,7 @@ export const internalTypeDefs = gql`
     transfer_group: String!
   }
 
-  type SubstitutionsType {
+  input SubstitutionsInput {
     name: String
     city: String
     state: String
@@ -531,7 +531,7 @@ export const internalTypeDefs = gql`
     subject: String
     templateId: String
     attachments: [AttachmentInput]
-    substitutions: SubstitutionsType
+    substitutions: SubstitutionsInput
     categories: [String!]
     replyTo: String
   }
@@ -555,7 +555,7 @@ export const internalTypeDefs = gql`
     description: String
     email: String
     invoice_prefix: String
-    shipping: ShippingType
+    shipping: OrderShippingInput
     source: SourceInput
   }
 

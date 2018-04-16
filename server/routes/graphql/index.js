@@ -2,7 +2,17 @@ import bodyParser from 'body-parser';
 import { apolloUploadExpress } from 'apollo-upload-server';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import schema, { internalSchema } from './schema';
-import context from './context';
+import createContext from './context';
+
+const asyncGraphql = mainSchema => async (req, res, next) => {
+  const context = await createContext(req, internalSchema);
+  return graphqlExpress({
+    schema: mainSchema,
+    context,
+    cacheControl: process.env.NODE_ENV === 'production',
+    tracing: process.env.NODE_ENV === 'production'
+  })(req, res, next);
+};
 
 const internalGraphql =
   process.env.NODE_ENV === 'production'
@@ -16,12 +26,7 @@ const internalGraphql =
         app.use(
           '/internal-graphql',
           bodyParser.json(),
-          graphqlExpress(req => ({
-            schema: internalSchema,
-            context: context(req, internalSchema),
-            cacheControl: process.env.NODE_ENV === 'production',
-            tracing: process.env.NODE_ENV === 'production'
-          }))
+          asyncGraphql(internalSchema)
         );
       };
 
@@ -31,11 +36,6 @@ export default app => {
     '/graphql',
     bodyParser.json(),
     apolloUploadExpress(/* Options */),
-    graphqlExpress(req => ({
-      schema,
-      context: context(req, internalSchema),
-      cacheControl: process.env.NODE_ENV === 'production',
-      tracing: process.env.NODE_ENV === 'production'
-    }))
+    asyncGraphql(schema)
   );
 };

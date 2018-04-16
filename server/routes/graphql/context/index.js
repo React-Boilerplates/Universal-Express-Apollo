@@ -1,12 +1,15 @@
 import { graphql } from 'graphql';
 import createLoader from './Loader';
-import db from '../../../models';
+import createDb from '../../../models';
 
-const context = (req, schema) => ({
-  loader: createLoader(req.user, db),
-  query: query => graphql(schema, query),
-  req,
-  ...db
-});
+const context = async (req, schema) => {
+  const db = await createDb();
+  return {
+    loader: createLoader(req.user, db),
+    query: query => graphql(schema, query),
+    req,
+    ...db
+  };
+};
 
 module.exports = context;

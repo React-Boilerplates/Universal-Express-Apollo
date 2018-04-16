@@ -7,9 +7,9 @@ import db from '../models';
 const logger = require('../logger');
 
 const compression = require('compression');
-const session = require('express-session');
-const jwtMiddleware = require('express-jwt');
 const jwt = require('jsonwebtoken');
+const jwtMiddleware = require('express-jwt');
+const session = require('express-session');
 
 const express = require('express');
 

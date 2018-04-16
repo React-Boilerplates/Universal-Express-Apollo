@@ -27,6 +27,7 @@
 - Make Server side Graphql different from client-side
 - Setup Helmet-CSP
 - Setup Server-Timing API
+- Add a Rust and WebAssembly Loader
 
 ## Previously
 

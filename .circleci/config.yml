@@ -34,7 +34,7 @@ jobs:
 
       - run:
           name: Test Packages
-          command: npm test
+          command: npm run test:silent
 
       - save_cache:
           name: Save node_modules cache

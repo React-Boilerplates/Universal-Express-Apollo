@@ -15,27 +15,6 @@ const sequelize = new Sequelize({
   logging: false
 });
 
-const buildRelationships = async (objects, models) => {
-  const relationships = {};
-  try {
-    Object.entries(models).forEach(async ([key, model]) => {
-      relationships[key] = {};
-      if (model.associations) {
-        relationships[key] = model.associations(models);
-      }
-    });
-    const promises = [];
-    Object.values(objects).forEach(object => {
-      if (!object.postSetup) return;
-      promises.push(object.postSetup(models, relationships));
-    });
-    await Promise.all(promises);
-  } catch (e) {
-    logger.log(e);
-  }
-  return relationships;
-};
-
 const configureModels = objects => {
   const models = {};
 
@@ -47,9 +26,40 @@ const configureModels = objects => {
   return models;
 };
 
+const buildDataBase = async () => {
+  const buildRelationships = async (objects, models) => {
+    const relationships = {};
+    try {
+      Object.entries(models).forEach(async ([key, model]) => {
+        relationships[key] = {};
+        if (model.associations) {
+          relationships[key] = model.associations(models);
+        }
+      });
+      const promises = [];
+      Object.values(objects).forEach(object => {
+        if (!object.postSetup) return;
+        promises.push(object.postSetup(models, relationships));
+      });
+      await Promise.all(promises);
+    } catch (e) {
+      logger.log(e);
+    }
+    return relationships;
+  };
+
+  if (!db.relationships) {
+    db.relationships = await buildRelationships(
+      db.objects,
+      db.models,
+      sequelize
+    );
+  }
+
+  return db;
+};
 db.models = configureModels(db.objects);
-db.relationships = buildRelationships(db.objects, db.models, sequelize);
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-export default db;
+export default buildDataBase;

@@ -12,6 +12,7 @@ module.exports = {
   entry: baseClient.entry,
   output: baseClient.output,
   resolve: baseClient.resolve,
+  module: baseClient.module,
   plugins: baseClient.plugins,
   target: baseClient.target
 };

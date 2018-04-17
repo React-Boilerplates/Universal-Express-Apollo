@@ -6,7 +6,7 @@ process.env.NODE_ENV = 'development';
 const config = require('../webpack/base.testing');
 const webpack = require('webpack');
 
-module.exports = () =>
+const globalSetup = () =>
   new Promise(resolve => {
     console.log('Global Setup Initializing!!');
     webpack(config, err => {
@@ -15,3 +15,9 @@ module.exports = () =>
       resolve();
     });
   });
+
+module.exports = globalSetup;
+
+if (require.main === module) {
+  globalSetup();
+}

@@ -32,9 +32,7 @@ jobs:
 
       - run: npm install
 
-      - run: echo '{"app":{"js":"/assets/app.js"},"vendor":{"js":"/assets/vendor.js"}}' > assets.json
-      - run: npm run pretest
-      - run: find . -name 'assets.json' -print
+      - run: npm run assets
 
       - run:
           name: Test Packages

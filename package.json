@@ -8,8 +8,10 @@
         "url": "https://github.com/React-Boilerplates/Universal-Express-Apollo.git"
     },
     "scripts": {
-        "pretest": "node ./tools/jest/globalSetup.js && cross-env echo '{\"app\":{\"js\":\"/assets/app.js\"},\"vendor\":{\"js\":\"/assets/vendor.js\"}}' > assets.json",
+        "pretest": "node ./tools/jest/globalSetup.js",
         "test": "node --harmony ./node_modules/.bin/jest",
+        "assets:windows": "echo {\"app\":{\"js\":\"/assets/app.js\"},\"vendor\":{\"js\":\"/assets/vendor.js\"}} > assets.json",
+        "assets": "echo '{\"app\":{\"js\":\"/assets/app.js\"},\"vendor\":{\"js\":\"/assets/vendor.js\"}}' > assets.json",
         "test:silent": "jest --silent",
         "build:server": "cross-env NODE_ENV=production BABEL_ENV=server:prod webpack --mode production --config tools/webpack/production.server.js",
         "build:client": "cross-env NODE_ENV=production BABEL_ENV=client:prod webpack --mode production --config tools/webpack/production.client.js",

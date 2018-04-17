@@ -4,6 +4,9 @@ environment:
   nodejs_version: "8"
 platform: x64
 
+init:
+  - git config --global core.autocrlf input
+
 # Install scripts. (runs after repo cloning)
 install:
   - echo {"app":{"js":"/assets/app.js"},"vendor":{"js":"/assets/vendor.js"}} > assets.json
@@ -19,7 +22,7 @@ test_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
-  - npm run pretest
+  - npm run assets:windows
   # run tests
   - npm run test:silent
 

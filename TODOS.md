@@ -4,7 +4,6 @@
   - Add Session Storage
 - Refactor
 - Move more modules to External for production
-- add Dynamic relative css handling
 - add Responsive/Progressive Image component
 - Add Custom Schema Directives
   - Auth ✔
@@ -12,14 +11,15 @@
   - Unique
   - deprecated ✔
   - lower ✔
-- Add a Custom Image Loader
-  - Uses `node-potrace` for SVG Path
-  - Uses Data:URL for inline
-  - Uses `sharp` or `jimp` for image resizing
 - Build a function that will compress GraphQL Schema Strings
 - Setup Helmet-CSP
 - Setup Server-Timing API
 - Add a Rust and WebAssembly Loader
+- add Dynamic relative css handling ✔
+- Add a Custom Image Loader ✔
+  - Uses `node-potrace` for SVG Path ✔
+  - Uses Data:URL for inline ✔
+  - Uses `sharp` or `jimp` for image resizing ✔
 - add StyleLint ✔
 - rebuild server/side jest ✔
 - Integrate with Travis CI ✔

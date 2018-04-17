@@ -1,8 +1,9 @@
+process.env.NODE_ENV = 'production';
 const config = require('./base.client');
 const path = require('path');
 const webpack = require('webpack');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
-const { envVariables } = require('./constants');
+const { envVariables, extractTextPlugin } = require('./constants');
 
 // const envVariables = Object.assign({}, process.env);
 config.plugins.unshift(
@@ -18,10 +19,11 @@ config.plugins.unshift(
     icons: [
       {
         src: path.resolve('./static/favicon.png'),
-        sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+        sizes: [96, 128, 192, 256, 384, 512]
       }
     ]
-  })
+  }),
+  extractTextPlugin
 );
 
 config.node = {

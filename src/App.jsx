@@ -6,6 +6,8 @@ import Helmet from './Helmet';
 import Layout from './components/Layout';
 import routes from './routes';
 
+const cats = require('./style.sss');
+
 // import Universal from './routes';
 
 const App = props => (

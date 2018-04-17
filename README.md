@@ -71,7 +71,7 @@ I was trying to use other cli/generators and was coming up against some blockers
   - PostCSS
     - PreCSS
     - CSSNano
-    - Autoprefixer
+    - CSS-Next
   - Code-Splitting
     - Loadable-Components
 - Server-Side-Render

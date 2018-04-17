@@ -6,14 +6,14 @@ const path = require('path');
 
 // const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
-
 const cssTransformer = require('./transformer/css');
 const jsTransformer = require('./transformer/js');
+const { sssLoader } = require('./constants');
 
-const assetsPath = path.join(process.cwd(), '/assets.json');
-console.log(assetsPath);
-
-const assetsPluginInstance = new AssetsPlugin({ filename: '/assets.json' });
+const assetsPluginInstance = new AssetsPlugin({
+  filename: 'assets.json',
+  path: path.join(process.cwd())
+});
 
 const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line no-underscore-dangle
 
@@ -42,6 +42,7 @@ module.exports = {
     publicPath: '/',
     filename: __DEV__ ? 'assets/[name].js' : 'assets/[name].[hash].js'
   },
+  context: path.join(process.cwd()),
   resolve: {
     extensions: ['.webpack.js', '.web.js', '.js', '.json', '.jsx']
   },
@@ -58,6 +59,10 @@ module.exports = {
             }
           }
         }
+      },
+      {
+        test: /\.sss$/,
+        use: sssLoader
       },
       {
         test: /\.(jpe?g|png)$/i,
@@ -120,7 +125,9 @@ module.exports = {
         toType: 'template'
       }
     ]),
-    new CleanWebpackPlugin(['public']),
+    new CleanWebpackPlugin(['public'], {
+      root: process.cwd()
+    }),
     assetsPluginInstance
   ],
   target: 'web'

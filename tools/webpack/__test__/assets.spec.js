@@ -11,6 +11,7 @@ const assetsPath = path.join(process.cwd(), 'assets.json');
 
 describe('Assets', () => {
   beforeAll(done => {
+    jest.setTimeout = 20000;
     compiler.run((err, stats) => {
       if (err || stats.hasErrors()) {
         console.error(err);

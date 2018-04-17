@@ -79,9 +79,9 @@ const potraceToDataUri = (content, options) =>
             const string = encodeOptimizedSVGDataUri(data);
             resolve(string);
           })
-          .catch(err => {
-            console.log(err);
-            reject(err);
+          .catch(error => {
+            console.log(error);
+            reject(error);
           });
       }
       return resolve(encodeOptimizedSVGDataUri(svg));

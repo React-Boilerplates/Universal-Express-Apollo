@@ -10,7 +10,9 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const cssTransformer = require('./transformer/css');
 const jsTransformer = require('./transformer/js');
 
-const assetsPluginInstance = new AssetsPlugin({ filename: './assets.json' });
+const assetsPath = path.join(process.cwd(), '/assets.json');
+
+const assetsPluginInstance = new AssetsPlugin({ filename: assetsPath });
 
 const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line no-underscore-dangle
 

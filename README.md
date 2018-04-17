@@ -9,7 +9,6 @@
 [![made-with-Markdown](https://img.shields.io/badge/Made%20with-Webpack-1f425f.svg)](http://commonmark.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-
 ## Install
 
 ```bash

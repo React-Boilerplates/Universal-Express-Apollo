@@ -8,8 +8,8 @@
         "url": "https://github.com/React-Boilerplates/Universal-Express-Apollo.git"
     },
     "scripts": {
-        "test": "jest",
-        "test:silent": "jest --silent",
+        "test": "node --harmony ./node_modules/.bin/jest",
+        "test:silent": "node --harmony ./node_modules/.bin/jest --silent",
         "build:server": "cross-env NODE_ENV=production BABEL_ENV=server:prod webpack --mode production --config tools/webpack/production.server.js",
         "build:client": "cross-env NODE_ENV=production BABEL_ENV=client:prod webpack --mode production --config tools/webpack/production.client.js",
         "dev:client": "cross-env NODE_ENV=development BABEL_ENV=client webpack --mode development --config tools/webpack/development.client.js",
@@ -22,7 +22,7 @@
         "clean:client": "rm -rf public",
         "start:prod": "cross-env node build/main.js",
         "pre:start": "npm run dev:client && npm run clean",
-        "start": "cross-env NODE_ENV=development BABEL_ENV=server babel-node server/dev.js",
+        "start": "cross-env NODE_ENV=development BABEL_ENV=server babel-node --harmony server/dev.js",
         "heroku-postbuild": "npm run build"
     },
     "bugs": {
@@ -92,6 +92,7 @@
         "@babel/preset-env": "7.0.0-beta.44",
         "@babel/preset-react": "7.0.0-beta.44",
         "@babel/preset-stage-1": "7.0.0-beta.44",
+        "@babel/register": "^7.0.0-beta.44",
         "assets-webpack-plugin": "3.5.1",
         "autoprefixer": "8.3.0",
         "babel-core": "7.0.0-bridge.0",

@@ -9,7 +9,7 @@ const webpack = require('webpack');
 const compiler = webpack(config);
 const assetsPath = path.join(process.cwd(), 'assets.json');
 
-describe('Assets', () => {
+describe.skip('Assets', () => {
   beforeAll(done => {
     jest.setTimeout = 20000;
     compiler.run((err, stats) => {

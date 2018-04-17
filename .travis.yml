@@ -6,6 +6,7 @@ install:
   - npm install -g codecov
 script:
   - npm run test:silent && codecov
+  - find . -name 'assets.json' -print
 cache:
   bundler: true
   directories:

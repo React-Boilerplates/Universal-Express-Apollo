@@ -12,7 +12,7 @@ import config from '../tools/webpack/development.client';
 require('@babel/register');
 
 // Hacking the File System to Allow for Development
-const extensions = ['.jpg', '.jgep', '.css', '.png', '.woff', '.svg'];
+const extensions = ['.jpg', '.jpeg', '.css', '.png', '.woff', '.svg'];
 
 webpack(config, err => {
   if (err) logger.log(err);

@@ -5,10 +5,27 @@ import validateOptions from 'schema-utils';
 const potrace = require('potrace');
 const sharp = require('sharp');
 
-const pathMaker = (outputPath, prefix) => {
-  const urlPath = JSON.stringify(`${prefix}/${outputPath}`.replace('//', '/'));
+const pathMaker = (outputPath, prefix, ...options) => {
+  const urlPath = JSON.stringify(
+    `${prefix}/${options.join('-')}-${outputPath}`.replace('//', '/')
+  );
   return urlPath;
 };
+
+const optimize = (svg, options = { multipass: true, floatPrecision: 2 }) => {
+  // eslint-disable-next-line global-require
+  const SVGO = require(`svgo`);
+  const svgo = new SVGO(options);
+  return new Promise((resolve, reject) =>
+    svgo
+      .optimize(svg)
+      .then(({ data }) => resolve(data))
+      .catch(reject)
+  );
+};
+
+const createPublicPath = outputPath =>
+  ` __webpack_public_path__ + ${outputPath}`;
 
 const promisePotrace = (key, content, options, url, context) =>
   new Promise((resolve, reject) => {
@@ -22,13 +39,52 @@ const promisePotrace = (key, content, options, url, context) =>
       }
     }
 
+    const filepath = pathMaker(
+      outputPath.replace(/\..[^.]*$/gm, '.svg'),
+      'trace/',
+      'vector'
+    );
+
+    return potrace.posterize(content, options, (err, svg) => {
+      if (err) return reject(err);
+      if (options.optimize) {
+        return optimize(svg, options.optimize).then(result => {
+          resolve([key, result].concat([filepath]));
+        });
+      }
+      return resolve([key, svg].concat([filepath]));
+    });
+  });
+
+function encodeOptimizedSVGDataUri(svgString) {
+  const uriPayload = encodeURIComponent(svgString) // encode URL-unsafe characters
+    .replace(/%0A/g, ``) // remove newlines
+    .replace(/%20/g, ` `) // put spaces back in
+    .replace(/%3D/g, `=`) // ditto equals signs
+    .replace(/%3A/g, `:`) // ditto colons
+    .replace(/%2F/g, `/`) // ditto slashes
+    .replace(/%22/g, `'`); // replace quotes with apostrophes (may break certain SVGs)
+
+  return `data:image/svg+xml,${uriPayload}`;
+}
+
+const potraceToDataUri = (content, options) =>
+  new Promise((resolve, reject) => {
     potrace.posterize(content, options, (err, svg) => {
-      if (err) throw reject(err);
-      resolve(
-        [key, svg].concat([
-          pathMaker(outputPath.replace(/\..[^.]*$/gm, '.svg'), 'trace/')
-        ])
-      );
+      if (err) return reject(err);
+
+      if (options.optimize) {
+        return optimize(svg, options.optimize)
+          .then(data => {
+            const string = encodeOptimizedSVGDataUri(data);
+            resolve(string);
+          })
+          .catch(err => {
+            console.log(err);
+            reject(err);
+          });
+      }
+      return resolve(encodeOptimizedSVGDataUri(svg));
     });
   });
 
@@ -53,7 +109,8 @@ const promiseSharp = (key, content, options, url, context) =>
           [key, data.toString()].concat([
             pathMaker(
               outputPath.replace(/\..[^.]*$/gm, options.fileType),
-              'img/vars/'
+              'img/vars/',
+              options.size
             )
           ])
         )
@@ -98,7 +155,7 @@ export default function(content) {
     regExp: options.regExp
   });
 
-  return Promise.all(
+  Promise.all(
     [
       options.trace &&
         promisePotrace('trace', content, options.trace, url, options)
@@ -110,22 +167,18 @@ export default function(content) {
         : []
     )
   )
-    .then(([[key, svg, outputPath]]) => {
-      // const finalOutPut = {};
-      // files.forEach(([key, svg, outputPath]) => {
-      //   finalOutPut[key] = outputPath;
-      //   this.emitFile(outputPath, svg);
-      // });
+    .then(results =>
+      potraceToDataUri(content, options.trace).then(() => {
+        const filesString = results
+          .map(([key, data, outputPath]) => {
+            this.emitFile(outputPath, data);
+            return `${key}:${createPublicPath(outputPath)}`;
+          })
+          .join(',');
 
-      this.emitFile(outputPath, svg);
-
-      console.log(`{${key}: __webpack_public_path__ + ${outputPath}}`);
-
-      callback(
-        null,
-        `module.exports = {${key}: __webpack_public_path__ + ${outputPath}};`
-      );
-    })
+        callback(null, `module.exports = {${filesString}};`);
+      })
+    )
     .catch(callback);
   // potrace.posterize(content, options.trace, (err, svg) => {
   //   if (err) throw err;

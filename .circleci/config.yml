@@ -37,6 +37,8 @@ jobs:
       - run:
           name: Test Packages
           command: npm run test:silent
+      
+      - run: find . -name 'assets.json' -print
 
       - save_cache:
           name: Save node_modules cache

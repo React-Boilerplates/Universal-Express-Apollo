@@ -61,8 +61,18 @@ module.exports = {
         loader: path.resolve('./tools/webpack/loaders/image-loader.js'),
         options: {
           trace: {
-            threshold: 128,
-            color: '#880000'
+            threshold: 180,
+            steps: 4,
+            color: '#880000',
+            optimize: {
+              multipass: true,
+              floatPrecision: 2,
+              plugins: [
+                { removeDoctype: false },
+                { convertColors: { shorthex: false } },
+                { removeRasterImages: { param: true } }
+              ]
+            }
           },
           sizes: [{ size: 500, fileType: '.png' }]
         }

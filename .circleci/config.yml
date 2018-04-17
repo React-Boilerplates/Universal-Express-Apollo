@@ -47,6 +47,3 @@ jobs:
           key: v1-node-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
-        
-      # run tests!
-      - run: npm test

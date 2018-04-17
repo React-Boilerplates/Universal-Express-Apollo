@@ -9,7 +9,7 @@
     },
     "scripts": {
         "pretest": "node ./tools/jest/globalSetup.js",
-        "test": "node --harmony ./node_modules/.bin/jest",
+        "test": "jest",
         "assets:windows": "echo {\"app\":{\"js\":\"/assets/app.js\"},\"vendor\":{\"js\":\"/assets/vendor.js\"}} > assets.json",
         "assets": "echo '{\"app\":{\"js\":\"/assets/app.js\"},\"vendor\":{\"js\":\"/assets/vendor.js\"}}' > assets.json",
         "test:silent": "jest --silent",

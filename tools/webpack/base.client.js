@@ -11,6 +11,7 @@ const cssTransformer = require('./transformer/css');
 const jsTransformer = require('./transformer/js');
 
 const assetsPath = path.join(process.cwd(), '/assets.json');
+console.log(assetsPath);
 
 const assetsPluginInstance = new AssetsPlugin({ filename: assetsPath });
 

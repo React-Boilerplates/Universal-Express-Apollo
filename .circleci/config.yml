@@ -34,6 +34,7 @@ jobs:
 
       # - run: echo '{"app":{"js":"/assets/app.ca83982d2615c67aa736.js"},"vendor":{"js":"/assets/vendor.ca83982d2615c67aa736.js"}}' > assets.json
       - run: npm run pretest
+      
       - run:
           name: Test Packages
           command: npm run test:silent

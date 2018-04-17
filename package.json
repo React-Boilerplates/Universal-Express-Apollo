@@ -10,7 +10,7 @@
     "scripts": {
         "pretest": "node ./tools/jest/globalSetup.js",
         "test": "node --harmony ./node_modules/.bin/jest",
-        "test:silent": "node --harmony ./node_modules/.bin/jest --silent",
+        "test:silent": "jest --silent",
         "build:server": "cross-env NODE_ENV=production BABEL_ENV=server:prod webpack --mode production --config tools/webpack/production.server.js",
         "build:client": "cross-env NODE_ENV=production BABEL_ENV=client:prod webpack --mode production --config tools/webpack/production.client.js",
         "dev:client": "cross-env NODE_ENV=development BABEL_ENV=client webpack --mode development --config tools/webpack/development.client.js",

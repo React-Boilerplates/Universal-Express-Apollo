@@ -1,6 +1,6 @@
-import path from 'path';
-import { getOptions, interpolateName } from 'loader-utils';
-import validateOptions from 'schema-utils';
+const path = require('path');
+const validateOptions = require('schema-utils');
+const { getOptions, interpolateName } = require('loader-utils');
 
 const potrace = require('potrace');
 const sharp = require('sharp');
@@ -138,7 +138,7 @@ const schema = {
   additionalProperties: true
 };
 
-export default function(content) {
+module.exports = function loader(content) {
   const options = getOptions(this);
   validateOptions(schema, options, 'Image Loader');
   const callback = this.async();
@@ -171,7 +171,7 @@ export default function(content) {
       potraceToDataUri(content, options.trace).then(() => {
         const filesString = results
           .map(([key, data, outputPath]) => {
-            this.emitFile(outputPath, data);
+            if (options.emitFile) this.emitFile(JSON.parse(outputPath), data);
             return `${key}:${createPublicPath(outputPath)}`;
           })
           .join(',');
@@ -188,6 +188,6 @@ export default function(content) {
   // });
 
   // return `export default ${ JSON.stringify(content) } `;
-}
+};
 
-export const raw = true;
+module.exports.raw = true;

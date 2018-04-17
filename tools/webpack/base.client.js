@@ -13,7 +13,7 @@ const jsTransformer = require('./transformer/js');
 const assetsPath = path.join(process.cwd(), '/assets.json');
 console.log(assetsPath);
 
-const assetsPluginInstance = new AssetsPlugin({ filename: assetsPath });
+const assetsPluginInstance = new AssetsPlugin({ filename: '/assets.json' });
 
 const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line no-underscore-dangle
 
@@ -63,6 +63,7 @@ module.exports = {
         test: /\.(jpe?g|png)$/i,
         loader: path.resolve('./tools/webpack/loaders/image-loader.js'),
         options: {
+          emitFile: true,
           trace: {
             threshold: 180,
             steps: 4,

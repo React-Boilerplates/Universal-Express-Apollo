@@ -1,7 +1,9 @@
 # TODOs
 
-- Add Sessions ✔
-  - Add Session Storage
+- Build a function that will compress GraphQL Schema Strings
+- Setup Helmet-CSP
+- Setup Server-Timing API
+- Add a Rust and WebAssembly Loader
 - Refactor
 - Move more modules to External for production
 - add Responsive/Progressive Image component
@@ -11,14 +13,12 @@
   - Unique
   - deprecated ✔
   - lower ✔
-- Build a function that will compress GraphQL Schema Strings
-- Setup Helmet-CSP
-- Setup Server-Timing API
-- Add a Rust and WebAssembly Loader
+- Add Sessions ✔
+  - Add Session Storage
 - add Dynamic relative css handling ✔
 - Add a Custom Image Loader ✔
-  - Uses `node-potrace` for SVG Path ✔
-  - Uses Data:URL for inline ✔
+  - Uses `node-potrace` and `svgo` for SVG Path ✔
+  - Uses Data:URI for inline ✔
   - Uses `sharp` or `jimp` for image resizing ✔
 - add StyleLint ✔
 - add Express Hot Reload on Routes ✔

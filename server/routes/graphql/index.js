@@ -23,16 +23,16 @@ if (process.env.NODE_ENV !== 'production') {
     bodyParser.json(),
     graphiqlExpress({ endpointURL: '/internal-graphql' })
   );
-  app.use('/internal-graphql', bodyParser.json(), (req, res, next) => {
-    asyncGraphql(internalSchema)(req, res, next);
+  app.use('/internal-graphql', bodyParser.json(), async (req, res, next) => {
+    await asyncGraphql(internalSchema)(req, res, next);
   });
 }
 app.use(
   '/graphql',
   bodyParser.json(),
   apolloUploadExpress(),
-  (req, res, next) => {
-    asyncGraphql(schema)(req, res, next);
+  async (req, res, next) => {
+    await asyncGraphql(schema)(req, res, next);
   }
 );
 

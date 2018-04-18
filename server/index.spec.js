@@ -47,7 +47,7 @@ describe('Server', () => {
   describe('neither prod or dev', () => {
     const env = process.env.NODE_ENV;
     beforeEach(() => {
-      process.env.NODE_ENV = undefined;
+      process.env.NODE_ENV = 'test';
     });
     it('should allow us to start', done => {
       op.find((err, port) =>

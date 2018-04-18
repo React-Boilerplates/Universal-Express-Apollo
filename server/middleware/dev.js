@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies, node/no-missing-require, no-useless-escape */
 import chokidar from 'chokidar';
 import chalk from 'chalk';
+// eslint-disable-next-line no-unused-vars
+import fetch from 'isomorphic-unfetch';
 
 const logger = require('../logger');
 
@@ -41,6 +43,7 @@ function isLikelyASyntaxError(message) {
 }
 
 const func = app => {
+  global.fetch = fetch;
   const watcher = chokidar.watch(
     ['**/server/routes/**/*.js', '**/server/models/**/*.js'],
     {
@@ -49,10 +52,11 @@ const func = app => {
   );
 
   compiler.plugin('done', function(stats) {
-    logger.log('Clearing /client/ module cache from server');
-    Object.keys(require.cache).forEach(id => {
-      if (/[\/\\]client[\/\\]/.test(id)) delete require.cache[id];
-    });
+    // Setup Clearing Cache in Future
+    // logger.log('Clearing /client/ module cache from server');
+    // Object.keys(require.cache).forEach(id => {
+    //   if (/[\/\\]client[\/\\]/.test(id)) delete require.cache[id];
+    // });
     const hasErrors = stats.hasErrors();
     const hasWarnings = stats.hasWarnings();
     if (!hasErrors && !hasWarnings) {

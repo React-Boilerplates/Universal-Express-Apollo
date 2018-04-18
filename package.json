@@ -114,6 +114,7 @@
         "babel-plugin-transform-require-ignore": "0.1.1",
         "casual": "1.5.19",
         "chalk": "^2.4.0",
+        "chokidar": "^2.0.3",
         "clean-webpack-plugin": "0.1.19",
         "copy-webpack-plugin": "4.5.1",
         "css-loader": "^0.28.11",

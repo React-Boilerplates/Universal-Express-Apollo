@@ -17,4 +17,4 @@ app.use(
   graphiqlExpress({ endpointURL: '/graphql' })
 );
 
-export default app;
+module.exports = app;

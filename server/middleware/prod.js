@@ -4,9 +4,9 @@ import helmet from 'helmet';
 import csp from 'helmet-csp';
 import cookieParser from 'cookie-parser';
 import db from '../models';
-import routes from '../routes';
 
 const logger = require('../logger');
+const routes = require('../routes');
 
 const compression = require('compression');
 const jwt = require('jsonwebtoken');

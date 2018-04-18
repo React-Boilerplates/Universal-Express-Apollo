@@ -147,8 +147,9 @@ const func = app => {
   app.use(webpackHot(compiler));
   // eslint-disable-next-line global-require
   app.use((req, res, next) => {
-    require('../routes').default(req, res, next);
+    require('../routes')(req, res, next);
   });
+
   return app;
 };
 

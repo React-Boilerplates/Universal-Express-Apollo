@@ -15,6 +15,7 @@ describe('Server', () => {
     jest.resetModules();
     Helmet.canUseDOM = false;
     styledTools.StyleSheet.reset(true);
+    jest.mock('chokidar');
     jest.mock('webpack-hot-middleware');
     jest.mock('webpack-dev-middleware');
     jest.mock('webpack');
@@ -25,6 +26,7 @@ describe('Server', () => {
     jest.resetModules();
     Helmet.canUseDOM = true;
     styledTools.StyleSheet.reset(false);
+    jest.unmock('chokidar');
     jest.unmock('webpack-hot-middleware');
     jest.unmock('webpack-dev-middleware');
     jest.unmock('webpack');

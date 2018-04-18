@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies, node/no-missing-require, no-useless-escape */
 import chokidar from 'chokidar';
+import morgan from 'morgan';
 import chalk from 'chalk';
 // eslint-disable-next-line no-unused-vars
 import fetch from 'isomorphic-unfetch';
@@ -51,15 +52,22 @@ const func = app => {
     }
   );
 
+  app.use(morgan('dev'));
+
   logger.log('Applying Development Middleware!');
   app.use(compression());
   app.use(express.static('public'));
   app.use(
     webpackDev(compiler, {
-      publicPath: config.output.publicPath
+      publicPath: config.output.publicPath,
+      quiet: true,
+      watchOptions: {
+        ignored: /node_modules/
+      }
     })
   );
-  app.use(webpackHot(compiler));
+  // eslint-disable-next-line no-console
+  app.use(webpackHot(compiler, { log: console.log }));
   // eslint-disable-next-line global-require
   app.use((req, res, next) => {
     require('../routes')(req, res, next);

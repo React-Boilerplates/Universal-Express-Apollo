@@ -77,6 +77,17 @@ I was trying to use other cli/generators and was coming up against some blockers
 - Server-Side-Render
 - Production-Ready
 
+## Rust Coding ??
+
+I added a nice ability to use WebAssembly by the use of Rust.  What you will need to do to allow Rust to compile to WASM is the following.
+
+```bash
+curl https://sh.rustup.rs -sSf | sh
+rustup toolchain install nightly
+rustup target add wasm32-unknown-unknown --toolchain nightly
+npm i -D rust-native-wasm-loader wasm-loader
+```
+
 ## Windows Issues
 
 If you are running into something like the following

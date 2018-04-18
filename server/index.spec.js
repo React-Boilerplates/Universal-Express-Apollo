@@ -120,8 +120,8 @@ describe('Server', () => {
               query: '{users{pageInfo{hasPreviousPage}}}'
             });
           expect(result.statusCode).toBe(200);
-          expect(result.body).toEqual({
-            data: { users: { pageInfo: { hasPreviousPage: false } } }
+          expect({ ...result.body.data }).toEqual({
+            users: { pageInfo: { hasPreviousPage: false } }
           });
         });
       });

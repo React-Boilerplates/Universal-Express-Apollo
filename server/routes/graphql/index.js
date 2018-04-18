@@ -32,4 +32,4 @@ app.use(
   asyncGraphql(schema)
 );
 
-export default app;
+module.exports = app;

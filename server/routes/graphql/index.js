@@ -1,3 +1,4 @@
+import express from 'express';
 import bodyParser from 'body-parser';
 import { apolloUploadExpress } from 'apollo-upload-server';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
@@ -14,28 +15,21 @@ const asyncGraphql = mainSchema => async (req, res, next) => {
   })(req, res, next);
 };
 
-const internalGraphql =
-  process.env.NODE_ENV === 'production'
-    ? () => {}
-    : app => {
-        app.use(
-          '/internal-graphiql',
-          bodyParser.json(),
-          graphiqlExpress({ endpointURL: '/internal-graphql' })
-        );
-        app.use(
-          '/internal-graphql',
-          bodyParser.json(),
-          asyncGraphql(internalSchema)
-        );
-      };
+const app = express.Router();
 
-export default app => {
-  internalGraphql(app);
+if (process.env.NODE_ENV !== 'production') {
   app.use(
-    '/graphql',
+    '/internal-graphiql',
     bodyParser.json(),
-    apolloUploadExpress(/* Options */),
-    asyncGraphql(schema)
+    graphiqlExpress({ endpointURL: '/internal-graphql' })
   );
-};
+  app.use('/internal-graphql', bodyParser.json(), asyncGraphql(internalSchema));
+}
+app.use(
+  '/graphql',
+  bodyParser.json(),
+  apolloUploadExpress(),
+  asyncGraphql(schema)
+);
+
+module.exports = app;

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies, node/no-missing-require */
 /* eslint-env node */
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -21,16 +22,15 @@ const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line n
 const express = require('express');
 // eslint-disable-next-line import/prefer-default-export
 export const createServer = () => {
-  const middleware = __DEV__
-    ? // eslint-disable-next-line node/no-unpublished-require
-      require('./middleware/dev.js') // eslint-disable-line global-require
-    : require('./middleware/prod.js'); // eslint-disable-line global-require
+  const middleware = app =>
+    __DEV__
+      ? // eslint-disable-next-line node/no-unpublished-require
+        require('./middleware/dev.js')(app) // eslint-disable-line global-require
+      : require('./middleware/prod.js')(app); // eslint-disable-line global-require
 
   const app = express();
 
   middleware(app);
-  // eslint-disable-next-line global-require
-  require('./routes').default(app);
 
   const getPage = async ({
     req,

@@ -1,12 +1,14 @@
+process.env.NODE_ENV = 'production';
 const config = require('./base.server');
 const webpack = require('webpack');
-const { envVariables } = require('./constants');
+const { envVariables, extractTextPlugin } = require('./constants');
 
 // const envVariables = Object.assign({}, process.env);
 config.plugins.unshift(
   new webpack.DefinePlugin({
     'process.env': envVariables
-  })
+  }),
+  extractTextPlugin
 );
 
 module.exports = config;

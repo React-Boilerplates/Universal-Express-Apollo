@@ -20,7 +20,6 @@ const createPostModel = (Sequelize = require('sequelize'), sequelize) => {
     // CREATE JOINS
     // relationships.User = models.Post.hasOne(models.User);
 
-    // console.log(postToUser);
     return relationships;
   };
   return Post;

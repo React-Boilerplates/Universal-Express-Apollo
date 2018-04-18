@@ -71,10 +71,30 @@ I was trying to use other cli/generators and was coming up against some blockers
   - PostCSS
     - PreCSS
     - CSSNano
-    - Autoprefixer
+    - CSS-Next
   - Code-Splitting
     - Loadable-Components
 - Server-Side-Render
 - Production-Ready
+
+## Windows Issues
+
+If you are running into something like the following
+
+```bash
+C:\projects\universal-express-apollo\node_modules\readdirp\readdirp.js:55
+    var api          =  require('./stream-api')();
+
+TypeError: require(...) is not a function
+    at readdir (C:\projects\universal-express-apollo\node_modules\readdirp\readdirp.js:55:48)
+```
+
+This is because Chokidar does not seem to work well with Windows Machines.
+Possible Solutions when reading this GitHub issue [Chokidar #312](https://github.com/paulmillr/chokidar/issues/312)
+
+- Watch specific files instead of directories (I am not going to do this as I do not have a windows machine and testing this using Appveyor is taking ages)
+- Take this the Chokidar part of the code and trash it
+
+## Contributing
 
 Take a look and contribute if you would like.  The goal of this is to use modern standards.

@@ -10,6 +10,8 @@ window.__LOADABLE_STATE__ = {
   ]
 };
 
+window.fetch = fetch;
+
 window.location.pathname = '/';
 
 const element = document.createElement('div');

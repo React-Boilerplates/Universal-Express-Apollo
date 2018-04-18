@@ -1,3 +1,4 @@
+/* eslint-disable node/no-missing-require */
 import morgan from 'morgan';
 import helmet from 'helmet';
 import csp from 'helmet-csp';
@@ -5,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import db from '../models';
 
 const logger = require('../logger');
+const routes = require('../routes');
 
 const compression = require('compression');
 const jwt = require('jsonwebtoken');
@@ -98,6 +100,8 @@ const func = app => {
       name: process.env.SESSION_NAME || 'boilerplate'
     })(req, res, next);
   });
+  // eslint-disable-next-line global-require
+  app.use(routes);
   return app;
 };
 

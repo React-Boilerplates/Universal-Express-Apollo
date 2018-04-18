@@ -4,7 +4,9 @@
             "presets": [
                 "@babel/preset-env",
                 "@babel/preset-react",
-                "@babel/preset-stage-1"
+                "@babel/preset-stage-1",
+                "@babel/preset-typescript"
+                // "@babel/preset-flow"
             ],
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
@@ -28,7 +30,9 @@
                     }
                 ],
                 "@babel/preset-stage-1",
-                "@babel/preset-react"
+                "@babel/preset-react",
+                "@babel/preset-typescript"
+                // "@babel/preset-flow"
             ],
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
@@ -58,7 +62,9 @@
                     }
                 ],
                 "@babel/preset-stage-1",
-                "@babel/preset-react"
+                "@babel/preset-react",
+                "@babel/preset-typescript"
+                // "@babel/preset-flow"
             ],
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
@@ -91,7 +97,9 @@
                     }
                 ],
                 "@babel/preset-stage-1",
-                "@babel/preset-react"
+                "@babel/preset-react",
+                "@babel/preset-typescript"
+                // "@babel/preset-flow"
             ],
             "plugins": [
                 "@babel/plugin-transform-react-jsx",
@@ -117,7 +125,9 @@
                     }
                 ],
                 "@babel/preset-stage-1",
-                "@babel/preset-react"
+                "@babel/preset-react",
+                "@babel/preset-typescript"
+                // "@babel/preset-flow"
             ],
             "plugins": [
                 "graphql-tag",

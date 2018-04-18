@@ -1,8 +1,8 @@
 {
     "extends": [
-        "stylelint",
         "airbnb",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "stylelint"
     ],
     "parser": "babel-eslint",
     "parserOptions": {

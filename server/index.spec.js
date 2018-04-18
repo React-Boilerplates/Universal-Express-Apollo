@@ -15,6 +15,10 @@ describe('Server', () => {
     jest.resetModules();
     Helmet.canUseDOM = false;
     styledTools.StyleSheet.reset(true);
+    jest.mock('chokidar');
+    jest.mock('webpack-hot-middleware');
+    jest.mock('webpack-dev-middleware');
+    jest.mock('webpack');
     jest.mock('twilio');
     jest.mock('@sendgrid/mail');
   });
@@ -22,6 +26,10 @@ describe('Server', () => {
     jest.resetModules();
     Helmet.canUseDOM = true;
     styledTools.StyleSheet.reset(false);
+    jest.unmock('chokidar');
+    jest.unmock('webpack-hot-middleware');
+    jest.unmock('webpack-dev-middleware');
+    jest.unmock('webpack');
     jest.unmock('twilio');
     jest.unmock('@sendgrid/mail');
   });
@@ -47,7 +55,7 @@ describe('Server', () => {
   describe('neither prod or dev', () => {
     const env = process.env.NODE_ENV;
     beforeEach(() => {
-      process.env.NODE_ENV = undefined;
+      process.env.NODE_ENV = 'test';
     });
     it('should allow us to start', done => {
       op.find((err, port) =>
@@ -104,6 +112,7 @@ describe('Server', () => {
 
   describe('/graphql', () => {
     beforeEach(() => {
+      process.env.NODE_ENV = 'production';
       jest.resetModules();
       Helmet.canUseDOM = true;
       styledTools.StyleSheet.reset(false);
@@ -119,8 +128,8 @@ describe('Server', () => {
               query: '{users{pageInfo{hasPreviousPage}}}'
             });
           expect(result.statusCode).toBe(200);
-          expect(result.body).toEqual({
-            data: { users: { pageInfo: { hasPreviousPage: false } } }
+          expect({ ...result.body.data }).toEqual({
+            users: { pageInfo: { hasPreviousPage: false } }
           });
         });
       });

@@ -1,12 +1,16 @@
+import express from 'express';
 import { graphiqlExpress } from 'apollo-server-express';
 import bodyParser from 'body-parser';
-import graphql from './graphql';
 
-export default app => {
-  graphql(app);
-  app.use(
-    '/graphiql',
-    bodyParser.json(),
-    graphiqlExpress({ endpointURL: '/graphql' })
-  );
-};
+const graphQl = require('./graphql');
+
+const app = express.Router();
+
+app.use(graphQl);
+app.use(
+  '/graphiql',
+  bodyParser.json(),
+  graphiqlExpress({ endpointURL: '/graphql' })
+);
+
+module.exports = app;

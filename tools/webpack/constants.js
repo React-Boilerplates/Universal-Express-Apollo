@@ -1,4 +1,6 @@
 const dotEnv = require('dotenv');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 const path = require('path');
 
 const envPath = path.join(process.cwd(), '.env');
@@ -48,7 +50,30 @@ const envVariables = JSON.stringify(
     variables
   )
 );
+
+const extractCss = new ExtractTextPlugin({
+  filename: '[name].css'
+});
+
+const sssLoader =
+  process.env.NODE_ENV === 'production'
+    ? extractCss.extract({
+        fallback: 'style-loader',
+        use: [
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'postcss-loader'
+        ]
+      })
+    : [
+        'style-loader',
+        { loader: 'css-loader', options: { importLoaders: 1 } },
+        'postcss-loader'
+      ];
+const extractTextPlugin =
+  process.env.NODE_ENV === 'production' ? extractCss : undefined;
 module.exports = {
   envVariables,
-  hardScripts
+  hardScripts,
+  sssLoader,
+  extractTextPlugin
 };

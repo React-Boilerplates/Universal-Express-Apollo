@@ -18,6 +18,8 @@ const typeDefs = /* GraphQL */ gql`
 
   scalar Date
 
+  scalar Email
+
   enum Role {
     ADMIN
     REVIEWER

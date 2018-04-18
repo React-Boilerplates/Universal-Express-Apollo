@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const path = require('path');
 const validateOptions = require('schema-utils');
 const { getOptions, interpolateName } = require('loader-utils');
@@ -143,7 +144,6 @@ module.exports = function loader(content) {
   validateOptions(schema, options, 'Image Loader');
   const callback = this.async();
   this.addDependency('potrace');
-  // console.log(this);
   const context =
     options.context ||
     this.rootContext ||
@@ -180,14 +180,6 @@ module.exports = function loader(content) {
       })
     )
     .catch(callback);
-  // potrace.posterize(content, options.trace, (err, svg) => {
-  //   if (err) throw err;
-  //   console.log(options.trace);
-  //   this.emitFile(outputPath, svg);
-  //   callback(null, `module.exports = ${ publicPath }; `);
-  // });
-
-  // return `export default ${ JSON.stringify(content) } `;
 };
 
 module.exports.raw = true;

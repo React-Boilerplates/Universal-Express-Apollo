@@ -1,10 +1,11 @@
 # TODOs
 
-- Add Sessions ✔
-  - Add Session Storage
+- Build a function that will compress GraphQL Schema Strings
+- Setup Helmet-CSP
+- Setup Server-Timing API
+- Add a Rust and WebAssembly Loader
 - Refactor
 - Move more modules to External for production
-- add Dynamic relative css handling
 - add Responsive/Progressive Image component
 - Add Custom Schema Directives
   - Auth ✔
@@ -12,15 +13,15 @@
   - Unique
   - deprecated ✔
   - lower ✔
-- Add a Custom Image Loader
-  - Uses `node-potrace` for SVG Path
-  - Uses Data:URL for inline
-  - Uses `sharp` or `jimp` for image resizing
-- Build a function that will compress GraphQL Schema Strings
-- Setup Helmet-CSP
-- Setup Server-Timing API
-- Add a Rust and WebAssembly Loader
+- Add Sessions ✔
+  - Add Session Storage
+- add Dynamic relative css handling ✔
+- Add a Custom Image Loader ✔
+  - Uses `node-potrace` and `svgo` for SVG Path ✔
+  - Uses Data:URI for inline ✔
+  - Uses `sharp` or `jimp` for image resizing ✔
 - add StyleLint ✔
+- add Express Hot Reload on Routes ✔
 - rebuild server/side jest ✔
 - Integrate with Travis CI ✔
 - Add GraphQL File Handling ✔

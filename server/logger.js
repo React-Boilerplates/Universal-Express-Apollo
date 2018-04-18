@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/* eslint-disable no-console */
 const AirbrakeClient = require('airbrake-js');
 const winston = require('winston');
 

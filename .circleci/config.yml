@@ -32,17 +32,16 @@ jobs:
 
       - run: npm install
 
-      # - run: echo '{"app":{"js":"/assets/app.ca83982d2615c67aa736.js"},"vendor":{"js":"/assets/vendor.ca83982d2615c67aa736.js"}}' > assets.json
+      - run: npm run assets
 
       - run:
           name: Test Packages
           command: npm run test:silent
+      
+      
 
       - save_cache:
           name: Save node_modules cache
           key: v1-node-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
-        
-      # run tests!
-      - run: npm test

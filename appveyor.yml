@@ -4,9 +4,12 @@ environment:
   nodejs_version: "8"
 platform: x64
 
+init:
+  - git config --global core.autocrlf input
+
 # Install scripts. (runs after repo cloning)
 install:
-  # - echo {"app":{"js":"/assets/app.ca83982d2615c67aa736.js"},"vendor":{"js":"/assets/vendor.ca83982d2615c67aa736.js"}} > assets.json
+  - echo {"app":{"js":"/assets/app.js"},"vendor":{"js":"/assets/vendor.js"}} > assets.json
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version x64
   # install modules
@@ -19,6 +22,7 @@ test_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
+  - npm run assets:windows
   # run tests
   - npm run test:silent
 

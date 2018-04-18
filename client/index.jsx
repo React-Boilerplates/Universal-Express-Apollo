@@ -6,6 +6,8 @@ import { loadComponents } from 'loadable-components';
 import logger from './logger';
 import App from './App';
 
+// const cats = require('./cats.jpg');
+
 const rootElement = document.getElementById('root');
 
 const render = element => {

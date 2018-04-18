@@ -14,20 +14,7 @@
                 "babel-plugin-dynamic-import-node",
                 "loadable-components/babel",
                 "react-hot-loader/babel",
-                "babel-plugin-styled-components",
-                [
-                    "babel-plugin-transform-require-ignore",
-                    {
-                        "extensions": [
-                            ".less",
-                            ".sass",
-                            ".css",
-                            "jpg",
-                            "jpeg",
-                            "png"
-                        ]
-                    }
-                ]
+                "babel-plugin-styled-components"
             ]
         },
         "server": {
@@ -55,19 +42,6 @@
                     "babel-plugin-styled-components",
                     {
                         "ssr": true
-                    }
-                ],
-                [
-                    "babel-plugin-transform-require-ignore",
-                    {
-                        "extensions": [
-                            ".less",
-                            ".sass",
-                            ".css",
-                            "jpg",
-                            "jpeg",
-                            "png"
-                        ]
                     }
                 ],
                 "transform-react-remove-prop-types"

@@ -24,6 +24,17 @@ module.exports = {
     '\\.(css|less)$': '<rootDir>/tools/jest/fileTransformer.js',
     'sw-loader!./sw': '<rootDir>/tools/jest/fileTransformer.js'
   },
+  watchPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/tools/',
+    '<rootDir>/.circleci/',
+    '<rootDir>/build/',
+    '<rootDir>/logs/',
+    '<rootDir>/public/',
+    '<rootDir>/static/',
+    '<rootDir>/*.js',
+    '<rootDir>/*.json'
+  ],
   snapshotSerializers: ['enzyme-to-json/serializer'],
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['json', 'lcov']

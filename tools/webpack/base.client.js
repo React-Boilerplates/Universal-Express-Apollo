@@ -10,7 +10,10 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const cssTransformer = require('./transformer/css');
 const jsTransformer = require('./transformer/js');
 
-const assetsPluginInstance = new AssetsPlugin({ filename: './assets.json' });
+const assetsPath = path.join(process.cwd(), '/assets.json');
+console.log(assetsPath);
+
+const assetsPluginInstance = new AssetsPlugin({ filename: '/assets.json' });
 
 const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line no-underscore-dangle
 
@@ -58,10 +61,24 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png)$/i,
-        loader: 'responsive-loader',
+        loader: path.resolve('./tools/webpack/loaders/image-loader.js'),
         options: {
-          // eslint-disable-next-line global-require
-          adapter: require('responsive-loader/sharp')
+          emitFile: true,
+          trace: {
+            threshold: 180,
+            steps: 4,
+            color: '#880000',
+            optimize: {
+              multipass: true,
+              floatPrecision: 2,
+              plugins: [
+                { removeDoctype: false },
+                { convertColors: { shorthex: false } },
+                { removeRasterImages: { param: true } }
+              ]
+            }
+          },
+          sizes: [{ size: 500, fileType: '.png' }]
         }
       }
     ]

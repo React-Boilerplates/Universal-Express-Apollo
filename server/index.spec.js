@@ -104,6 +104,7 @@ describe('Server', () => {
 
   describe('/graphql', () => {
     beforeEach(() => {
+      process.env.NODE_ENV = 'production';
       jest.resetModules();
       Helmet.canUseDOM = true;
       styledTools.StyleSheet.reset(false);

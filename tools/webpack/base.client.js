@@ -54,20 +54,20 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: 'eslint-loader'
       },
-      {
-        test: /\.rs$/,
-        use: [
-          {
-            loader: 'wasm-loader'
-          },
-          {
-            loader: 'rust-native-wasm-loader',
-            options: {
-              release: true
-            }
-          }
-        ]
-      },
+      // {
+      //   test: /\.rs$/,
+      //   use: [
+      //     {
+      //       loader: 'wasm-loader'
+      //     },
+      //     {
+      //       loader: 'rust-native-wasm-loader',
+      //       options: {
+      //         release: true
+      //       }
+      //     }
+      //   ]
+      // },
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,

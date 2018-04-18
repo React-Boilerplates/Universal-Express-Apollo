@@ -66,3 +66,6 @@ database.*
 *.db
 .vscode/temp.sql
 
+/target/
+**/*.rs.bk
+Cargo.lock

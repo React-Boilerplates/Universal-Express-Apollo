@@ -51,6 +51,20 @@ const func = app => {
     }
   );
 
+  logger.log('Applying Development Middleware!');
+  app.use(compression());
+  app.use(express.static('public'));
+  app.use(
+    webpackDev(compiler, {
+      publicPath: config.output.publicPath
+    })
+  );
+  app.use(webpackHot(compiler));
+  // eslint-disable-next-line global-require
+  app.use((req, res, next) => {
+    require('../routes')(req, res, next);
+  });
+
   compiler.plugin('done', function(stats) {
     // Setup Clearing Cache in Future
     // logger.log('Clearing /client/ module cache from server');
@@ -135,19 +149,6 @@ const func = app => {
         }
       });
     });
-  });
-  logger.log('Applying Development Middleware!');
-  app.use(compression());
-  app.use(express.static('public'));
-  app.use(
-    webpackDev(compiler, {
-      publicPath: config.output.publicPath
-    })
-  );
-  app.use(webpackHot(compiler));
-  // eslint-disable-next-line global-require
-  app.use((req, res, next) => {
-    require('../routes')(req, res, next);
   });
 
   return app;

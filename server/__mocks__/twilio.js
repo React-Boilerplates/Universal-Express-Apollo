@@ -1,5 +1,3 @@
-// const twil = jest.genMockFromModule('twilio');
-// console.log(twil);
 class Twilio {
   constructor(id, token) {
     this.id = id;
@@ -7,7 +5,7 @@ class Twilio {
   }
 
   messages = {
-    create: jest.fn(() => ({ id: 'asdf' }))
+    create: jest.fn(() => ({ id: '' }))
   };
 }
 

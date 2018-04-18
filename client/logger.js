@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/* eslint-disable no-console */
 const AirbrakeClient =
   typeof window.airbrakeJs === 'undefined'
     ? require('airbrake-js')

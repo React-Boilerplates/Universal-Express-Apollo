@@ -21,6 +21,7 @@
   - Uses Data:URL for inline ✔
   - Uses `sharp` or `jimp` for image resizing ✔
 - add StyleLint ✔
+- add Express Hot Reload on Routes ✔
 - rebuild server/side jest ✔
 - Integrate with Travis CI ✔
 - Add GraphQL File Handling ✔

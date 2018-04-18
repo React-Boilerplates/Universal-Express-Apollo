@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies, node/no-missing-require, no-useless-escape, no-console */
+/* eslint-disable import/no-extraneous-dependencies, node/no-missing-require, no-useless-escape */
 import chokidar from 'chokidar';
 
 const logger = require('../logger');
@@ -23,22 +23,22 @@ const func = app => {
   );
 
   compiler.plugin('done', function() {
-    console.log('Clearing /client/ module cache from server');
+    logger.log('Clearing /client/ module cache from server');
     Object.keys(require.cache).forEach(id => {
       if (/[\/\\]client[\/\\]/.test(id)) delete require.cache[id];
     });
   });
 
   watcher.on('ready', () => {
-    console.log('watcher is READY!');
+    logger.log('watcher is READY!');
     watcher.on('all', () => {
       Object.keys(require.cache).forEach(id => {
         if (/[\/\\]server[\/\\]/.test(id)) {
-          console.log('deleting cache for module:', id);
+          logger.log('deleting cache for module:', id);
           try {
             delete require.cache[id];
           } catch (e) {
-            console.log(e);
+            logger.log(e);
           }
         }
       });

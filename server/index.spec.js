@@ -15,6 +15,9 @@ describe('Server', () => {
     jest.resetModules();
     Helmet.canUseDOM = false;
     styledTools.StyleSheet.reset(true);
+    jest.mock('webpack-hot-middleware');
+    jest.mock('webpack-dev-middleware');
+    jest.mock('webpack');
     jest.mock('twilio');
     jest.mock('@sendgrid/mail');
   });
@@ -22,6 +25,9 @@ describe('Server', () => {
     jest.resetModules();
     Helmet.canUseDOM = true;
     styledTools.StyleSheet.reset(false);
+    jest.unmock('webpack-hot-middleware');
+    jest.unmock('webpack-dev-middleware');
+    jest.unmock('webpack');
     jest.unmock('twilio');
     jest.unmock('@sendgrid/mail');
   });

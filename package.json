@@ -150,7 +150,7 @@
         "service-worker-mock": "1.9.1",
         "sharp": "0.20.1",
         "sinon": "4.5.0",
-        "style-loader": "0.20.3",
+        "style-loader": "0.21.0",
         "stylelint": "9.2.0",
         "stylelint-config-recommended": "2.1.0",
         "stylelint-config-styled-components": "0.1.1",

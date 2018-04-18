@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies, node/no-missing-require */
 /* eslint-env node */
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -29,8 +30,6 @@ export const createServer = () => {
   const app = express();
 
   middleware(app);
-  // eslint-disable-next-line global-require
-  require('./routes').default(app);
 
   const getPage = async ({
     req,

@@ -2,7 +2,6 @@
   "eslint.enable": true,
   "git.ignoreLimitWarning": true,
   "stylelint.enable": true,
-  "stylelint.config": "./.stylelintrc",
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,

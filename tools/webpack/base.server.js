@@ -1,4 +1,5 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MakeDirWebpackPlugin = require('make-dir-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 const { sssLoader } = require('./constants');
@@ -71,6 +72,9 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['build', 'logs'], {
       root: process.cwd()
+    }),
+    new MakeDirWebpackPlugin({
+      dirs: [{ path: './logs' }]
     })
   ],
   target: 'node'

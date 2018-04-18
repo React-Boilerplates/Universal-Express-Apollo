@@ -1,8 +1,10 @@
+/* eslint-disable node/no-missing-require */
 import morgan from 'morgan';
 import helmet from 'helmet';
 import csp from 'helmet-csp';
 import cookieParser from 'cookie-parser';
 import db from '../models';
+import routes from '../routes';
 
 const logger = require('../logger');
 
@@ -98,6 +100,8 @@ const func = app => {
       name: process.env.SESSION_NAME || 'boilerplate'
     })(req, res, next);
   });
+  // eslint-disable-next-line global-require
+  app.use(routes);
   return app;
 };
 

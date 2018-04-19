@@ -78,6 +78,7 @@
             {
                 "devDependencies": [
                     "**/*.test.js",
+                    "test_utilities/**/*.js",
                     "**/*.dev.js",
                     "**/dev.js",
                     "**/*.test.jsx",

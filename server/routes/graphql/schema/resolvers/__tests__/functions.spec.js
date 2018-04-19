@@ -25,11 +25,12 @@ const emptyFolder = done => {
   });
 };
 
-const imagePath = path.join(__dirname, 'cats.jpeg');
+const filename = 'cats.jpg';
 
-const filename = 'cats.jpeg';
-const mimetype = 'cats.jpeg';
-const encoding = 'cats.jpeg';
+const imagePath = path.join(__dirname, filename);
+
+const mimetype = filename;
+const encoding = filename;
 
 const createDb = () => ({
   models: {
@@ -54,7 +55,7 @@ describe('Functions', () => {
           stream: createStream(),
           id,
           sizes: [20, 80, 60],
-          filename: 'cats.jpeg'
+          filename
         },
         createDb()
       );
@@ -102,7 +103,7 @@ describe('Functions', () => {
             stream: createStream(),
             id,
             sizes: [20, 80, 60],
-            filename: 'cats.jpeg'
+            filename
           },
           createDb()
         );

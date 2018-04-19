@@ -5,8 +5,6 @@ const groupById = list => list.reduce((p, c) => ({ ...p, [c.id]: c }), {});
 // eslint-disable-next-line no-unused-vars
 module.exports = (user, db) => {
   const Loader = {
-    posts: new DataLoader(keys => Loader.genPosts(keys)),
-    users: new DataLoader(keys => Loader.genPersons(keys)),
     genPosts: async ids => {
       const result = await db.models.Post.findAll({
         where: {
@@ -28,5 +26,7 @@ module.exports = (user, db) => {
       return ids.map(id => result[id] || null);
     }
   };
+  Loader.posts = new DataLoader(keys => Loader.genPosts(keys));
+  Loader.users = new DataLoader(keys => Loader.genPersons(keys));
   return Loader;
 };

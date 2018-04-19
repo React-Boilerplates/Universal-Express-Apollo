@@ -1,15 +1,18 @@
 const webpack = () => {
   return {
-    plugin: (string, callback) => {
-      const stats = {
-        hasErrors: () => false,
-        hasWarnings: () => false,
-        toJson: () => ({
-          errors: [],
-          warnings: []
-        })
-      };
-      callback(stats);
+    stats: {
+      hasErrors: () => false,
+      hasWarnings: () => false,
+      toJson: () => ({
+        errors: [],
+        warnings: []
+      })
+    },
+    plugin(string, callback) {
+      callback(this.stats);
+    },
+    run(callback) {
+      callback(null, this.stats);
     }
   };
 };

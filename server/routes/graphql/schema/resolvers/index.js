@@ -5,20 +5,14 @@ import {
 import { GraphQLUpload } from 'apollo-upload-server';
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
+import { processFile, processImage } from './functions';
 
 const jwt = require('jsonwebtoken');
-const sgMail = require('@sendgrid/mail');
-const Twilio = require('twilio');
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || 'abc');
-const twilioClient = new Twilio(
-  process.env.TWILIO_ACCT_ID || 'abc',
-  process.env.TWILIO_AUTH_TOKEN || 'abc'
-);
 
 const cookieSecret = process.env.COOKIE_SECRET;
 
 const resolvers = {
+  Upload: GraphQLUpload,
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
@@ -88,9 +82,12 @@ const resolvers = {
         user: user.get(),
         token: jwt.sign({ id: user.id }, cookieSecret)
       };
-    }
+    },
+    // singleImage(file: Upload): ImageAsset
+    singleImage: (parent, { file, sizes }, context) =>
+      processImage(file, sizes, context),
+    singleUpload: (parent, { file }, context) => processFile(file, context)
   },
-  Upload: GraphQLUpload,
   Person: {
     posts: async (parent, args, context) =>
       connectionFromPromisedArray(
@@ -110,35 +107,4 @@ const resolvers = {
 };
 
 export default resolvers;
-
-export const internalResolvers = {
-  Mutation: {
-    sendSms: async (
-      parent,
-      { message: { from = process.env.TWILIO_FROM_NUMBER, ...msg } }
-    ) => {
-      const message = await twilioClient.messages.create({
-        from,
-        ...msg
-      });
-      return message.sid;
-    },
-    sendEmail: async (
-      parent,
-      {
-        message: {
-          from = process.env.DEFAULT_EMAIL_REPLY_TO,
-          replyTo = process.env.DEFAULT_EMAIL_REPLY_TO,
-          ...message
-        }
-      }
-    ) => {
-      await sgMail.send({
-        from,
-        replyTo,
-        ...message
-      });
-      return 'Success!';
-    }
-  }
-};
+export { default as internalResolvers } from './internal';

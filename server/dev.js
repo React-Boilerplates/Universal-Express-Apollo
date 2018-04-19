@@ -30,6 +30,8 @@ webpack(config, err => {
     require.extensions[extension] = () => ({});
   });
 
+  require.extensions['.rs'] = () => Promise.resolve({});
+
   const processPort = process.env.PORT;
   require('.').startServer(processPort); // eslint-disable-line global-require
 });

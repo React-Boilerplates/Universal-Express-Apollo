@@ -1,4 +1,5 @@
 import casual from 'casual';
+import Sequelize from 'sequelize';
 
 export const loader = {
   load: () => ({})
@@ -7,7 +8,16 @@ export const loader = {
 export const model = result => ({
   async findAll() {
     return result;
-  }
+  },
+  create: async input => ({
+    input,
+    get(str) {
+      return this.input[str];
+    },
+    toJSON() {
+      return input;
+    }
+  })
 });
 
 export const createDb = result => ({
@@ -17,8 +27,10 @@ export const createDb = result => ({
   },
   models: {
     Post: model(result),
+    File: model(result),
     User: model(result)
-  }
+  },
+  Sequelize
 });
 
 export const createPost = () => ({

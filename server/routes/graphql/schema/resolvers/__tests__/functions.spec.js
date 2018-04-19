@@ -2,6 +2,7 @@ import fs from 'fs';
 import rimraf from 'rimraf';
 import path from 'path';
 import Sequelize from 'sequelize';
+import { createDb } from '../../../../../../test_utilities';
 import {
   createAlternateImageSizes,
   uploadDir,
@@ -31,18 +32,6 @@ const imagePath = path.join(__dirname, filename);
 
 const mimetype = filename;
 const encoding = filename;
-
-const createDb = () => ({
-  models: {
-    File: {
-      create: () => ({
-        toJSON() {
-          return {};
-        }
-      })
-    }
-  }
-});
 
 const createStream = () => fs.createReadStream(imagePath);
 

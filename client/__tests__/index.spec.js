@@ -10,6 +10,13 @@ window.__LOADABLE_STATE__ = {
   ]
 };
 
+global.console = {
+  warn: jest.fn(),
+  info: jest.fn(),
+  log: jest.fn(),
+  error: jest.fn()
+};
+
 window.fetch = fetch;
 
 window.location.pathname = '/';

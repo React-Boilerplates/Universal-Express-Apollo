@@ -19,7 +19,7 @@ describe.skip('Assets', () => {
       done();
     });
   });
-  it('should exist', () => {
+  it.skip('should exist', () => {
     // eslint-disable-next-line global-require, import/no-dynamic-require
     expect(require(assetsPath)).toEqual({
       app: { js: '/assets/app.js' },

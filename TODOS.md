@@ -7,6 +7,14 @@
 - Refactor
 - Move more modules to External for production
 - add Responsive/Progressive Image component
+- GraphQL make it so that when uploading an Image it saves Many different versions of it.
+  - Make it Mimic the Image Loader API
+  - Create GraphQL type
+- Add a Custom Image Loader ✔
+  - Uses `node-potrace` and `svgo` for SVG Path ✔
+  - Uses Data:URI for inline ✔
+  - Uses `sharp` or `jimp` for image resizing ✔
+  - Returns Original in Main
 - Add Custom Schema Directives
   - Auth ✔
   - ReadOnly
@@ -16,10 +24,6 @@
 - Add Sessions ✔
   - Add Session Storage
 - add Dynamic relative css handling ✔
-- Add a Custom Image Loader ✔
-  - Uses `node-potrace` and `svgo` for SVG Path ✔
-  - Uses Data:URI for inline ✔
-  - Uses `sharp` or `jimp` for image resizing ✔
 - add StyleLint ✔
 - add Express Hot Reload on Routes ✔
 - rebuild server/side jest ✔

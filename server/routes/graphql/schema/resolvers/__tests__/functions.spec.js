@@ -1,14 +1,16 @@
 import fs from 'fs';
 import rimraf from 'rimraf';
+import casual from 'casual';
 import path from 'path';
-import Sequelize from 'sequelize';
 import { createDb } from '../../../../../../test_utilities';
-import {
+
+process.cwd = () => path.resolve('./');
+const {
   createAlternateImageSizes,
   uploadDir,
   processFile,
   processImage
-} from '../functions';
+} = require('../functions');
 
 const removeFolder = done => {
   rimraf(uploadDir, () => {
@@ -37,7 +39,7 @@ const createStream = () => fs.createReadStream(imagePath);
 
 describe('Functions', () => {
   describe('createAlternateImageSizes', () => {
-    const id = Sequelize.UUIDV4();
+    const id = casual.uuid;
     it('should process the stream', async () => {
       await createAlternateImageSizes(
         {
@@ -77,16 +79,17 @@ describe('Functions', () => {
     });
   });
   describe('scaffolding', () => {
-    describe('dry-run', () => {
-      beforeEach(removeFolder);
+    xdescribe('dry-run', () => {
+      beforeAll(removeFolder);
       it('should create folders', () => {
         require('../functions');
       });
     });
-    describe('main folder exists', () => {
-      beforeEach(emptyFolder);
+    xdescribe('main folder exists', () => {
+      beforeAll(emptyFolder);
       it('should create folders', async () => {
-        const id = Sequelize.UUIDV4();
+        const id = casual.uuid;
+
         await createAlternateImageSizes(
           {
             stream: createStream(),

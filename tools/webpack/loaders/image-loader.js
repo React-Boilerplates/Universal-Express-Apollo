@@ -1,61 +1,26 @@
 /* eslint-disable no-console */
-const path = require('path');
+// const path = require('path');
+const fs = require('fs');
+
+const DataURI = require('datauri');
 const validateOptions = require('schema-utils');
 const { getOptions, interpolateName } = require('loader-utils');
 
-const potrace = require('potrace');
-const sharp = require('sharp');
-
-const pathMaker = (outputPath, prefix, ...options) => {
-  const urlPath = JSON.stringify(
-    `${prefix}/${options.join('-')}-${outputPath}`.replace('//', '/')
-  );
-  return urlPath;
+const defaultOptions = {
+  emitFile: true,
+  sizeOpts: {
+    dataUri: false,
+    emitFile: true
+  },
+  svgOptimize: { multipass: true, floatPrecision: 1 },
+  svgOpts: {
+    threshold: 180,
+    steps: 1,
+    color: '#880000'
+  },
+  dataUri: false,
+  sizes: []
 };
-
-const optimize = (svg, options = { multipass: true, floatPrecision: 2 }) => {
-  // eslint-disable-next-line global-require
-  const SVGO = require(`svgo`);
-  const svgo = new SVGO(options);
-  return new Promise((resolve, reject) =>
-    svgo
-      .optimize(svg)
-      .then(({ data }) => resolve(data))
-      .catch(reject)
-  );
-};
-
-const createPublicPath = outputPath =>
-  ` __webpack_public_path__ + ${outputPath}`;
-
-const promisePotrace = (key, content, options, url, context) =>
-  new Promise((resolve, reject) => {
-    let outputPath = url;
-
-    if (context.outputPath) {
-      if (typeof context.outputPath === 'function') {
-        outputPath = context.outputPath(url);
-      } else {
-        outputPath = path.posix.join(context.outputPath, url);
-      }
-    }
-
-    const filepath = pathMaker(
-      outputPath.replace(/\..[^.]*$/gm, '.svg'),
-      'trace/',
-      'vector'
-    );
-
-    return potrace.posterize(content, options, (err, svg) => {
-      if (err) return reject(err);
-      if (options.optimize) {
-        return optimize(svg, options.optimize).then(result => {
-          resolve([key, result].concat([filepath]));
-        });
-      }
-      return resolve([key, svg].concat([filepath]));
-    });
-  });
 
 function encodeOptimizedSVGDataUri(svgString) {
   const uriPayload = encodeURIComponent(svgString) // encode URL-unsafe characters
@@ -69,59 +34,90 @@ function encodeOptimizedSVGDataUri(svgString) {
   return `data:image/svg+xml,${uriPayload}`;
 }
 
-const potraceToDataUri = (content, options) =>
+const optimize = (svg, options = { multipass: true, floatPrecision: 1 }) => {
+  // eslint-disable-next-line global-require
+  const SVGO = require(`svgo`);
+  const svgo = new SVGO(options);
+  return new Promise((resolve, reject) =>
+    svgo
+      .optimize(svg)
+      .then(({ data }) => resolve(encodeOptimizedSVGDataUri(data)))
+      .catch(reject)
+  );
+};
+
+const potrace = require('potrace');
+
+const createSvg = (
+  content,
+  options = {
+    threshold: 180,
+    steps: 1,
+    color: '#880000'
+  }
+) =>
   new Promise((resolve, reject) => {
     potrace.posterize(content, options, (err, svg) => {
       if (err) return reject(err);
-
-      if (options.optimize) {
-        return optimize(svg, options.optimize)
-          .then(data => {
-            const string = encodeOptimizedSVGDataUri(data);
-            resolve(string);
-          })
-          .catch(error => {
-            console.log(error);
-            reject(error);
-          });
-      }
-      return resolve(encodeOptimizedSVGDataUri(svg));
+      return resolve(svg);
     });
   });
+const sharp = require('sharp');
 
-const promiseSharp = (key, content, options, url, context) =>
-  new Promise((resolve, reject) => {
-    let result = sharp(content);
-
-    let outputPath = url;
-
-    if (context.outputPath) {
-      if (typeof context.outputPath === 'function') {
-        outputPath = context.outputPath(url);
-      } else {
-        outputPath = path.posix.join(context.outputPath, url);
-      }
-    }
-    if (options.size) result = result.resize(options.size);
-    return result
-      .toBuffer()
-      .then(data =>
-        resolve(
-          [key, data.toString()].concat([
-            pathMaker(
-              outputPath.replace(/\..[^.]*$/gm, options.fileType),
-              'img/vars/',
-              options.size
-            )
-          ])
-        )
-      )
-      .catch(reject);
-  });
+const createTempPath = path => `<public-path>/${path}`;
+const transformPaths = string =>
+  string.replace(
+    // eslint-disable-next-line no-useless-escape
+    /"(<public-path>)([\/\d\w.-]*)"/g,
+    '__webpack_public_path__ + "$2"'
+  );
 
 const schema = {
   type: 'object',
   properties: {
+    sizeOpts: {
+      type: 'object',
+      properties: {
+        dataUri: {
+          type: 'boolean'
+        },
+        emitFile: {
+          type: 'boolean'
+        }
+      }
+    },
+    svgOptimize: {
+      type: 'object',
+      properties: {
+        multipass: {
+          type: 'boolean'
+        },
+        floatPrecision: {
+          type: 'number'
+        }
+      }
+    },
+    svgOpts: {
+      type: 'object',
+      properties: {
+        threshold: {
+          type: 'number'
+        },
+        steps: {
+          type: 'number'
+        },
+        color: {
+          type: 'string'
+        }
+      }
+    },
+    dataUri: {
+      type: 'boolean'
+    },
+    sizes: {
+      type: 'array',
+      properties: {}
+    },
     name: {},
     regExp: {},
     context: {
@@ -139,46 +135,88 @@ const schema = {
   additionalProperties: true
 };
 
+const resources = () => ({
+  items: []
+});
+
+const counter = resources();
+
 module.exports = function loader(content) {
-  const options = getOptions(this);
-  validateOptions(schema, options, 'Image Loader');
+  const options = Object.assign({}, defaultOptions, getOptions(this));
+  if (counter.items.includes(this.resourcePath)) return '';
+  counter.items.push(this.resourcePath);
+  console.log(options);
+  if (typeof this.query === 'string') {
+    content = fs.readFileSync(this.resourcePath);
+  }
+  validateOptions(schema, options, 'image-loader');
   const callback = this.async();
-  this.addDependency('potrace');
-  const context =
-    options.context ||
-    this.rootContext ||
-    (this.options && this.options.context);
-
-  const url = interpolateName(this, options.name, {
-    context,
-    content,
-    regExp: options.regExp
-  });
-
-  Promise.all(
-    [
-      options.trace &&
-        promisePotrace('trace', content, options.trace, url, options)
-    ].concat(
-      options.sizes
-        ? options.sizes.map(option =>
-            promiseSharp(option.size, content, option, url, options)
-          )
-        : []
-    )
+  return Promise.all(
+    options.sizes.map(size => {
+      return Promise.all([
+        sharp(content)
+          .resize(+size)
+          .toBuffer(),
+        sharp(content)
+          .resize(+size)
+          .metadata()
+      ]).then(([buffer, { width, height, format }]) => {
+        let dataUri;
+        const name = interpolateName(this, `${size}/[hash:8]-[name].[ext]`, {
+          content: buffer
+        });
+        if (options.sizeOpts.dataUri) {
+          const datauri = new DataURI();
+          datauri.format(format, buffer);
+          dataUri = datauri.content;
+        }
+        if (options.sizeOpts.emitFile) {
+          this.emitFile(name, buffer);
+        }
+        return {
+          width,
+          height,
+          format,
+          dataUri,
+          url: createTempPath(name)
+        };
+      });
+    })
   )
-    .then(results =>
-      potraceToDataUri(content, options.trace).then(() => {
-        const filesString = results
-          .map(([key, data, outputPath]) => {
-            if (options.emitFile) this.emitFile(JSON.parse(outputPath), data);
-            return `${key}:${createPublicPath(outputPath)}`;
-          })
-          .join(',');
-
-        callback(null, `module.exports = {${filesString}};`);
-      })
-    )
+    .then(images => {
+      const name = interpolateName(this, `[hash:8]-[name].[ext]`, {
+        content
+      });
+      if (options.emitFile) {
+        this.emitFile(name, content);
+      }
+      return Promise.all([
+        sharp(content).metadata(),
+        options.svgOpts.dataUri
+          ? createSvg(content, options.svgOpts).then(svg =>
+            optimize(svg, options.svgOptimize)
+          )
+          : Promise.resolve()
+      ]).then(([{ width, height, format }, svg]) => {
+        let dataUri;
+        if (options.dataUri) {
+          const datauri = new DataURI();
+          datauri.format(format, content);
+          dataUri = datauri.content;
+        }
+        const output = JSON.stringify({
+          width,
+          height,
+          dataUri,
+          svg,
+          format,
+          url: createTempPath(name),
+          images
+        });
+        const result = `module.exports = ${transformPaths(output)}`;
+        callback(null, result);
+      });
+    })
     .catch(callback);
 };
 

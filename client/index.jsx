@@ -5,9 +5,9 @@ import ReactDOM from 'react-dom';
 import { loadComponents } from 'loadable-components';
 import logger from './logger';
 import App from './App';
-// import { add, wasmBooted } from '../src/lib.rs';
 
-// const cats = require('./style.sss');
+// require('image-loader?emitFile&sizes[]=200&-dataUri!./cats.jpg');
+// import { add, wasmBooted } from '../src/lib.rs';
 
 const rootElement = document.getElementById('root');
 
@@ -21,7 +21,7 @@ const render = element => {
   // wasmBooted.then(() => {
   //   console.log('return value was', add(2, 3));
   // });
-  return loadComponents().then(() => {
+  return Promise.all([loadComponents()]).then(() => {
     ReactDOM.hydrate(<App />, element);
   });
 };

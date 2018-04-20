@@ -9,9 +9,9 @@ init:
 
 # Install scripts. (runs after repo cloning)
 install:
-  - echo {"app":{"js":"/assets/app.js"},"vendor":{"js":"/assets/vendor.js"}} > assets.json
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version x64
+  - npm run assets:windows
   # install modules
   # - rd -r node_modules
   - npm install
@@ -22,7 +22,6 @@ test_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
-  - npm run assets:windows
   # run tests
   - npm run test:silent
 
@@ -31,7 +30,7 @@ build:
   verbosity: minimal
 
 cache:
-  #- node_modules
+  - node_modules -> appveyor.yml
 
 
 skip_commits:

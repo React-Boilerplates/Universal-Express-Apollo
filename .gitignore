@@ -65,7 +65,9 @@ assets.json
 database.*
 *.db
 .vscode/temp.sql
+.vscode/last.sql
 
 /target/
 **/*.rs.bk
 Cargo.lock
+/uploads

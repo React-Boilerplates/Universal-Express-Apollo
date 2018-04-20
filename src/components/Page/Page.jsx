@@ -65,7 +65,8 @@ const Page = ({ query, match, title, children, root, paginate }) => (
 );
 
 Page.propTypes = {
-  query: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  query: PropTypes.object.isRequired,
   paginate: PropTypes.bool,
   title: PropTypes.string,
   root: PropTypes.string,

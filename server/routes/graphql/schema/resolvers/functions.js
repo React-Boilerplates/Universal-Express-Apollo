@@ -20,7 +20,7 @@ const dirExists = async path => {
     return false;
   }
 };
-const createUploadDir = async dir => {
+export const createUploadDir = async dir => {
   try {
     if (!(await dirExists(dir))) {
       await mkdirAsync(dir);
@@ -31,7 +31,7 @@ const createUploadDir = async dir => {
   return undefined;
 };
 
-createUploadDir(uploadDir);
+// createUploadDir(uploadDir);
 
 const storeFS = ({ stream, filename }) => {
   const id = Sequelize.UUIDV4();

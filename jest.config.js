@@ -12,6 +12,7 @@ module.exports = {
     '!**/build/**',
     '!**/static/**',
     '!**/tools/**',
+    '!**/test_utilities/**',
     '!**/jest.*.js',
     '!**/dev.*.js',
     '!**/dev.js',

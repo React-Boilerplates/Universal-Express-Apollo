@@ -1,13 +1,16 @@
 import fs from 'fs';
 import rimraf from 'rimraf';
+import casual from 'casual';
 import path from 'path';
-import Sequelize from 'sequelize';
-import {
+import { createDb } from '../../../../../../test_utilities';
+
+process.cwd = () => path.resolve('./');
+const {
   createAlternateImageSizes,
   uploadDir,
   processFile,
   processImage
-} from '../functions';
+} = require('../functions');
 
 const removeFolder = done => {
   rimraf(uploadDir, () => {
@@ -25,36 +28,25 @@ const emptyFolder = done => {
   });
 };
 
-const imagePath = path.join(__dirname, 'cats.jpeg');
+const filename = 'cats.jpg';
 
-const filename = 'cats.jpeg';
-const mimetype = 'cats.jpeg';
-const encoding = 'cats.jpeg';
+const imagePath = path.join(__dirname, filename);
 
-const createDb = () => ({
-  models: {
-    File: {
-      create: () => ({
-        toJSON() {
-          return {};
-        }
-      })
-    }
-  }
-});
+const mimetype = filename;
+const encoding = filename;
 
 const createStream = () => fs.createReadStream(imagePath);
 
 describe('Functions', () => {
   describe('createAlternateImageSizes', () => {
-    const id = Sequelize.UUIDV4();
+    const id = casual.uuid;
     it('should process the stream', async () => {
       await createAlternateImageSizes(
         {
           stream: createStream(),
           id,
           sizes: [20, 80, 60],
-          filename: 'cats.jpeg'
+          filename
         },
         createDb()
       );
@@ -87,22 +79,23 @@ describe('Functions', () => {
     });
   });
   describe('scaffolding', () => {
-    describe('dry-run', () => {
-      beforeEach(removeFolder);
+    xdescribe('dry-run', () => {
+      beforeAll(removeFolder);
       it('should create folders', () => {
         require('../functions');
       });
     });
-    describe('main folder exists', () => {
-      beforeEach(emptyFolder);
+    xdescribe('main folder exists', () => {
+      beforeAll(emptyFolder);
       it('should create folders', async () => {
-        const id = Sequelize.UUIDV4();
+        const id = casual.uuid;
+
         await createAlternateImageSizes(
           {
             stream: createStream(),
             id,
             sizes: [20, 80, 60],
-            filename: 'cats.jpeg'
+            filename
           },
           createDb()
         );

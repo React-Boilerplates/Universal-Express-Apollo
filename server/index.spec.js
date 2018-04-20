@@ -6,6 +6,13 @@ import { __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS as styledTools } f
 
 const op = require('openport');
 
+global.console = {
+  warn: jest.fn(),
+  info: jest.fn(),
+  log: jest.fn(),
+  error: jest.fn()
+};
+
 process.env.COOKIE_SECRET = 'abc';
 // process.env.PORT = 3002;
 const server = require('.').createServer();

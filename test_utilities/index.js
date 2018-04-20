@@ -1,3 +1,5 @@
+import fs from 'fs';
+import rimraf from 'rimraf';
 import casual from 'casual';
 import Sequelize from 'sequelize';
 
@@ -50,6 +52,22 @@ export const createUser = () => ({
     return this[str];
   }
 });
+
+export const removeFolder = uploadDir => done => {
+  rimraf(uploadDir, () => {
+    fs.mkdir(uploadDir, () => {
+      done();
+    });
+  });
+};
+
+export const emptyFolder = uploadDir => done => {
+  rimraf(uploadDir, () => {
+    fs.mkdir(uploadDir, () => {
+      done();
+    });
+  });
+};
 
 export const createArray = (size, fn) => {
   return [...Array(size).keys()].map(() => fn());

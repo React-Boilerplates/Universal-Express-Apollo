@@ -87,7 +87,7 @@ describe('Functions', () => {
     it('should handle sizes', async () => {
       await processImage(
         { stream: createStream(), filename, mimetype, encoding },
-        [],
+        [20, 80, 60],
         createDb()
       );
       expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);

@@ -116,20 +116,20 @@ describe('Functions', () => {
     });
     afterAll(removeFolder(uploadDir));
   });
-  describe('scaffolding', () => {
-    describe('dry-run', () => {
+  xdescribe('scaffolding', () => {
+    xdescribe('dry-run', () => {
       beforeAll(removeFolder(uploadDir));
-      it('should create folders', async () => {
+      xit('should create folders', async () => {
         await require('../functions').createUploadDir(
           require('../functions').uploadDir
         );
       });
       afterAll(removeFolder(uploadDir));
     });
-    describe('main folder exists', () => {
+    xdescribe('main folder exists', () => {
       beforeAll(emptyFolder(uploadDir));
       afterAll(removeFolder(uploadDir));
-      it('should create folders', async () => {
+      xit('should create folders', async () => {
         await processImage(
           { stream: createStream(), filename, mimetype, encoding },
           [],

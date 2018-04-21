@@ -87,7 +87,7 @@ describe('Functions', () => {
     it('should handle sizes', async () => {
       await processImage(
         { stream: createStream(), filename, mimetype, encoding },
-        [20, 80, 60],
+        [],
         createDb()
       );
       expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
@@ -119,8 +119,10 @@ describe('Functions', () => {
   describe('scaffolding', () => {
     describe('dry-run', () => {
       beforeAll(removeFolder(uploadDir));
-      it('should create folders', () => {
-        require('../functions');
+      it('should create folders', async () => {
+        await require('../functions').createUploadDir(
+          require('../functions').uploadDir
+        );
       });
       afterAll(removeFolder(uploadDir));
     });
@@ -128,15 +130,9 @@ describe('Functions', () => {
       beforeAll(emptyFolder(uploadDir));
       afterAll(removeFolder(uploadDir));
       it('should create folders', async () => {
-        const id = uuidV4();
-
-        await createAlternateImageSizes(
-          {
-            stream: createStream(),
-            id,
-            sizes: [20, 80, 60],
-            filename
-          },
+        await processImage(
+          { stream: createStream(), filename, mimetype, encoding },
+          [],
           createDb()
         );
       });

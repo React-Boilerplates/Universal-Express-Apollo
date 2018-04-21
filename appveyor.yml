@@ -6,6 +6,7 @@ platform: x64
 
 init:
   - git config --global core.autocrlf input
+  - ps: IF ($env:APPVEYOR_REPO_BRANCH -eq "develop") {$env:APPVEYOR_CACHE_SKIP_SAVE = "true"}
 
 # Install scripts. (runs after repo cloning)
 install:
@@ -30,7 +31,7 @@ build:
   verbosity: minimal
 
 cache:
-  - node_modules -> appveyor.yml
+  # - node_modules -> appveyor.yml
 
 
 skip_commits:

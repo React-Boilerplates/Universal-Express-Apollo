@@ -37,6 +37,9 @@ module.exports = {
       'apollo-link-http'
     ]
   },
+  resolveLoader: {
+    modules: ['node_modules', path.resolve(__dirname, 'loaders')]
+  },
   output: {
     path: path.resolve(process.cwd(), 'public'),
     publicPath: '/',
@@ -83,34 +86,31 @@ module.exports = {
       {
         test: /\.sss$/,
         use: sssLoader
-      },
-      {
-        test: /\.(jpe?g|png)$/i,
-        loader: path.resolve('./tools/webpack/loaders/image-loader.js'),
-        options: {
-          emitFile: true,
-          trace: {
-            threshold: 180,
-            steps: 4,
-            color: '#880000',
-            optimize: {
-              multipass: true,
-              floatPrecision: 2,
-              plugins: [
-                { removeDoctype: false },
-                { convertColors: { shorthex: false } },
-                { removeRasterImages: { param: true } }
-              ]
-            }
-          },
-          sizes: [{ size: 500, fileType: '.png' }]
-        }
       }
+      // {
+      //   test: /\.(jpe?g|png)$/i,
+      //   loader: 'image-loader',
+      //   options: {
+      //     emitFile: true,
+      //     sizeOpts: {
+      //       dataUri: false,
+      //       emitFile: true
+      //     },
+      //     svgOptimize: { multipass: true, floatPrecision: 1 },
+      //     svgOpts: {
+      //       threshold: 180,
+      //       steps: 1,
+      //       color: '#880000'
+      //     },
+      //     dataUri: false,
+      //     sizes: []
+      //   }
+      // }
     ]
   },
   plugins: [
     new MakeDirWebpackPlugin({
-      dirs: [{ path: './logs' }]
+      dirs: [{ path: './logs' }, { path: './uploads' }]
     }),
     new ManifestPlugin({
       fileName: 'assets-manifest.json'

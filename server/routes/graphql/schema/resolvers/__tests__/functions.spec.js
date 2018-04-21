@@ -1,32 +1,20 @@
 import fs from 'fs';
-import rimraf from 'rimraf';
-import casual from 'casual';
+// import casual from 'casual';
 import path from 'path';
-import { createDb } from '../../../../../../test_utilities';
+import uuidV4 from 'uuid/v4';
+import {
+  createDb,
+  removeFolder,
+  emptyFolder
+} from '../../../../../../test_utilities';
 
-process.cwd = () => path.resolve('./');
+// process.cwd = () => path.resolve('./');
 const {
   createAlternateImageSizes,
   uploadDir,
   processFile,
   processImage
 } = require('../functions');
-
-const removeFolder = done => {
-  rimraf(uploadDir, () => {
-    fs.mkdir(uploadDir, () => {
-      done();
-    });
-  });
-};
-
-const emptyFolder = done => {
-  rimraf(uploadDir, () => {
-    fs.mkdir(uploadDir, () => {
-      done();
-    });
-  });
-};
 
 const filename = 'cats.jpg';
 
@@ -39,8 +27,9 @@ const createStream = () => fs.createReadStream(imagePath);
 
 describe('Functions', () => {
   describe('createAlternateImageSizes', () => {
-    const id = casual.uuid;
+    beforeAll(removeFolder(uploadDir));
     it('should process the stream', async () => {
+      const id = uuidV4();
       await createAlternateImageSizes(
         {
           stream: createStream(),
@@ -50,53 +39,100 @@ describe('Functions', () => {
         },
         createDb()
       );
+      expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
+      expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
+      expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, '20', `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, '80', `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, '60', `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
     });
-    afterAll(done => {
-      removeFolder(done);
-    });
+    afterAll(removeFolder(uploadDir));
   });
   describe('processFile', () => {
+    beforeAll(removeFolder(uploadDir));
     it('should process the stream', async () => {
       await processFile(
         { stream: createStream(), filename, mimetype, encoding },
         createDb()
       );
     });
-    afterAll(done => {
-      removeFolder(done);
-    });
+    afterAll(removeFolder(uploadDir));
   });
   describe('processImage', () => {
-    it('should process the stream', async () => {
+    beforeAll(removeFolder(uploadDir));
+    it('should handle no sizes', async () => {
       await processImage(
         { stream: createStream(), filename, mimetype, encoding },
         [],
         createDb()
       );
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
     });
-    afterAll(done => {
-      removeFolder(done);
+    it('should handle sizes', async () => {
+      await processImage(
+        { stream: createStream(), filename, mimetype, encoding },
+        [20, 80, 60],
+        createDb()
+      );
+      expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
+      expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
+      expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, '20', `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, '80', `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, '60', `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(uploadDir, `totally-fake-uuid-displayed-${filename}`)
+        )
+      ).toBe(true);
     });
+    afterAll(removeFolder(uploadDir));
   });
-  describe('scaffolding', () => {
+  xdescribe('scaffolding', () => {
     xdescribe('dry-run', () => {
-      beforeAll(removeFolder);
-      it('should create folders', () => {
-        require('../functions');
+      beforeAll(removeFolder(uploadDir));
+      xit('should create folders', async () => {
+        await require('../functions').createUploadDir(
+          require('../functions').uploadDir
+        );
       });
+      afterAll(removeFolder(uploadDir));
     });
     xdescribe('main folder exists', () => {
-      beforeAll(emptyFolder);
-      it('should create folders', async () => {
-        const id = casual.uuid;
-
-        await createAlternateImageSizes(
-          {
-            stream: createStream(),
-            id,
-            sizes: [20, 80, 60],
-            filename
-          },
+      beforeAll(emptyFolder(uploadDir));
+      afterAll(removeFolder(uploadDir));
+      xit('should create folders', async () => {
+        await processImage(
+          { stream: createStream(), filename, mimetype, encoding },
+          [],
           createDb()
         );
       });

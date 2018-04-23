@@ -1,4 +1,3 @@
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MakeDirWebpackPlugin = require('make-dir-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -38,7 +37,7 @@ module.exports = {
     ]
   },
   resolveLoader: {
-    modules: ['node_modules', path.resolve(__dirname, 'loaders')]
+    modules: ['node_modules', path.join(__dirname, 'loaders')]
   },
   output: {
     path: path.resolve(process.cwd(), 'public'),
@@ -77,35 +76,47 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            cacheIdentifier: {
-              env: 'client'
-            }
+            cacheIdentifier: 'client'
           }
         }
       },
       {
         test: /\.sss$/,
         use: sssLoader
+      },
+      {
+        test: /\.(jpe?g|png)$/i,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheIdentifier: {
+                env: 'client'
+              }
+            }
+          },
+          {
+            loader: 'image-loader',
+            options: {
+              width: undefined,
+              emitFile: true,
+              sizeOpts: {
+                dataUri: false,
+                emitFile: true
+              },
+              svgOptimize: { multipass: true, floatPrecision: 1 },
+              svgOpts: {
+                threshold: 180,
+                steps: 1,
+                color: '#880000'
+              },
+              dataUri: true,
+              sizes: []
+            }
+          }
+        ],
+        sideEffects: __DEV__
       }
-      // {
-      //   test: /\.(jpe?g|png)$/i,
-      //   loader: 'image-loader',
-      //   options: {
-      //     emitFile: true,
-      //     sizeOpts: {
-      //       dataUri: false,
-      //       emitFile: true
-      //     },
-      //     svgOptimize: { multipass: true, floatPrecision: 1 },
-      //     svgOpts: {
-      //       threshold: 180,
-      //       steps: 1,
-      //       color: '#880000'
-      //     },
-      //     dataUri: false,
-      //     sizes: []
-      //   }
-      // }
     ]
   },
   plugins: [
@@ -145,9 +156,7 @@ module.exports = {
         toType: 'template'
       }
     ]),
-    new CleanWebpackPlugin(['public'], {
-      root: process.cwd()
-    }),
+
     assetsPluginInstance
   ],
   target: 'web'

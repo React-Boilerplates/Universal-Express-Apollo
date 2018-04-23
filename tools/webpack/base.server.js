@@ -4,6 +4,8 @@ const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 const { sssLoader } = require('./constants');
 
+const __DEV__ = process.env.NODE_ENV === 'development'; // eslint-disable-line no-underscore-dangle
+
 module.exports = {
   entry: './server/index.jsx',
   externals: [nodeExternals()],
@@ -11,11 +13,13 @@ module.exports = {
   resolve: {
     extensions: ['.webpack.js', '.web.js', '.js', '.json', '.jsx']
   },
+  resolveLoader: {
+    modules: ['node_modules', path.join(__dirname, 'loaders')]
+  },
   output: {
     path: path.join(process.cwd(), 'build'),
     filename: '[name].js'
   },
-  mode: 'production',
   module: {
     rules: [
       {
@@ -36,25 +40,35 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png)$/i,
-        loader: path.resolve('./tools/webpack/loaders/image-loader.js'),
-        options: {
-          emitFile: false,
-          trace: {
-            threshold: 180,
-            steps: 4,
-            color: '#880000',
-            optimize: {
-              multipass: true,
-              floatPrecision: 2,
-              plugins: [
-                { removeDoctype: false },
-                { convertColors: { shorthex: false } },
-                { removeRasterImages: { param: true } }
-              ]
+        use: [
+          // {
+          //   loader: 'babel-loader',
+          //   options: {
+          //     cacheIdentifier: {
+          //       env: 'client'
+          //     }
+          //   }
+          // },
+          {
+            loader: 'image-loader',
+            options: {
+              emitFile: true,
+              sizeOpts: {
+                dataUri: false,
+                emitFile: true
+              },
+              svgOptimize: { multipass: true, floatPrecision: 1 },
+              svgOpts: {
+                threshold: 180,
+                steps: 1,
+                color: '#880000'
+              },
+              dataUri: false,
+              sizes: []
             }
-          },
-          sizes: [{ size: 500, fileType: '.png' }]
-        }
+          }
+        ],
+        sideEffects: !__DEV__
       }
     ]
   },

@@ -11,4 +11,6 @@ config.plugins.unshift(
   extractTextPlugin
 );
 
+config.mode = 'production';
+
 module.exports = config;

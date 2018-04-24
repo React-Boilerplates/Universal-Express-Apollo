@@ -5,9 +5,9 @@ import ReactDOM from 'react-dom';
 import { loadComponents } from 'loadable-components';
 import logger from './logger';
 import App from './App';
-import { width } from './cats.jpg';
+// import { width } from './cats.jpg';
 
-console.log(width);
+// console.log(width);
 // import { add, wasmBooted } from '../src/lib.rs';
 
 const rootElement = document.getElementById('root');

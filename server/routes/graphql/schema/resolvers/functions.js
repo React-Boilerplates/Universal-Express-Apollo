@@ -44,7 +44,7 @@ const createSvg = (
     });
   });
 
-const DataURI = require('datauri').promise;
+const DataURI = require('datauri');
 
 class ResolveAfterCount {
   constructor(count, resolve, reject) {
@@ -164,13 +164,14 @@ export const createAlternateImageSizes = (
           })
           .pipe(fs.createWriteStream(filepath))
           .on('finish', async () => {
-            const { height } = await sharp(filepath).metadata();
-            const dataUri = await DataURI(filepath);
+            const [{ height }] = await Promise.all([
+              sharp(filepath).metadata()
+            ]);
+
             const file = await db.models.File.create({
               id: sizeId,
               path: filepath,
               url,
-              dataUri,
               filename,
               height,
               width,
@@ -212,11 +213,18 @@ export const processImage = async (upload, sizes, context) => {
   const { stream, filename, mimetype, encoding } = await upload;
 
   const { filepath, url } = await storeFS({ stream, filename, id });
-  const dataUri = await DataURI(filepath);
-  const [{ width, height }, svg] = await Promise.all([
+  const duri = new DataURI();
+
+  const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
     sharp(filepath).metadata(),
-    createSvg(filepath)
+    createSvg(filepath),
+    sharp(filepath)
+      .resize(10)
+      .jpeg()
+      .toBuffer()
   ]);
+  duri.format('.jpeg', dataUriBuffer);
+  const dataUri = duri.content;
   const svgDataUri = await optimize(svg);
   await storeDB(
     {

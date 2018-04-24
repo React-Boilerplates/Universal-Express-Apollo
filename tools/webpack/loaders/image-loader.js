@@ -158,109 +158,115 @@ const checkIfInlineIsOption = context => {
 };
 
 module.exports = async function loader(content) {
+  if (!checkIfInlineIsOption(this)) return false;
   const callback = this.async();
-  try {
-    if (!checkIfInlineIsOption(this)) return callback(null, '');
-    // console.log(this.loaders, this.loaderIndex);
-    const options = Object.assign({}, defaultOptions, getOptions(this));
+  console.log(this);
+  // console.log(this.loaders, this.loaderIndex);
+  const options = Object.assign({}, defaultOptions, getOptions(this));
+  const context =
+    options.context ||
+    this.rootContext ||
+    (this.options && this.options.context);
 
-    if (typeof this.query === 'string') {
-      content = fs.readFileSync(this.resourcePath);
-    }
-    if (options.width) {
-      content = await sharp(content)
-        .resize(options.width)
-        .toBuffer();
-    }
-    validateOptions(schema, options, 'image-loader');
+  if (typeof this.query === 'string') {
+    content = fs.readFileSync(this.resourcePath);
+  }
+  if (options.width) {
+    content = await sharp(content)
+      .resize(options.width)
+      .toBuffer();
+  }
+  validateOptions(schema, options, 'image-loader');
 
-    return Promise.all(
-      options.sizes.map(size => {
-        return Promise.all([
-          sharp(content)
-            .resize(+size)
-            .toBuffer(),
-          sharp(content)
-            .resize(+size)
-            .metadata()
-        ]).then(([buffer, { width, height, format }]) => {
-          let dataUri;
-          const name = interpolateName(this, `${size}/[hash:8]-[name].[ext]`, {
-            content: buffer
-          });
-          if (options.sizeOpts.dataUri) {
-            const datauri = new DataURI();
-            datauri.format(format, buffer);
-            dataUri = datauri.content;
-          }
-          if (options.sizeOpts.emitFile) {
-            this.emitFile(name, buffer);
-          }
-          return {
+  Promise.all(
+    options.sizes.map(size => {
+      return Promise.all([
+        sharp(content)
+          .resize(+size)
+          .toBuffer(),
+        sharp(content)
+          .resize(+size)
+          .metadata()
+      ]).then(([buffer, { width, height, format }]) => {
+        let dataUri;
+        const name = interpolateName(this, `${size}/[hash:8]-[name].[ext]`, {
+          content: buffer,
+          context
+        });
+        if (options.sizeOpts.dataUri) {
+          const datauri = new DataURI();
+          datauri.format(format, buffer);
+          dataUri = datauri.content;
+        }
+        if (options.sizeOpts.emitFile) {
+          this.emitFile(`./${name}`, buffer);
+        }
+        return {
+          width,
+          height,
+          format,
+          dataUri,
+          url: createTempPath(name)
+        };
+      });
+    })
+  )
+    .then(images => {
+      const name = interpolateName(this, `[hash:8]-[name].[ext]`, {
+        content,
+        context
+      });
+      if (options.emitFile) {
+        this.emitFile(`./${name}`, content);
+      }
+      return Promise.all([
+        sharp(content).metadata(),
+        options.svgOpts.dataUri
+          ? createSvg(content, options.svgOpts).then(svg =>
+              optimize(svg, options.svgOptimize)
+            )
+          : Promise.resolve()
+      ]).then(async ([{ width, height, format }, svg]) => {
+        let dataUri;
+        if (options.dataUri) {
+          const datauri = new DataURI();
+          const inline = await sharp(content)
+            .resize(20)
+            .jpeg()
+            .toBuffer();
+          datauri.format('jpeg', inline);
+          dataUri = datauri.content;
+        }
+        const output =
+          `` +
+          Object.entries({
             width,
             height,
-            format,
             dataUri,
-            url: createTempPath(name)
-          };
-        });
-      })
-    )
-      .then(images => {
-        const name = interpolateName(this, `[hash:8]-[name].[ext]`, {
-          content
-        });
-        if (options.emitFile) {
-          this.emitFile(name, content);
-        }
-        return Promise.all([
-          sharp(content).metadata(),
-          options.svgOpts.dataUri
-            ? createSvg(content, options.svgOpts).then(svg =>
-                optimize(svg, options.svgOptimize)
-              )
-            : Promise.resolve()
-        ]).then(async ([{ width, height, format }, svg]) => {
-          let dataUri;
-          if (options.dataUri) {
-            const datauri = new DataURI();
-            const inline = await sharp(content)
-              .resize(20)
-              .jpeg()
-              .toBuffer();
-            datauri.format('jpeg', inline);
-            dataUri = datauri.content;
-          }
-          const output =
-            `` +
-            Object.entries({
-              width,
-              height,
-              dataUri,
-              svg,
-              format,
-              url: createTempPath(name),
-              images
-            })
-              .filter(value => value[1] !== undefined)
-              .map(
-                ([key, value]) =>
-                  `
+            svg,
+            format,
+            url: createTempPath(name),
+            images
+          })
+            .filter(value => value[1] !== undefined)
+            .map(
+              ([key, value]) =>
+                `
+// module.exports.${key} = ${JSON.stringify(value)};
 export const ${key} = ${JSON.stringify(value)};`
-              )
-              .join('');
-          const result = transformPaths(output);
-          console.log(result);
-          return callback(null, result);
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        return callback(err);
+            )
+            .join('') +
+          `
+export {url as default};`;
+        const result = transformPaths(output);
+        console.log(result);
+        return callback(null, result);
       });
-  } catch (e) {
-    return callback(e);
-  }
+    })
+    .catch(err => {
+      console.error(err);
+      return callback(err);
+    });
 };
 
 module.exports.raw = true;

@@ -145,6 +145,7 @@
         "jest-styled-components": "5.0.1",
         "loader-utils": "1.1.0",
         "make-dir-webpack-plugin": "0.1.0",
+        "memory-fs": "0.4.1",
         "mock-env": "0.2.0",
         "openport": "0.0.5",
         "postcss": "6.0.21",

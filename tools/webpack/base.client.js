@@ -42,7 +42,7 @@ module.exports = {
   output: {
     path: path.resolve(process.cwd(), 'public'),
     publicPath: '/',
-    filename: __DEV__ ? 'assets/[name].js' : 'assets/[name].[hash].js'
+    filename: __DEV__ ? 'assets/[name].[ext]' : 'assets/[name].[hash].[ext]'
   },
   context: path.join(process.cwd()),
   resolve: {
@@ -76,7 +76,9 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            cacheIdentifier: 'client'
+            cacheIdentifier: {
+              env: __DEV__ ? 'client' : 'client:prod'
+            }
           }
         }
       },
@@ -87,14 +89,14 @@ module.exports = {
       {
         test: /\.(jpe?g|png)$/i,
         use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheIdentifier: {
-                env: 'client'
-              }
-            }
-          },
+          // {
+          //   loader: 'babel-loader',
+          //   options: {
+          //     cacheIdentifier: {
+          //       env: __DEV__ ? 'client' : 'client:prod'
+          //     }
+          //   }
+          // },
           {
             loader: 'image-loader',
             options: {
@@ -115,7 +117,7 @@ module.exports = {
             }
           }
         ],
-        sideEffects: __DEV__
+        sideEffects: false
       }
     ]
   },

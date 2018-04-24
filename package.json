@@ -7,7 +7,10 @@
         "type": "git",
         "url": "https://github.com/React-Boilerplates/Universal-Express-Apollo.git"
     },
-    "cpu": ["x64", "ia32"],
+    "cpu": [
+        "x64",
+        "ia32"
+    ],
     "scripts": {
         "pretest": "node ./tools/jest/globalSetup.js",
         "lint:es": "eslint . --cache",
@@ -154,7 +157,6 @@
         "rimraf": "2.6.2",
         "schema-utils": "0.4.5",
         "service-worker-mock": "1.9.2",
-        "sharp": "0.20.1",
         "sinon": "4.5.0",
         "style-loader": "0.21.0",
         "stylelint": "9.2.0",

@@ -5,8 +5,8 @@ import ReactDOM from 'react-dom';
 import { loadComponents } from 'loadable-components';
 import logger from './logger';
 import App from './App';
+// import { width } from './cats.jpg';
 
-// require('image-loader?emitFile&sizes[]=200&-dataUri!./cats.jpg');
 // import { add, wasmBooted } from '../src/lib.rs';
 
 const rootElement = document.getElementById('root');

@@ -8,6 +8,7 @@ const { getOptions, interpolateName } = require('loader-utils');
 
 const defaultOptions = {
   emitFile: true,
+  width: undefined,
   sizeOpts: {
     dataUri: false,
     emitFile: true
@@ -68,7 +69,7 @@ const createTempPath = path => `<public-path>/${path}`;
 const transformPaths = string =>
   string.replace(
     // eslint-disable-next-line no-useless-escape
-    /"(<public-path>)([\/\d\w.-]*)"/g,
+    /"(<public-path>\/)([\/\d\w.-]*)"/g,
     '__webpack_public_path__ + "$2"'
   );
 
@@ -96,6 +97,9 @@ const schema = {
           type: 'number'
         }
       }
+    },
+    width: {
+      type: 'string'
     },
     svgOpts: {
       type: 'object',
@@ -135,89 +139,128 @@ const schema = {
   additionalProperties: true
 };
 
-const resources = () => ({
-  items: []
-});
-
-const counter = resources();
-
-module.exports = function loader(content) {
-  const options = Object.assign({}, defaultOptions, getOptions(this));
-  if (counter.items.includes(this.resourcePath)) return '';
-  counter.items.push(this.resourcePath);
-  console.log(options);
-  if (typeof this.query === 'string') {
-    content = fs.readFileSync(this.resourcePath);
+const checkIfInlineIsOption = context => {
+  const count = context.loaders
+    .map((value, index) => Object.assign({}, value, { index }))
+    .filter(({ path }) => /tools\/webpack\/loaders\/image-loader/g.test(path));
+  if (count.length <= 1) return true;
+  const inlineVersion = count.find(
+    ({ options }) => typeof options === 'string'
+  );
+  if (
+    count.length >= 2 &&
+    inlineVersion &&
+    context.loaderIndex === inlineVersion.index
+  ) {
+    return true;
   }
-  validateOptions(schema, options, 'image-loader');
+  return false;
+};
+
+module.exports = async function loader(content) {
   const callback = this.async();
-  return Promise.all(
-    options.sizes.map(size => {
-      return Promise.all([
-        sharp(content)
-          .resize(+size)
-          .toBuffer(),
-        sharp(content)
-          .resize(+size)
-          .metadata()
-      ]).then(([buffer, { width, height, format }]) => {
-        let dataUri;
-        const name = interpolateName(this, `${size}/[hash:8]-[name].[ext]`, {
-          content: buffer
+  try {
+    if (!checkIfInlineIsOption(this)) return callback(null, '');
+    // console.log(this.loaders, this.loaderIndex);
+    const options = Object.assign({}, defaultOptions, getOptions(this));
+
+    if (typeof this.query === 'string') {
+      content = fs.readFileSync(this.resourcePath);
+    }
+    if (options.width) {
+      content = await sharp(content)
+        .resize(options.width)
+        .toBuffer();
+    }
+    validateOptions(schema, options, 'image-loader');
+
+    return Promise.all(
+      options.sizes.map(size => {
+        return Promise.all([
+          sharp(content)
+            .resize(+size)
+            .toBuffer(),
+          sharp(content)
+            .resize(+size)
+            .metadata()
+        ]).then(([buffer, { width, height, format }]) => {
+          let dataUri;
+          const name = interpolateName(this, `${size}/[hash:8]-[name].[ext]`, {
+            content: buffer
+          });
+          if (options.sizeOpts.dataUri) {
+            const datauri = new DataURI();
+            datauri.format(format, buffer);
+            dataUri = datauri.content;
+          }
+          if (options.sizeOpts.emitFile) {
+            this.emitFile(name, buffer);
+          }
+          return {
+            width,
+            height,
+            format,
+            dataUri,
+            url: createTempPath(name)
+          };
         });
-        if (options.sizeOpts.dataUri) {
-          const datauri = new DataURI();
-          datauri.format(format, buffer);
-          dataUri = datauri.content;
-        }
-        if (options.sizeOpts.emitFile) {
-          this.emitFile(name, buffer);
-        }
-        return {
-          width,
-          height,
-          format,
-          dataUri,
-          url: createTempPath(name)
-        };
-      });
-    })
-  )
-    .then(images => {
-      const name = interpolateName(this, `[hash:8]-[name].[ext]`, {
-        content
-      });
-      if (options.emitFile) {
-        this.emitFile(name, content);
-      }
-      return Promise.all([
-        sharp(content).metadata(),
-        options.svgOpts.dataUri
-          ? createSvg(content, options.svgOpts).then(svg =>
-            optimize(svg, options.svgOptimize)
-          )
-          : Promise.resolve()
-      ]).then(([{ width, height, format }, svg]) => {
-        let dataUri;
-        if (options.dataUri) {
-          const datauri = new DataURI();
-          datauri.format(format, content);
-          dataUri = datauri.content;
-        }
-        const output = JSON.stringify({
-          width,
-          height,
-          dataUri,
-          svg,
-          format,
-          url: createTempPath(name),
-          images
+      })
+    )
+      .then(images => {
+        const name = interpolateName(this, `[hash:8]-[name].[ext]`, {
+          content
         });
-        const result = `module.exports = ${transformPaths(output)}`;
-        callback(null, result);
+        if (options.emitFile) {
+          this.emitFile(name, content);
+        }
+        return Promise.all([
+          sharp(content).metadata(),
+          options.svgOpts.dataUri
+            ? createSvg(content, options.svgOpts).then(svg =>
+                optimize(svg, options.svgOptimize)
+              )
+            : Promise.resolve()
+        ]).then(async ([{ width, height, format }, svg]) => {
+          let dataUri;
+          if (options.dataUri) {
+            const datauri = new DataURI();
+            const inline = await sharp(content)
+              .resize(20)
+              .jpeg()
+              .toBuffer();
+            datauri.format('jpeg', inline);
+            dataUri = datauri.content;
+          }
+          const output =
+            `` +
+            Object.entries({
+              width,
+              height,
+              dataUri,
+              svg,
+              format,
+              url: createTempPath(name),
+              images
+            })
+              .filter(value => value[1] !== undefined)
+              .map(
+                ([key, value]) =>
+                  `
+export const ${key} = ${JSON.stringify(value)};`
+              )
+              .join('');
+          const result = transformPaths(output);
+          console.log(result);
+          return callback(null, result);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        return callback(err);
       });
-    })
-    .catch(callback);
+  } catch (e) {
+    return callback(e);
+  }
 };
 
 module.exports.raw = true;

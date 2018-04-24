@@ -2,6 +2,7 @@
 
 - Build a function that will compress GraphQL Schema Strings
 - Setup Helmet-CSP
+- Setup Tree-Shaking on Image-Loader
 - Setup Server-Timing API
 - Add a Rust and WebAssembly Loader
 - Refactor

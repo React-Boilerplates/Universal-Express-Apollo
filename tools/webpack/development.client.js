@@ -1,3 +1,4 @@
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const config = require('./base.client');
 const webpack = require('webpack');
 const { envVariables } = require('./constants');
@@ -8,6 +9,9 @@ config.plugins.unshift(new webpack.HotModuleReplacementPlugin());
 config.plugins.unshift(
   new webpack.DefinePlugin({
     'process.env': envVariables
+  }),
+  new CleanWebpackPlugin(['public'], {
+    root: process.cwd()
   })
 );
 config.node = {

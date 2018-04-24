@@ -4,7 +4,12 @@
             "presets": [
                 "@babel/preset-env",
                 "@babel/preset-react",
-                "@babel/preset-stage-1",
+                [
+                    "@babel/preset-stage-1",
+                    {
+                        "decoratorsLegacy": true
+                    }
+                ],
                 "@babel/preset-typescript"
                 // "@babel/preset-flow"
             ],
@@ -29,7 +34,12 @@
                         }
                     }
                 ],
-                "@babel/preset-stage-1",
+                [
+                    "@babel/preset-stage-1",
+                    {
+                        "decoratorsLegacy": true
+                    }
+                ],
                 "@babel/preset-react",
                 "@babel/preset-typescript"
                 // "@babel/preset-flow"
@@ -61,7 +71,12 @@
                         }
                     }
                 ],
-                "@babel/preset-stage-1",
+                [
+                    "@babel/preset-stage-1",
+                    {
+                        "decoratorsLegacy": true
+                    }
+                ],
                 "@babel/preset-react",
                 "@babel/preset-typescript"
                 // "@babel/preset-flow"
@@ -93,10 +108,16 @@
                                 "last 2 versions",
                                 "safari >= 7"
                             ]
-                        }
+                        },
+                        "modules": false
                     }
                 ],
-                "@babel/preset-stage-1",
+                [
+                    "@babel/preset-stage-1",
+                    {
+                        "decoratorsLegacy": true
+                    }
+                ],
                 "@babel/preset-react",
                 "@babel/preset-typescript"
                 // "@babel/preset-flow"
@@ -124,7 +145,12 @@
                         }
                     }
                 ],
-                "@babel/preset-stage-1",
+                [
+                    "@babel/preset-stage-1",
+                    {
+                        "decoratorsLegacy": true
+                    }
+                ],
                 "@babel/preset-react",
                 "@babel/preset-typescript"
                 // "@babel/preset-flow"

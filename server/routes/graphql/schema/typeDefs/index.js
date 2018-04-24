@@ -30,7 +30,6 @@ const typeDefs = /* GraphQL */ gql`
     filename: String!
     mimetype: String!
     encoding: String!
-    dataUri: String!
     height: Int!
     width: Int!
   }
@@ -41,6 +40,7 @@ const typeDefs = /* GraphQL */ gql`
     filename: String!
     mimetype: String!
     encoding: String!
+    dataUri: String! # inline image in png format
     height: Int!
     width: Int!
     images: [Image]!

@@ -160,7 +160,7 @@ const checkIfInlineIsOption = context => {
 module.exports = async function loader(content) {
   if (!checkIfInlineIsOption(this)) return false;
   const callback = this.async();
-  console.log(this);
+  // console.log(this);
   // console.log(this.loaders, this.loaderIndex);
   const options = Object.assign({}, defaultOptions, getOptions(this));
   const context =

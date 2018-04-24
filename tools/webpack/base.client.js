@@ -117,7 +117,7 @@ module.exports = {
             }
           }
         ],
-        sideEffects: __DEV__
+        sideEffects: false
       }
     ]
   },

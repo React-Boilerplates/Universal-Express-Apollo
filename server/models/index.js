@@ -49,11 +49,15 @@ const buildDataBase = async () => {
   };
 
   if (!db.relationships) {
-    db.relationships = await buildRelationships(
-      db.objects,
-      db.models,
-      sequelize
-    );
+    try {
+      db.relationships = await buildRelationships(
+        db.objects,
+        db.models,
+        sequelize
+      );
+    } catch (e) {
+      logger.log(e);
+    }
   }
 
   return db;

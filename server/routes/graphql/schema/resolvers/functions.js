@@ -205,7 +205,7 @@ const storeDB = async (file, db) => {
     const instance = await db.models.File.create(file);
     return instance.toJSON();
   } catch (error) {
-    console.log(error);
+    logger.log(error);
     return new Error('ERROR Saving!');
   }
 };
@@ -220,7 +220,7 @@ export const processFile = async (upload, context) => {
       context
     );
   } catch (error) {
-    console.log(error);
+    logger.log(error);
     return;
   }
 };
@@ -266,7 +266,7 @@ export const processImage = async (upload, sizes, context) => {
     );
   } catch (e) {
     //
-    console.log(e);
+    logger.log(e);
   }
   return;
 };

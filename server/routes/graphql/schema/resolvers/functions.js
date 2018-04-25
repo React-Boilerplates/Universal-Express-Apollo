@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import potrace from 'potrace';
 import uuidV4 from 'uuid/v4';
 import logger from '../../../../logger';
 
@@ -36,13 +35,16 @@ const createSvg = (
     steps: 1,
     color: '#880000'
   }
-) =>
-  new Promise((resolve, reject) => {
+) => {
+  // eslint-disable-next-line global-require
+  const potrace = require('potrace');
+  return new Promise((resolve, reject) => {
     potrace.posterize(content, options, (err, svg) => {
       if (err) return reject(err);
       return resolve(svg);
     });
   });
+};
 
 const DataURI = require('datauri');
 
@@ -98,8 +100,9 @@ const dirExists = async path => {
     const stats = await lstatAsync(path);
     return stats.isDirectory();
   } catch (e) {
-    return false;
+    //
   }
+  return false;
 };
 export const createUploadDir = async dir => {
   try {
@@ -120,9 +123,14 @@ const storeFS = ({ stream, filename, id = uuidV4() }) => {
   return new Promise((resolve, reject) =>
     stream
       .on('error', async error => {
-        if (stream.truncated)
-          // Delete the truncated file
-          await unlinkAsync(filepath);
+        if (stream.truncated) {
+          try {
+            // Delete the truncated file
+            await unlinkAsync(filepath);
+          } catch (e) {
+            return reject(e);
+          }
+        }
         reject(error);
       })
       .pipe(fs.createWriteStream(filepath))
@@ -193,57 +201,72 @@ export const createAlternateImageSizes = (
 };
 
 const storeDB = async (file, db) => {
-  const instance = await db.models.File.create(file);
-  return instance.toJSON();
+  try {
+    const instance = await db.models.File.create(file);
+    return instance.toJSON();
+  } catch (error) {
+    console.log(error);
+    return new Error('ERROR Saving!');
+  }
 };
 
 export const processFile = async (upload, context) => {
-  await createUploadDir(uploadDir);
-  const { stream, filename, mimetype, encoding } = await upload;
-  const { id, filepath, url } = await storeFS({ stream, filename });
-  return storeDB(
-    { id, filename, mimetype, encoding, path: filepath, url },
-    context
-  );
+  try {
+    await createUploadDir(uploadDir);
+    const { stream, filename, mimetype, encoding } = await upload;
+    const { id, filepath, url } = await storeFS({ stream, filename });
+    return storeDB(
+      { id, filename, mimetype, encoding, path: filepath, url },
+      context
+    );
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 };
 
 export const processImage = async (upload, sizes, context) => {
-  await createUploadDir(uploadDir);
-  const id = uuidV4();
-  const { stream, filename, mimetype, encoding } = await upload;
+  try {
+    await createUploadDir(uploadDir);
+    const id = uuidV4();
+    const { stream, filename, mimetype, encoding } = await upload;
 
-  const { filepath, url } = await storeFS({ stream, filename, id });
-  const duri = new DataURI();
+    const { filepath, url } = await storeFS({ stream, filename, id });
+    const dataURI = new DataURI();
 
-  const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
-    sharp(filepath).metadata(),
-    createSvg(filepath),
-    sharp(filepath)
-      .resize(10)
-      .jpeg()
-      .toBuffer()
-  ]);
-  duri.format('.jpeg', dataUriBuffer);
-  const dataUri = duri.content;
-  const svgDataUri = await optimize(svg);
-  await storeDB(
-    {
-      id,
-      url,
-      filename,
-      svg: svgDataUri,
-      mimetype,
-      width,
-      height,
-      dataUri,
-      encoding,
-      path: filepath
-    },
-    context
-  );
-  const rs = fs.createReadStream(filepath);
-  await createAlternateImageSizes(
-    { stream: rs, id, sizes, filename, mimetype, encoding },
-    context
-  );
+    const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
+      sharp(filepath).metadata(),
+      optimize(await createSvg(filepath)),
+      sharp(filepath)
+        .resize(10)
+        .jpeg()
+        .toBuffer()
+    ]);
+    dataURI.format('.jpeg', dataUriBuffer);
+    const dataUri = dataURI.content;
+    await storeDB(
+      {
+        id,
+        url,
+        filename,
+        svg,
+        mimetype,
+        width,
+        height,
+        dataUri,
+        encoding,
+        path: filepath
+      },
+      context
+    );
+    const rs = fs.createReadStream(filepath);
+    await createAlternateImageSizes(
+      { stream: rs, id, sizes, filename, mimetype, encoding },
+      context
+    );
+  } catch (e) {
+    //
+    console.log(e);
+  }
+  return;
 };

@@ -3,6 +3,7 @@ import path from 'path';
 import sharp from 'sharp';
 import uuidV4 from 'uuid/v4';
 import logger from '../../../../logger';
+import ResolveAfterCount from './ResolveAfterCount';
 
 function encodeOptimizedSVGDataUri(svgString) {
   const uriPayload = encodeURIComponent(svgString) // encode URL-unsafe characters
@@ -47,45 +48,6 @@ const createSvg = (
 };
 
 const DataURI = require('datauri');
-
-class ResolveAfterCount {
-  constructor(count, resolve, reject) {
-    this.count = count;
-    this.resolve = resolve;
-    this.reject = reject;
-    this.items = [];
-    this.errors = [];
-    this.resolves = [];
-  }
-  addItem(item) {
-    this.items.push(item);
-    this.errors.push(undefined);
-    this.attemptCallback();
-  }
-
-  attemptCallback() {
-    if (this.items.length >= this.count) {
-      if (this.items.every(value => value === undefined))
-        return this.reject(this.errors);
-      this.resolves.forEach(resolve => {
-        resolve(this.items);
-      });
-      this.resolve(this.items);
-    }
-  }
-
-  addError(error) {
-    this.errors.push(error);
-    this.items.push(undefined);
-    this.attemptCallback();
-  }
-
-  addCallbacks(...callbacks) {
-    callbacks.forEach(callback => {
-      this.callbacks.push(callback);
-    });
-  }
-}
 
 const { promisify } = require('util');
 
@@ -228,22 +190,22 @@ export const processFile = async (upload, context) => {
 export const processImage = async (upload, sizes, context) => {
   try {
     await createUploadDir(uploadDir);
-    const id = uuidV4();
+    const id = await uuidV4();
     const { stream, filename, mimetype, encoding } = await upload;
 
     const { filepath, url } = await storeFS({ stream, filename, id });
-    const dataURI = new DataURI();
+    const dataURI = await new DataURI();
 
     const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
       sharp(filepath).metadata(),
-      optimize(await createSvg(filepath)),
+      createSvg(filepath).then(optimize),
       sharp(filepath)
         .resize(10)
         .jpeg()
         .toBuffer()
     ]);
     dataURI.format('.jpeg', dataUriBuffer);
-    const dataUri = dataURI.content;
+    const dataUri = await dataURI.content;
     await storeDB(
       {
         id,

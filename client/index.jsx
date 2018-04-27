@@ -1,6 +1,6 @@
 /* eslint-env browser */
 import React from 'react';
-import swURL from 'sw-loader!./sw'; // eslint-disable-line
+import registerServiceWorker, { ServiceWorkerNoSupportError } from 'service-worker-loader!./sw'; // eslint-disable-line
 import ReactDOM from 'react-dom';
 import { loadComponents } from 'loadable-components';
 import logger from './logger';
@@ -13,12 +13,15 @@ import App from './App';
 const rootElement = document.getElementById('root');
 
 const render = element => {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register(swURL)
-      .catch(err => logger.error(err))
-      .then(response => logger.log(response));
-  }
+  registerServiceWorker({ scope: '/' })
+    .catch(err => {
+      if (err instanceof ServiceWorkerNoSupportError) {
+        logger.log('ServiceWorker is not Supported!');
+      } else {
+        logger.error(err);
+      }
+    })
+    .then(response => logger.log(response));
   // wasmBooted.then(() => {
   //   console.log('return value was', add(2, 3));
   // });

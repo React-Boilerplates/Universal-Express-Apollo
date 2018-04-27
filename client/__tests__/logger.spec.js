@@ -1,7 +1,5 @@
 import logger from '../logger';
 
-jest.mock('airbrake-js');
-
 global.console = {
   warn: jest.fn(),
   info: jest.fn(),
@@ -10,6 +8,16 @@ global.console = {
 };
 
 describe('logger', () => {
+  jest.doMock('airbrake-js', () => {
+    return class Airbrake {
+      constructor(opts) {
+        this.opts = opts;
+      }
+      notify(...args) {
+        this.args = args;
+      }
+    };
+  });
   it('should error', () => {
     logger.error('ERROR');
   });

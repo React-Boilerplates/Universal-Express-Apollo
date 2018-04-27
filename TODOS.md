@@ -2,6 +2,7 @@
 
 - Build a function that will compress GraphQL Schema Strings
 - Server up Page using a Stream
+  - Possibly using [react-helmet-async](https://github.com/NYTimes/react-helmet-async)
 - Setup Helmet-CSP
 - Setup Tree-Shaking on Image-Loader
 - Setup Server-Timing API

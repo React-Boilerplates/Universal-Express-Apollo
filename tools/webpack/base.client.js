@@ -42,7 +42,7 @@ module.exports = {
   output: {
     path: path.resolve(process.cwd(), 'public'),
     publicPath: '/',
-    filename: __DEV__ ? 'assets/[name].[ext]' : 'assets/[name].[hash].[ext]'
+    filename: __DEV__ ? 'assets/[name].js' : 'assets/[name].[hash].js'
   },
   context: path.join(process.cwd()),
   resolve: {

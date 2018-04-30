@@ -115,7 +115,7 @@ export const createAlternateImageSizes = (
   { filepath, id, sizes, filename, ...data },
   db
 ) => {
-  if (!sizes.length) return Promise.resolve({ images: [] });
+  if (!sizes.length) return Promise.resolve(sizes);
 
   // return Promise.reject();
   const pipeline = sharp().sharpen();
@@ -249,11 +249,13 @@ export const processImage = async (upload, sizes, context) => {
       },
       context
     );
+    if (sizes.length) {
+      await createAlternateImageSizes(
+        { filepath, id, sizes, filename, mimetype, encoding },
+        context
+      );
+    }
 
-    await createAlternateImageSizes(
-      { filepath, id, sizes, filename, mimetype, encoding },
-      context
-    );
     return Promise.resolve();
   } catch (e) {
     //

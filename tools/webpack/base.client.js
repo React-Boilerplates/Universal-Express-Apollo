@@ -7,7 +7,7 @@ const path = require('path');
 const AssetsPlugin = require('assets-webpack-plugin');
 const cssTransformer = require('./transformer/css');
 const jsTransformer = require('./transformer/js');
-const { sssLoader } = require('./constants');
+const { sssLoader, cssLoader } = require('./constants');
 
 const assetsPluginInstance = new AssetsPlugin({
   filename: 'assets.json',
@@ -87,6 +87,10 @@ module.exports = {
       {
         test: /\.sss$/,
         use: sssLoader
+      },
+      {
+        test: /\.css$/,
+        use: cssLoader
       },
       {
         test: /\.(jpe?g|png)$/i,

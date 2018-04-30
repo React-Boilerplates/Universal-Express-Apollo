@@ -59,21 +59,26 @@ const sssLoader =
   process.env.NODE_ENV === 'production'
     ? extractCss.extract({
         fallback: 'style-loader',
-        use: [
-          { loader: 'css-loader', options: { importLoaders: 1 } },
-          'postcss-loader'
-        ]
+        use: [{ loader: 'css-loader' }]
       })
     : [
         'style-loader',
         { loader: 'css-loader', options: { importLoaders: 1 } },
         'postcss-loader'
       ];
+const cssLoader =
+  process.env.NODE_ENV === 'production'
+    ? extractCss.extract({
+        fallback: 'style-loader',
+        use: [{ loader: 'css-loader' }]
+      })
+    : ['style-loader', { loader: 'css-loader' }];
 const extractTextPlugin =
-  process.env.NODE_ENV === 'production' ? extractCss : undefined;
+  process.env.NODE_ENV === 'production' ? [extractCss, sssLoader] : undefined;
 module.exports = {
   envVariables,
   hardScripts,
   sssLoader,
-  extractTextPlugin
+  extractTextPlugin,
+  cssLoader
 };

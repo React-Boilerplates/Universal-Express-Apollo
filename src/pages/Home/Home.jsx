@@ -1,4 +1,5 @@
 import React from 'react';
+import Editor from '../../components/Editor';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
 const Home = () => (
@@ -6,6 +7,7 @@ const Home = () => (
     <div>
       <h1>Universal React Starter</h1>
       <div>
+        <Editor />
         <h3>Technologies</h3>
         <h4>Production</h4>
         <h5>Express</h5>

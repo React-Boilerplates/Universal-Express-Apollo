@@ -1,8 +1,6 @@
 /* eslint-env serviceworker */
 /* global fetch */
 /* eslint-disable no-restricted-globals */
-import 'babel-polyfill';
-
 const ASSET_CACHE = '1';
 const DYNAMIC_CACHE = 'dynamic-v1';
 

@@ -2,11 +2,7 @@ import fs from 'fs';
 // import casual from 'casual';
 import path from 'path';
 import uuidV4 from 'uuid/v4';
-import {
-  createDb,
-  removeFolder,
-  emptyFolder
-} from '../../../../../../test_utilities';
+import { createDb } from '../../../../../../test_utilities';
 
 // process.cwd = () => path.resolve('./');
 const {
@@ -27,51 +23,67 @@ const createStream = () => fs.createReadStream(imagePath);
 
 describe('Functions', () => {
   describe('createAlternateImageSizes', () => {
-    beforeAll(removeFolder(uploadDir));
+    // beforeAll(removeFolder(uploadDir));
     it('should process the stream', async () => {
-      const id = uuidV4();
-      await createAlternateImageSizes(
-        {
-          stream: createStream(),
-          id,
-          sizes: [20, 80, 60],
-          filename
-        },
-        createDb()
-      );
-      expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
-      expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
-      expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
-      expect(
-        fs.existsSync(
-          path.join(uploadDir, '20', `totally-fake-uuid-displayed-${filename}`)
-        )
-      ).toBe(true);
-      expect(
-        fs.existsSync(
-          path.join(uploadDir, '80', `totally-fake-uuid-displayed-${filename}`)
-        )
-      ).toBe(true);
-      expect(
-        fs.existsSync(
-          path.join(uploadDir, '60', `totally-fake-uuid-displayed-${filename}`)
-        )
-      ).toBe(true);
+      try {
+        const id = uuidV4();
+        await createAlternateImageSizes(
+          {
+            filepath: imagePath,
+            id,
+            sizes: [20, 80, 60],
+            filename
+          },
+          createDb()
+        );
+        expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
+        expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
+        expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
+        expect(
+          fs.existsSync(
+            path.join(
+              uploadDir,
+              '20',
+              `totally-fake-uuid-displayed-${filename}`
+            )
+          )
+        ).toBe(true);
+        expect(
+          fs.existsSync(
+            path.join(
+              uploadDir,
+              '80',
+              `totally-fake-uuid-displayed-${filename}`
+            )
+          )
+        ).toBe(true);
+        expect(
+          fs.existsSync(
+            path.join(
+              uploadDir,
+              '60',
+              `totally-fake-uuid-displayed-${filename}`
+            )
+          )
+        ).toBe(true);
+      } catch (error) {
+        expect(error).toBeUndefined();
+      }
     });
-    afterAll(removeFolder(uploadDir));
+    // afterAll(removeFolder(uploadDir));
   });
   describe('processFile', () => {
-    beforeAll(removeFolder(uploadDir));
+    // beforeAll(removeFolder(uploadDir));
     it('should process the stream', async () => {
       await processFile(
         { stream: createStream(), filename, mimetype, encoding },
         createDb()
       );
     });
-    afterAll(removeFolder(uploadDir));
+    // afterAll(removeFolder(uploadDir));
   });
   describe('processImage', () => {
-    beforeAll(removeFolder(uploadDir));
+    // beforeAll(removeFolder(uploadDir));
     it('should handle no sizes', async () => {
       await processImage(
         { stream: createStream(), filename, mimetype, encoding },
@@ -85,50 +97,66 @@ describe('Functions', () => {
       ).toBe(true);
     });
     it('should handle sizes', async () => {
-      await processImage(
-        { stream: createStream(), filename, mimetype, encoding },
-        [20, 80, 60],
-        createDb()
-      );
-      expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
-      expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
-      expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
-      expect(
-        fs.existsSync(
-          path.join(uploadDir, '20', `totally-fake-uuid-displayed-${filename}`)
-        )
-      ).toBe(true);
-      expect(
-        fs.existsSync(
-          path.join(uploadDir, '80', `totally-fake-uuid-displayed-${filename}`)
-        )
-      ).toBe(true);
-      expect(
-        fs.existsSync(
-          path.join(uploadDir, '60', `totally-fake-uuid-displayed-${filename}`)
-        )
-      ).toBe(true);
-      expect(
-        fs.existsSync(
-          path.join(uploadDir, `totally-fake-uuid-displayed-${filename}`)
-        )
-      ).toBe(true);
+      try {
+        await processImage(
+          { stream: createStream(), filename, mimetype, encoding },
+          [20, 80, 60],
+          createDb()
+        );
+        expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
+        expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
+        expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
+        expect(
+          fs.existsSync(
+            path.join(
+              uploadDir,
+              '20',
+              `totally-fake-uuid-displayed-${filename}`
+            )
+          )
+        ).toBe(true);
+        expect(
+          fs.existsSync(
+            path.join(
+              uploadDir,
+              '80',
+              `totally-fake-uuid-displayed-${filename}`
+            )
+          )
+        ).toBe(true);
+        expect(
+          fs.existsSync(
+            path.join(
+              uploadDir,
+              '60',
+              `totally-fake-uuid-displayed-${filename}`
+            )
+          )
+        ).toBe(true);
+        expect(
+          fs.existsSync(
+            path.join(uploadDir, `totally-fake-uuid-displayed-${filename}`)
+          )
+        ).toBe(true);
+      } catch (error) {
+        expect(error).toBeUndefined();
+      }
     });
-    afterAll(removeFolder(uploadDir));
+    // afterAll(removeFolder(uploadDir));
   });
   xdescribe('scaffolding', () => {
     xdescribe('dry-run', () => {
-      beforeAll(removeFolder(uploadDir));
+      // beforeAll(removeFolder(uploadDir));
       xit('should create folders', async () => {
         await require('../functions').createUploadDir(
           require('../functions').uploadDir
         );
       });
-      afterAll(removeFolder(uploadDir));
+      // afterAll(removeFolder(uploadDir));
     });
     xdescribe('main folder exists', () => {
-      beforeAll(emptyFolder(uploadDir));
-      afterAll(removeFolder(uploadDir));
+      // beforeAll(emptyFolder(uploadDir));
+      // afterAll(removeFolder(uploadDir));
       xit('should create folders', async () => {
         await processImage(
           { stream: createStream(), filename, mimetype, encoding },

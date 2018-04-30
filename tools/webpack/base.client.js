@@ -53,34 +53,36 @@ module.exports = {
       {
         enforce: 'pre',
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components|sw\.js$)/,
         loader: 'eslint-loader'
       },
-      // {
-      //   test: /\.rs$/,
-      //   use: [
-      //     {
-      //       loader: 'wasm-loader'
-      //     },
-      //     {
-      //       loader: 'rust-native-wasm-loader',
-      //       options: {
-      //         release: true
-      //       }
-      //     }
-      //   ]
-      // },
       {
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheIdentifier: {
-              env: __DEV__ ? 'client' : 'client:prod'
+        exclude: /(node_modules|bower_components|sw\.js$)/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheIdentifier: {
+                env: __DEV__ ? 'client' : 'client:prod'
+              }
             }
           }
-        }
+        ]
+      },
+      {
+        test: /sw\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: [
+          {
+            loader: 'sw-loader'
+            // options: {
+            //   cacheIdentifier: {
+            //     env: __DEV__ ? 'client' : 'client:prod'
+            //   }
+            // }
+          }
+        ]
       },
       {
         test: /\.sss$/,

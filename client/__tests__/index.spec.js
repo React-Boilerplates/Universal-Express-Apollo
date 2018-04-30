@@ -4,7 +4,6 @@ import fetch from 'isomorphic-unfetch';
 // eslint-disable-line no-unused-vars
 jest.disableAutomock();
 jest.mock('airbrake-js');
-jest.mock('service-worker-loader!./sw');
 // eslint-disable-next-line no-underscore-dangle
 window.__LOADABLE_STATE__ = {
   children: [
@@ -33,10 +32,18 @@ describe('Main Client', () => {
     jest.resetModules();
   });
   it('should render', () => {
+    jest.doMock('../sw', () => {
+      const def = () => Promise.reject();
+      return def;
+    });
     // eslint-disable-next-line no-unused-expressions, global-require
     require('../.').default;
   });
   it('should throw error in service worker', () => {
+    jest.doMock('../sw', () => {
+      const def = () => Promise.reject();
+      return def;
+    });
     require('../.').default;
   });
 });

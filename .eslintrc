@@ -87,6 +87,7 @@
                     "**/tools/jest/*.js",
                     "jest.setup.js",
                     "tools/**/*.js",
+                    "/gulpfile.js",
                     "**/mocks.js"
                 ]
             }

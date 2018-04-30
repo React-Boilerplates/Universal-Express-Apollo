@@ -82,14 +82,19 @@ export const createUploadDir = async dir => {
 // createUploadDir(uploadDir);
 
 const storeFS = ({ stream, filename, id = uuidV4() }) => {
+  let timeout;
   const url = `/${id}-${filename}`;
   const filepath = `${uploadDir}${url}`;
   const writeStream = fs.createWriteStream(filepath);
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
+    timeout = setTimeout(() => {
       // console.log('Error in storeFS!');
       reject(new Error('Process was taking too long!!'));
     }, 4800);
+    writeStream.on('finish', () => {
+      clearTimeout(timeout);
+      resolve({ id, url, filepath });
+    });
     stream
       .on('error', async error => {
         if (stream.truncated) {

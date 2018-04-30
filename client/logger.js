@@ -10,9 +10,11 @@ const airbrake = new AirbrakeClient({
   projectKey: process.env.AIRBRAKE_KEY || 'abc'
 });
 
+const PROD = process.env.NODE_ENV === 'production';
+
 const logger = {
   error: (error, ...info) =>
-    process.env.NODE_ENV === 'production'
+    PROD
       ? airbrake.notify({
           error,
           params: { info }

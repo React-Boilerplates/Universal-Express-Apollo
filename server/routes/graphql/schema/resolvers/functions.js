@@ -220,51 +220,58 @@ export const processFile = async (upload, context) => {
   }
 };
 
-export const processImage = async (upload, sizes, context) => {
-  try {
-    await createUploadDir(uploadDir);
-    const id = await uuidV4();
+export const processImage = (upload, sizes, context) => {
+  return new Promise(async (resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error('Process was taking too long!'));
+    }, 4800);
     const { stream, filename, mimetype, encoding } = await upload;
+    try {
+      await createUploadDir(uploadDir);
+      const id = await uuidV4();
 
-    const { filepath, url } = await storeFS({ stream, filename, id });
-    const dataURI = await new DataURI();
+      const { filepath, url } = await storeFS({ stream, filename, id });
+      const dataURI = await new DataURI();
 
-    const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
-      sharp(filepath).metadata(),
-      createSvg(filepath).then(optimize),
-      sharp(filepath)
-        .resize(10)
-        .jpeg()
-        .toBuffer()
-    ]);
-    dataURI.format('.jpeg', dataUriBuffer);
-    const dataUri = dataURI.content;
-    await storeDB(
-      {
-        id,
-        url,
-        filename,
-        svg,
-        mimetype,
-        width,
-        height,
-        dataUri,
-        encoding,
-        path: filepath
-      },
-      context
-    );
-    if (sizes.length) {
-      await createAlternateImageSizes(
-        { filepath, id, sizes, filename, mimetype, encoding },
+      const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
+        sharp(filepath).metadata(),
+        createSvg(filepath).then(optimize),
+        sharp(filepath)
+          .resize(10)
+          .jpeg()
+          .toBuffer()
+      ]);
+      dataURI.format('.jpeg', dataUriBuffer);
+      const dataUri = dataURI.content;
+      await storeDB(
+        {
+          id,
+          url,
+          filename,
+          svg,
+          mimetype,
+          width,
+          height,
+          dataUri,
+          encoding,
+          path: filepath
+        },
         context
       );
+      if (sizes.length) {
+        await createAlternateImageSizes(
+          { filepath, id, sizes, filename, mimetype, encoding },
+          context
+        );
+      }
+      clearTimeout(timeout);
+      return resolve();
+    } catch (e) {
+      //
+      logger.log(e);
+      clearTimeout(timeout);
+      stream.close();
+      return resolve();
     }
-
-    return Promise.resolve();
-  } catch (e) {
-    //
-    logger.log(e);
-    return Promise.resolve();
-  }
+  });
 };

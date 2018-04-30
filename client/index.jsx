@@ -2,16 +2,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { loadComponents } from 'loadable-components';
-import swUrl from './sw.js';
+import swUrl from './sw.js'; // eslint-disable-line import/extensions
 import App from './App';
 
 const rootElement = document.getElementById('root');
 
 const render = element => {
+  console.log(swUrl);
   let promise = Promise.resolve();
   if ('serviceWorker' in navigator) {
-    console.log(swUrl);
-    promise = promise.then(() => navigator.serviceWorker.register(swUrl));
+    promise = promise.then(() =>
+      navigator.serviceWorker.register(swUrl).catch(() => Promise.resolve())
+    );
   }
   return promise.then(() =>
     Promise.all([loadComponents()]).then(() => {

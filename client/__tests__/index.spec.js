@@ -3,6 +3,8 @@
 import fetch from 'isomorphic-unfetch';
 // eslint-disable-line no-unused-vars
 jest.disableAutomock();
+jest.mock('airbrake-js');
+jest.mock('service-worker-loader!./sw');
 // eslint-disable-next-line no-underscore-dangle
 window.__LOADABLE_STATE__ = {
   children: [
@@ -10,8 +12,6 @@ window.__LOADABLE_STATE__ = {
     { id: './Home', children: [{ id: './PageErrorBoundary' }] }
   ]
 };
-jest.mock('airbrake-js');
-jest.mock('service-worker-loader!./sw');
 
 global.console = {
   warn: jest.fn(),

@@ -69,18 +69,7 @@ config.externals = {
 
 config.optimization = {
   minimize: true,
-  minimizer: [
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        output: {
-          comments: false
-        },
-        compress: {
-          dead_code: true
-        }
-      }
-    })
-  ]
+  minimizer: [new UglifyJsPlugin()]
 };
 
 module.exports = config;

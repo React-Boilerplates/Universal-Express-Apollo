@@ -6,7 +6,7 @@ platform: x64
 
 init:
   - git config --global core.autocrlf input
-  - ps: IF ($env:APPVEYOR_REPO_BRANCH -eq "develop") {$env:APPVEYOR_CACHE_SKIP_SAVE = "true"}
+  - ps: IF ($env:APPVEYOR_REPO_BRANCH -ne "master") {$env:APPVEYOR_CACHE_SKIP_SAVE = "true"}
 
 # Install scripts. (runs after repo cloning)
 install:

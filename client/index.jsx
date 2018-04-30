@@ -7,6 +7,7 @@ import logger from './logger';
 import App from './App';
 // import { width } from './cats.jpg';
 
+// console.log(width);
 // import { add, wasmBooted } from '../src/lib.rs';
 
 const rootElement = document.getElementById('root');

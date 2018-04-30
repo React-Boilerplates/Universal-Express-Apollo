@@ -54,16 +54,20 @@ export const createUser = () => ({
 });
 
 export const removeFolder = uploadDir => done => {
-  rimraf(uploadDir, () => {
-    fs.mkdir(uploadDir, () => {
+  rimraf(uploadDir, err => {
+    if (err) return done(err);
+    fs.mkdir(uploadDir, error => {
+      if (error) return done(error);
       done();
     });
   });
 };
 
 export const emptyFolder = uploadDir => done => {
-  rimraf(uploadDir, () => {
-    fs.mkdir(uploadDir, () => {
+  rimraf(uploadDir, err => {
+    if (err) return done(err);
+    fs.mkdir(uploadDir, error => {
+      if (error) return done(error);
       done();
     });
   });

@@ -158,7 +158,7 @@
         "rimraf": "2.6.2",
         "schema-utils": "0.4.5",
         "service-worker-mock": "1.9.2",
-        "sinon": "4.5.0",
+        "sinon": "5.0.1",
         "style-loader": "0.21.0",
         "stylelint": "9.2.0",
         "stylelint-config-recommended": "2.1.0",
@@ -168,13 +168,18 @@
         "supertest": "3.0.0",
         "uglifyjs-webpack-plugin": "1.2.5",
         "sw-loader": "0.1.2",
-        "uglify-js": "3.3.22",
+        "uglify-js": "3.3.23",
         "webpack": "4.6.0",
+<<<<<<< HEAD
         "webpack-cli": "2.0.15",
         "webpack-dev-middleware": "3.1.3",
+=======
+        "webpack-cli": "2.1.2",
+        "webpack-dev-middleware": "3.1.2",
+>>>>>>> bd4d216173dab1dee6114cd6c08135c97c50a390
         "webpack-dev-server": "3.1.3",
         "webpack-hot-middleware": "2.22.1",
-        "webpack-manifest-plugin": "2.0.1",
+        "webpack-manifest-plugin": "2.0.2",
         "webpack-node-externals": "1.7.2",
         "webpack-pwa-manifest": "3.6.2"
     },

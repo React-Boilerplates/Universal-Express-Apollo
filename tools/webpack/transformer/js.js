@@ -1,5 +1,5 @@
 const babel = require('@babel/core');
-const UglifyJS = require('uglify-js');
+const UglifyJS = require('uglify-es');
 
 const jsTransformer = content =>
   new Promise((resolve, reject) => {

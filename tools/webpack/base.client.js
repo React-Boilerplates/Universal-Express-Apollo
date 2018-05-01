@@ -7,6 +7,7 @@ const path = require('path');
 const AssetsPlugin = require('assets-webpack-plugin');
 const cssTransformer = require('./transformer/css');
 const jsTransformer = require('./transformer/js');
+const serviceWorkerTransformer = require('./transformer/service-worker');
 const { sssLoader, cssLoader } = require('./constants');
 
 const assetsPluginInstance = new AssetsPlugin({
@@ -53,12 +54,12 @@ module.exports = {
       {
         enforce: 'pre',
         test: /\.js$/,
-        exclude: /(node_modules|bower_components|sw\.js$)/,
+        exclude: /(node_modules|bower_components)/,
         loader: 'eslint-loader'
       },
       {
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components|sw\.js$)/,
+        exclude: /(node_modules|bower_components)/,
         use: [
           {
             loader: 'babel-loader',
@@ -67,20 +68,6 @@ module.exports = {
                 env: __DEV__ ? 'client' : 'client:prod'
               }
             }
-          }
-        ]
-      },
-      {
-        test: /sw\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: [
-          {
-            loader: 'sw-loader'
-            // options: {
-            //   cacheIdentifier: {
-            //     env: __DEV__ ? 'client' : 'client:prod'
-            //   }
-            // }
           }
         ]
       },
@@ -143,6 +130,13 @@ module.exports = {
         test: /\.css$/,
         cache: { key: 'my-cache-key' },
         transform: cssTransformer,
+        toType: 'template'
+      },
+      {
+        from: 'client/sw.js',
+        to: '[name].[ext]',
+        // cache: { key: 'my-cache-key' },
+        transform: serviceWorkerTransformer,
         toType: 'template'
       },
       {

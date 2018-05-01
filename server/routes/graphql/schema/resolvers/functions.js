@@ -180,9 +180,12 @@ export const createAlternateImageSizes = (
                 }
               });
             stream.pipe(pipeline).on('error', reject);
-          });
+          }).catch(() => Promise.resolve());
         })
-      );
+      ).catch(() => {
+        // console.error(errs);
+        return Promise.resolve();
+      });
       resolve(images);
       // .on('finish', resolve);
     } catch (e) {
@@ -240,7 +243,9 @@ export const processImage = (upload, sizes, context) => {
           .resize(10)
           .jpeg()
           .toBuffer()
-      ]);
+      ]).catch(() => {
+        return Promise.resolve();
+      });
       dataURI.format('.jpeg', dataUriBuffer);
       const dataUri = dataURI.content;
       await storeDB(

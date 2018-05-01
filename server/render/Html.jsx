@@ -3,7 +3,7 @@ import assets from '../../assets.json';
 const stringify = json => JSON.stringify(json).replace(/</g, '\\u003c');
 
 export default (
-  html,
+  html = '',
   {
     title = '',
     headScript = '',
@@ -15,8 +15,9 @@ export default (
     link = '',
     amp = false,
     cache = false
-  }
-) => `
+  } = {}
+) =>
+  `
 <!doctype html>
 <html ${htmlAttributes}>
   <head>
@@ -40,18 +41,20 @@ export default (
   <body ${bodyAttributes}>
     <div id="root">${html}</div>
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-    <script>window.AMP = ${stringify(amp)}</script>
+    <script>window.AMP=${stringify(amp)};</script>
     ${process.env.HARD_CODED_SCRIPTS || ''}
     ${bodyScript}
     <script defer async src="${assets.vendor.js}"></script>
     ${
       cache
-        ? `<script>window.__APOLLO_STATE__ = ${stringify(
+        ? `<script>window.__APOLLO_STATE__=${stringify(
             cache.extract()
-          )}</script>`
+          )};</script>`
         : ''
     }
     <script defer async src="${assets.app.js}"></script>
   </body>
 </html>
-`;
+`
+    .replace(/  +/gm, ' ')
+    .replace(/>\s+(?=<)/gm, '>');

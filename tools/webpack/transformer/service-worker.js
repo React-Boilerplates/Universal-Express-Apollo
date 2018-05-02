@@ -1,37 +1,41 @@
-const babel = require('@babel/core');
+const compiler = require('./compiler');
+const config = require('../service-worker');
 const crypto = require('crypto');
-const UglifyJS = require('uglify-es');
+const path = require('path');
+const webpack = require('webpack');
 
-const serviceWorkerTransformer = content =>
-  new Promise((resolve, reject) => {
+// Created this to Transform the SW and not store it in memory
+
+const serviceWorkerTransformer = production => content =>
+  new Promise(async (resolve, reject) => {
+    const prod = production ? 'prod' : 'dev';
     // Create a Cache buster Here
-    let str = content.toString();
+    const str = content.toString();
     const hash = crypto
       .createHash('md5')
       .update(str)
       .digest('hex');
-
-    const assetCache = `assets-v${hash}`;
-    const dynamicCache = `dynamic-v${hash}`;
-    str = str
-      .replace(
-        "const ASSET_CACHE = 'assets-v1';",
-        `const ASSET_CACHE = '${assetCache}';`
-      )
-      .replace(
-        "const DYNAMIC_CACHE = 'dynamic-v1';",
-        `const DYNAMIC_CACHE = '${dynamicCache}';`
-      );
-    babel.transform(
-      str,
-      { minified: true, envName: 'client' },
-      (err, { code }) => {
-        if (err) return reject(err);
-        // return resolve(code);
-        const result = UglifyJS.minify(code);
-        return resolve(result.code);
-      }
+    const assetCache = `assets-v${hash}-${prod}`;
+    const dynamicCache = `dynamic-v${hash}-${prod}`;
+    config.plugins.unshift(
+      new webpack.DefinePlugin({
+        __assets__: JSON.stringify(assetCache),
+        __dynamic__: JSON.stringify(dynamicCache)
+      })
     );
+    if (!production) config.mode = 'development';
+    let code;
+    try {
+      const [d, fs] = await compiler(config);
+
+      code = fs
+        .readFileSync(path.join(process.cwd(), 'public', 'sw.js'))
+        .toString();
+    } catch (error) {
+      console.error(error);
+      reject(error);
+    }
+    return resolve(code);
   });
 
 module.exports = serviceWorkerTransformer;

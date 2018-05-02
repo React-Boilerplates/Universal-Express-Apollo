@@ -8,7 +8,7 @@ config.plugins.unshift(
   new webpack.DefinePlugin({
     'process.env': envVariables
   }),
-  extractTextPlugin
+  ...extractTextPlugin
 );
 
 config.mode = 'production';

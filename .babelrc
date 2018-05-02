@@ -183,26 +183,13 @@
                                 "last 2 versions",
                                 "safari >= 7"
                             ]
-                        },
-                        "modules": false
-                    }
-                ],
-                [
-                    "@babel/preset-stage-1",
-                    {
-                        "decoratorsLegacy": true
+                        }
                     }
                 ]
             ],
             "plugins": [
                 "@babel/plugin-proposal-optional-chaining",
-                "@babel/plugin-proposal-object-rest-spread",
-                [
-                    "babel-plugin-styled-components",
-                    {
-                        "displayName": false
-                    }
-                ],
+                "@babel/plugin-proposal-object-rest-spread"
             ]
         }
     }

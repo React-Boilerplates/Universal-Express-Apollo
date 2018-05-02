@@ -136,7 +136,7 @@ module.exports = {
         from: 'client/sw.js',
         to: '[name].[ext]',
         // cache: { key: 'my-cache-key' },
-        transform: serviceWorkerTransformer,
+        transform: serviceWorkerTransformer(!__DEV__),
         toType: 'template'
       },
       {

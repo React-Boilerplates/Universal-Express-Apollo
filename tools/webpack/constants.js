@@ -55,9 +55,13 @@ const extractCss = new ExtractTextPlugin({
   filename: '[name].css'
 });
 
+const extractSss = new ExtractTextPlugin({
+  filename: '[name].css'
+});
+
 const sssLoader =
   process.env.NODE_ENV === 'production'
-    ? extractCss.extract({
+    ? extractSss.extract({
         fallback: 'style-loader',
         use: [{ loader: 'css-loader' }]
       })
@@ -74,7 +78,7 @@ const cssLoader =
       })
     : ['style-loader', { loader: 'css-loader' }];
 const extractTextPlugin =
-  process.env.NODE_ENV === 'production' ? [extractCss, sssLoader] : undefined;
+  process.env.NODE_ENV === 'production' ? [extractCss, extractSss] : [];
 module.exports = {
   envVariables,
   hardScripts,

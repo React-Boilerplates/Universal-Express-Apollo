@@ -19,7 +19,12 @@ const App = props => (
 
 App.propTypes = {
   a: PropTypes.bool.isRequired,
-  path: PropTypes.string.isRequired
+  path: PropTypes.string.isRequired,
+  handleRouterChange: PropTypes.func
+};
+
+App.defaultProps = {
+  handleRouterChange: () => {}
 };
 
 export default hot(module)(App);

@@ -152,7 +152,7 @@
         "memory-fs": "0.4.1",
         "mock-env": "0.2.0",
         "openport": "0.0.5",
-        "postcss": "6.0.21",
+        "postcss": "6.0.22",
         "postcss-cssnext": "3.1.0",
         "postcss-import": "11.1.0",
         "postcss-loader": "2.1.4",

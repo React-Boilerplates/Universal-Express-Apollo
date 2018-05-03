@@ -4,15 +4,43 @@
 
 const makeServiceWorkerEnv = require('service-worker-mock');
 
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: jest.fn(() => ({ 'test.js': 'test' }))
+  })
+);
+
 describe('Service Worker', () => {
   beforeEach(() => {
     jest.mock('babel-polyfill');
     // jest.resetAllMocks();
     Object.assign(global, makeServiceWorkerEnv());
     jest.resetModules();
+    global.cachedResponse = {
+      body: { parts: [], type: '' },
+      json() {
+        return this.body;
+      },
+      clone() {
+        return this;
+      },
+      headers: undefined,
+      ok: true,
+      redirected: false,
+      status: 200,
+      statusText: 'SuperSmashingGreat!',
+      type: 'basic',
+      url: 'http://example.com/asset'
+    };
+    global.cachedRequest = new Request(
+      '/' + Math.round(Math.random * 10000000000)
+    );
+    global.__assets__ = '' + Math.random(); // eslint-disable-line no-unused-vars
+    global.__dynamic__ = '' + Math.random(); // eslint-disable-line no-unused-vars
+    require('../sw.js');
+    global.fetch = jest.fn(() => Promise.resolve(global.cachedResponse));
   });
   it('should install', async () => {
-    require('../sw.js');
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: jest.fn(() => ({ 'test.js': 'test' }))
@@ -21,29 +49,13 @@ describe('Service Worker', () => {
     await self.trigger('install');
   });
   it('should fetch cached response when cached', async () => {
-    require('../sw.js');
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: jest.fn(() => ({ 'test.js': 'test' }))
-      })
-    );
-    const cachedResponse = { clone: () => {} };
-    const cachedRequest = new Request('/test');
-
-    const cache = await self.caches.open('dynamic-v1');
-    cache.put(cachedRequest, cachedResponse);
-
+    const cache = await self.caches.open(global.__dynamic__);
+    await cache.put(global.cachedRequest.clone(), global.cachedResponse);
     // Verify the response is the cachedResponse
-    const response = await self.trigger('fetch', cachedRequest);
-    expect(response).toBe(cachedResponse);
+    const response = await self.trigger('fetch', global.cachedRequest);
+    expect(response).toBe(global.cachedResponse);
   });
   it('should fetch', async () => {
-    require('../sw.js');
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: jest.fn(() => ({ 'test.js': 'test' }))
-      })
-    );
     const cachedRequest = new Request('/test');
 
     // Verify the response is the cachedResponse
@@ -52,11 +64,6 @@ describe('Service Worker', () => {
   });
   it('should fetch non-GET', async () => {
     require('../sw.js');
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: jest.fn(() => ({ 'test.js': 'test' }))
-      })
-    );
     const cachedRequest = new Request('/test', {
       method: 'POST'
     });

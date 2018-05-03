@@ -54,6 +54,7 @@ export const createUser = () => ({
 });
 
 export const removeFolder = uploadDir => done => {
+  console.log('removing', uploadDir);
   if (fs.existsSync(uploadDir)) {
     rimraf(uploadDir, err => {
       if (err) return done(err);

@@ -1,33 +1,42 @@
 import fs from 'fs';
 // import casual from 'casual';
 import path from 'path';
-import uuidV4 from 'uuid/v4';
-import { createDb } from '../../../../../../test_utilities';
-
-// process.cwd = () => path.resolve('./');
-const {
-  createAlternateImageSizes,
-  uploadDir,
-  processFile,
-  processImage
-} = require('../functions');
+import { createDb, removeFolder } from '../../../../../../test_utilities';
 
 const filename = 'cats.jpg';
 
 const imagePath = path.join(__dirname, filename);
+const { promisify } = require('util');
 
+const mkdirAsync = promisify(fs.mkdir);
 const mimetype = filename;
 const encoding = filename;
-
+const createMockUuid = () => require.requireActual('uuid/v4')();
 const createStream = () => fs.createReadStream(imagePath);
-
+global.uploadFolder = path.join(__dirname, 'uploads');
 describe('Functions', () => {
+  beforeAll(async () => {
+    await mkdirAsync(path.join(global.uploadFolder)).catch(() =>
+      Promise.resolve()
+    );
+  });
   describe('createAlternateImageSizes', () => {
-    // beforeAll(removeFolder(uploadDir));
+    beforeEach(async () => {
+      jest.resetAllMocks();
+      global.mockUuid = createMockUuid();
+      const finalPath = '' + Math.round(Math.random() * 100000000);
+      global.uploadDir = path.join(global.uploadFolder, finalPath);
+      jest.doMock('../directories.js', () => global.uploadDir);
+
+      await require('../functions').mkdirAsync(global.uploadDir);
+    });
+    // beforeAll(removeFolder(global.uploadDir));
     it('should process the stream', async () => {
+      console.log(global.mockUuid);
+      jest.mock('uuid/v4', () => global.mockUuid);
       try {
-        const id = uuidV4();
-        await createAlternateImageSizes(
+        const id = global.mockUuid;
+        await require('../functions').createAlternateImageSizes(
           {
             filepath: imagePath,
             id,
@@ -36,64 +45,70 @@ describe('Functions', () => {
           },
           createDb()
         );
-        expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
-        expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
-        expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
-        expect(
-          fs.existsSync(
-            path.join(
-              uploadDir,
-              '20',
-              `totally-fake-uuid-displayed-${filename}`
-            )
-          )
-        ).toBe(true);
-        expect(
-          fs.existsSync(
-            path.join(
-              uploadDir,
-              '80',
-              `totally-fake-uuid-displayed-${filename}`
-            )
-          )
-        ).toBe(true);
-        expect(
-          fs.existsSync(
-            path.join(
-              uploadDir,
-              '60',
-              `totally-fake-uuid-displayed-${filename}`
-            )
-          )
-        ).toBe(true);
       } catch (error) {
+        console.error(error);
         expect(error).toBeUndefined();
       }
+      expect(fs.existsSync(path.join(global.uploadDir, '20'))).toBe(true);
+      expect(fs.existsSync(path.join(global.uploadDir, '80'))).toBe(true);
+      expect(fs.existsSync(path.join(global.uploadDir, '60'))).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(global.uploadDir, '20', `${global.mockUuid}-${filename}`)
+        )
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(global.uploadDir, '80', `${global.mockUuid}-${filename}`)
+        )
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(global.uploadDir, '60', `${global.mockUuid}-${filename}`)
+        )
+      ).toBe(true);
     });
-    // afterAll(removeFolder(uploadDir));
+    // afterAll(removeFolder(global.uploadDir));
   });
   describe('processFile', () => {
-    // beforeAll(removeFolder(uploadDir));
+    beforeEach(async () => {
+      const finalPath = '' + Math.round(Math.random() * 100000000);
+      global.uploadDir = path.join(global.uploadFolder, finalPath);
+      jest.doMock('../directories.js', () => global.uploadDir);
+
+      await require('../functions').mkdirAsync(global.uploadDir);
+    });
+    // beforeAll(removeFolder(global.uploadDir));
     it('should process the stream', async () => {
-      await processFile(
+      await require('../functions').processFile(
         { stream: createStream(), filename, mimetype, encoding },
         createDb()
       );
     });
-    // afterAll(removeFolder(uploadDir));
+    // afterAll(removeFolder(global.uploadDir));
   });
   describe('processImage', () => {
-    // beforeAll(removeFolder(uploadDir));
+    beforeEach(async () => {
+      const finalPath = '' + Math.round(Math.random() * 100000000);
+      global.uploadDir = path.join(global.uploadFolder, finalPath);
+      jest.doMock('../directories.js', () => global.uploadDir);
+
+      await require('../functions').mkdirAsync(global.uploadDir);
+    });
+    // beforeAll(removeFolder(global.uploadDir));
     it('should handle no sizes', async () => {
       try {
-        await processImage(
+        await require('../functions').processImage(
           { stream: createStream(), filename, mimetype, encoding },
           [],
           createDb()
         );
         expect(
           fs.existsSync(
-            path.join(uploadDir, `totally-fake-uuid-displayed-${filename}`)
+            path.join(
+              global.uploadDir,
+              `totally-fake-uuid-displayed-${filename}`
+            )
           )
         ).toBe(true);
       } catch (e) {
@@ -102,18 +117,18 @@ describe('Functions', () => {
     });
     it('should handle sizes', async () => {
       try {
-        await processImage(
+        await require('../functions').processImage(
           { stream: createStream(), filename, mimetype, encoding },
           [20, 80, 60],
           createDb()
         );
-        expect(fs.existsSync(path.join(uploadDir, '20'))).toBe(true);
-        expect(fs.existsSync(path.join(uploadDir, '80'))).toBe(true);
-        expect(fs.existsSync(path.join(uploadDir, '60'))).toBe(true);
+        expect(fs.existsSync(path.join(global.uploadDir, '20'))).toBe(true);
+        expect(fs.existsSync(path.join(global.uploadDir, '80'))).toBe(true);
+        expect(fs.existsSync(path.join(global.uploadDir, '60'))).toBe(true);
         expect(
           fs.existsSync(
             path.join(
-              uploadDir,
+              global.uploadDir,
               '20',
               `totally-fake-uuid-displayed-${filename}`
             )
@@ -122,7 +137,7 @@ describe('Functions', () => {
         expect(
           fs.existsSync(
             path.join(
-              uploadDir,
+              global.uploadDir,
               '80',
               `totally-fake-uuid-displayed-${filename}`
             )
@@ -131,7 +146,7 @@ describe('Functions', () => {
         expect(
           fs.existsSync(
             path.join(
-              uploadDir,
+              global.uploadDir,
               '60',
               `totally-fake-uuid-displayed-${filename}`
             )
@@ -139,30 +154,40 @@ describe('Functions', () => {
         ).toBe(true);
         expect(
           fs.existsSync(
-            path.join(uploadDir, `totally-fake-uuid-displayed-${filename}`)
+            path.join(
+              global.uploadDir,
+              `totally-fake-uuid-displayed-${filename}`
+            )
           )
         ).toBe(true);
       } catch (error) {
         // expect(error).toBeUndefined();
       }
     });
-    // afterAll(removeFolder(uploadDir));
+    // afterAll(removeFolder(global.uploadDir));
   });
   xdescribe('scaffolding', () => {
     xdescribe('dry-run', () => {
-      // beforeAll(removeFolder(uploadDir));
+      beforeEach(async () => {
+        const finalPath = '' + Math.round(Math.random() * 100000000);
+        global.uploadDir = path.join(global.uploadFolder, finalPath);
+        await require('../functions').mkdirAsync(global.uploadDir);
+      });
       xit('should create folders', async () => {
         await require('../functions').createUploadDir(
           require('../functions').uploadDir
         );
       });
-      // afterAll(removeFolder(uploadDir));
+      // afterAll(removeFolder(global.uploadDir));
     });
     xdescribe('main folder exists', () => {
-      // beforeAll(emptyFolder(uploadDir));
-      // afterAll(removeFolder(uploadDir));
+      beforeEach(async () => {
+        const finalPath = '' + Math.round(Math.random() * 100000000);
+        global.uploadDir = path.join(global.uploadFolder, finalPath);
+        await require('../functions').mkdirAsync(global.uploadDir);
+      });
       xit('should create folders', async () => {
-        await processImage(
+        await require('../functions').processImage(
           { stream: createStream(), filename, mimetype, encoding },
           [],
           createDb()
@@ -170,4 +195,5 @@ describe('Functions', () => {
       });
     });
   });
+  afterAll(removeFolder(global.uploadFolder));
 });

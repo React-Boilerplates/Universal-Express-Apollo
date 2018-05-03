@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 import uuidV4 from 'uuid/v4';
+import uploadDir from './directories';
 import logger from '../../../../logger';
 
 function encodeOptimizedSVGDataUri(svgString) {
@@ -53,9 +54,8 @@ const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
 const lstatAsync = promisify(fs.lstat);
 
-const mkdirAsync = promisify(fs.mkdir);
+export const mkdirAsync = promisify(fs.mkdir);
 
-export const uploadDir = path.join(process.cwd(), 'uploads');
 const dirExists = async dirPath => {
   await mkdirAsync(uploadDir).catch(() => Promise.resolve());
   try {
@@ -78,8 +78,6 @@ export const createUploadDir = async dir => {
     return Promise.resolve(undefined);
   }
 };
-
-// createUploadDir(uploadDir);
 
 const storeFS = ({ stream, filename, id = uuidV4() }) => {
   let timeout;

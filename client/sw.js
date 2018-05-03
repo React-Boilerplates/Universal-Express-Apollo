@@ -152,9 +152,11 @@ self.addEventListener('fetch', event => {
   if (/\.(css|json|js)/.test(event.request.url))
     return handleStaticContent(event);
   if (event.request.url.includes('__webpack_hmr')) return;
+  console.log('REACHED HERE!!!');
 
-  event.respondWith(
+  return event.respondWith(
     (async function handleGet() {
+      console.log(DYNAMIC_CACHE);
       const cache = await caches.open(DYNAMIC_CACHE);
       const [cachedResponse, response] = await Promise.all([
         cache.match(event.request.clone()),
@@ -166,6 +168,7 @@ self.addEventListener('fetch', event => {
 
       if (cachedResponse) {
         console.log('Cached Response Now!', event.request.url);
+        console.log(response);
         if (response)
           event.waitUntil(cache.put(event.request.url, response.clone()));
         return cachedResponse;

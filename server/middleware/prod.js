@@ -12,6 +12,7 @@ const compression = require('compression');
 const jwt = require('jsonwebtoken');
 const jwtMiddleware = require('express-jwt');
 const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
 
 const express = require('express');
 
@@ -97,6 +98,7 @@ const func = app => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 30
       },
+      store: new SQLiteStore(),
       name: process.env.SESSION_NAME || 'boilerplate'
     })(req, res, next);
   });

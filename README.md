@@ -36,13 +36,13 @@ I was trying to use other cli/generators and was coming up against some blockers
 ### Technology
 
 - Server
-  - Express
+  - [Express](https://expressjs.com/)
     - Logging
-      - Winston
-      - AirBrake
-  - Apollo-Server
-  - Apollo-Upload-Server
-  - Sequelize
+      - [Winston](https://github.com/winstonjs/winston)
+      - [AirBrake](https://github.com/airbrake/airbrake-js)
+  - [Apollo-Server](https://github.com/apollographql/apollo-server)
+  - [Apollo-Upload-Server](https://github.com/jaydenseric/apollo-upload-server)
+  - [Sequelize](http://docs.sequelizejs.com/)
   - Session-Storage
   - DataLoader
 - Client

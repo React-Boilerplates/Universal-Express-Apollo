@@ -1,6 +1,13 @@
 # TODOs
 
 - Build a function that will compress GraphQL Schema Strings
+- Add Draft.js
+- Integrate with Browser-Sync
+- Add Command Line
+- Add Admin Panel
+- Add MDX-js
+- Server up Page using a Stream
+  - Possibly using [react-helmet-async](https://github.com/NYTimes/react-helmet-async)
 - Setup Helmet-CSP
 - Setup Tree-Shaking on Image-Loader
 - Setup Server-Timing API

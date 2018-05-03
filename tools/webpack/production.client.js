@@ -25,7 +25,7 @@ config.plugins.unshift(
       }
     ]
   }),
-  extractTextPlugin,
+  ...extractTextPlugin,
   new CleanWebpackPlugin(['public'], {
     root: process.cwd()
   })

@@ -7,7 +7,8 @@ const path = require('path');
 const AssetsPlugin = require('assets-webpack-plugin');
 const cssTransformer = require('./transformer/css');
 const jsTransformer = require('./transformer/js');
-const { sssLoader } = require('./constants');
+const serviceWorkerTransformer = require('./transformer/service-worker');
+const { sssLoader, cssLoader } = require('./constants');
 
 const assetsPluginInstance = new AssetsPlugin({
   filename: 'assets.json',
@@ -42,7 +43,7 @@ module.exports = {
   output: {
     path: path.resolve(process.cwd(), 'public'),
     publicPath: '/',
-    filename: __DEV__ ? 'assets/[name].[ext]' : 'assets/[name].[hash].[ext]'
+    filename: __DEV__ ? 'assets/[name].js' : 'assets/[name].[hash].js'
   },
   context: path.join(process.cwd()),
   resolve: {
@@ -56,35 +57,27 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: 'eslint-loader'
       },
-      // {
-      //   test: /\.rs$/,
-      //   use: [
-      //     {
-      //       loader: 'wasm-loader'
-      //     },
-      //     {
-      //       loader: 'rust-native-wasm-loader',
-      //       options: {
-      //         release: true
-      //       }
-      //     }
-      //   ]
-      // },
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheIdentifier: {
-              env: __DEV__ ? 'client' : 'client:prod'
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheIdentifier: {
+                env: __DEV__ ? 'client' : 'client:prod'
+              }
             }
           }
-        }
+        ]
       },
       {
         test: /\.sss$/,
         use: sssLoader
+      },
+      {
+        test: /\.css$/,
+        use: cssLoader
       },
       {
         test: /\.(jpe?g|png)$/i,
@@ -137,6 +130,13 @@ module.exports = {
         test: /\.css$/,
         cache: { key: 'my-cache-key' },
         transform: cssTransformer,
+        toType: 'template'
+      },
+      {
+        from: 'client/sw.js',
+        to: '[name].[ext]',
+        // cache: { key: 'my-cache-key' },
+        transform: serviceWorkerTransformer(!__DEV__),
         toType: 'template'
       },
       {

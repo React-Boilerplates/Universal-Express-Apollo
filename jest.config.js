@@ -17,14 +17,14 @@ module.exports = {
     '!**/dev.*.js',
     '!**/dev.js',
     '!**/mocks.*.js',
-    '!**/mocks.js'
+    '!**/mocks.js',
+    '!postcss.config.js'
   ],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       '<rootDir>/tools/jest/fileTransformer.js',
     '\\.(css|less|sss|scss|sass|styl)$':
-      '<rootDir>/tools/jest/fileTransformer.js',
-    'sw-loader!./sw': '<rootDir>/tools/jest/fileTransformer.js'
+      '<rootDir>/tools/jest/fileTransformer.js'
   },
   watchPathIgnorePatterns: [
     '<rootDir>/node_modules/',

@@ -54,19 +54,32 @@ export const createUser = () => ({
 });
 
 export const removeFolder = uploadDir => done => {
-  rimraf(uploadDir, () => {
-    fs.mkdir(uploadDir, () => {
-      done();
+  console.log('removing', uploadDir);
+  if (fs.existsSync(uploadDir)) {
+    rimraf(uploadDir, err => {
+      if (err) return done(err);
+      return done();
     });
-  });
+  } else {
+    done();
+  }
 };
 
 export const emptyFolder = uploadDir => done => {
-  rimraf(uploadDir, () => {
-    fs.mkdir(uploadDir, () => {
+  if (fs.existsSync(uploadDir)) {
+    rimraf(uploadDir, err => {
+      if (err) return done(err);
+      fs.mkdir(uploadDir, error => {
+        if (error) return done(error);
+        done();
+      });
+    });
+  } else {
+    fs.mkdir(uploadDir, error => {
+      if (error) return done(error);
       done();
     });
-  });
+  }
 };
 
 export const createArray = (size, fn) => {

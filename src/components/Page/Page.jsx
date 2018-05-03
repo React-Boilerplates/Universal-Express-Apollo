@@ -13,14 +13,15 @@ const Page = ({ query, match, title, children, root, paginate }) => (
         <title>{title}</title>
       </Helmet>
     ) : null}
-    <Query query={query} variables={match.params}>
+    <Query query={query} variables={match.params} notifyOnNetworkStatusChange>
       {({ loading, error, data, fetchMore }) => {
-        if (loading) return <Loading />;
+        if (loading && !data[root]) return <Loading />;
         if (error) throw error;
         return (
           <div>
             {children(data)}
             {paginate &&
+              !loading &&
               root && (
                 <WayPoint
                   onEnter={() => {

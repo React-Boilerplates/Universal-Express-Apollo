@@ -3,11 +3,12 @@ node_js:
   - "8"
 install:
   - npm install
-  - npm install -g codecov
+  # - npm install -g codecov
 script:
   - npm run pretest
   - npm run assets
-  - npm run test:silent && codecov
+  - npm run test:silent
+  - bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json
 
 cache:
   bundler: true

@@ -71,3 +71,4 @@ database.*
 **/*.rs.bk
 Cargo.lock
 /uploads
+sessions

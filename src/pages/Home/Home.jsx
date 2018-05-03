@@ -1,4 +1,5 @@
 import React from 'react';
+// import Editor from '../../components/Editor';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
 const Home = () => (

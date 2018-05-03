@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import potrace from 'potrace';
 import uuidV4 from 'uuid/v4';
+import uploadDir from './directories';
 import logger from '../../../../logger';
 
 function encodeOptimizedSVGDataUri(svgString) {
@@ -36,151 +36,155 @@ const createSvg = (
     steps: 1,
     color: '#880000'
   }
-) =>
-  new Promise((resolve, reject) => {
+) => {
+  // eslint-disable-next-line global-require
+  const potrace = require('potrace');
+  return new Promise((resolve, reject) => {
     potrace.posterize(content, options, (err, svg) => {
       if (err) return reject(err);
       return resolve(svg);
     });
   });
+};
 
 const DataURI = require('datauri');
-
-class ResolveAfterCount {
-  constructor(count, resolve, reject) {
-    this.count = count;
-    this.resolve = resolve;
-    this.reject = reject;
-    this.items = [];
-    this.errors = [];
-    this.resolves = [];
-  }
-  addItem(item) {
-    this.items.push(item);
-    this.errors.push(undefined);
-    this.attemptCallback();
-  }
-
-  attemptCallback() {
-    if (this.items.length >= this.count) {
-      if (this.items.every(value => value === undefined))
-        return this.reject(this.errors);
-      this.resolves.forEach(resolve => {
-        resolve(this.items);
-      });
-      this.resolve(this.items);
-    }
-  }
-
-  addError(error) {
-    this.errors.push(error);
-    this.items.push(undefined);
-    this.attemptCallback();
-  }
-
-  addCallbacks(...callbacks) {
-    callbacks.forEach(callback => {
-      this.callbacks.push(callback);
-    });
-  }
-}
 
 const { promisify } = require('util');
 
 const unlinkAsync = promisify(fs.unlink);
 const lstatAsync = promisify(fs.lstat);
 
-const mkdirAsync = promisify(fs.mkdir);
+export const mkdirAsync = promisify(fs.mkdir);
 
-export const uploadDir = path.join(process.cwd(), 'uploads');
-const dirExists = async path => {
+const dirExists = async dirPath => {
+  await mkdirAsync(uploadDir).catch(() => Promise.resolve());
   try {
-    const stats = await lstatAsync(path);
+    const stats = await lstatAsync(dirPath);
     return stats.isDirectory();
   } catch (e) {
-    return false;
+    //
+    return Promise.resolve(false);
   }
 };
 export const createUploadDir = async dir => {
+  await mkdirAsync(uploadDir).catch(() => Promise.resolve());
   try {
     if (!(await dirExists(dir))) {
       await mkdirAsync(dir);
     }
+    return undefined;
   } catch (e) {
     //
+    return Promise.resolve(undefined);
   }
-  return undefined;
 };
 
-// createUploadDir(uploadDir);
-
 const storeFS = ({ stream, filename, id = uuidV4() }) => {
+  let timeout;
   const url = `/${id}-${filename}`;
   const filepath = `${uploadDir}${url}`;
-  return new Promise((resolve, reject) =>
+  const writeStream = fs.createWriteStream(filepath);
+  return new Promise((resolve, reject) => {
+    timeout = setTimeout(() => {
+      // console.log('Error in storeFS!');
+      reject(new Error('Process was taking too long!!'));
+    }, 4800);
+    writeStream.on('finish', () => {
+      clearTimeout(timeout);
+      resolve({ id, url, filepath });
+    });
     stream
       .on('error', async error => {
-        if (stream.truncated)
-          // Delete the truncated file
-          await unlinkAsync(filepath);
+        if (stream.truncated) {
+          try {
+            // Delete the truncated file
+            await unlinkAsync(filepath);
+          } catch (e) {
+            return reject(e);
+          }
+        }
         reject(error);
       })
-      .pipe(fs.createWriteStream(filepath))
+      .pipe(writeStream)
       .on('error', reject)
-      .on('finish', () => resolve({ id, url, filepath }))
-  );
+      .on('finish', () => {
+        clearTimeout(timeout);
+        resolve({ id, url, filepath });
+      });
+  });
 };
 
 export const createAlternateImageSizes = (
-  { stream, id, sizes, filename, ...data },
+  { filepath, id, sizes, filename, ...data },
   db
 ) => {
-  if (!sizes.length) return Promise.resolve({ images: [] });
+  if (!sizes.length) return Promise.resolve(sizes);
 
   // return Promise.reject();
   const pipeline = sharp().sharpen();
   return new Promise(async (resolve, reject) => {
-    const resolveAfter = new ResolveAfterCount(
-      sizes.length,
-      images => resolve({ images }),
-      reject
-    );
     try {
-      await sizes.forEach(async width => {
-        const fileDir = path.join(uploadDir, '' + width);
-        await createUploadDir(fileDir);
-        const url = `/${id}-${filename}`;
-        const filepath = `${fileDir}${url}`;
-        const sizeId = uuidV4();
-        const transformStream = pipeline.clone().resize(width);
-
-        transformStream
-          .on('error', async error => {
-            if (transformStream.truncated)
-              // Delete the truncated file
-              await unlinkAsync(filepath);
-            resolveAfter.addError(error);
-            logger.error(error);
-          })
-          .pipe(fs.createWriteStream(filepath))
-          .on('finish', async () => {
-            const [{ height }] = await Promise.all([
-              sharp(filepath).metadata()
-            ]);
-
-            const file = await db.models.File.create({
-              id: sizeId,
-              path: filepath,
-              url,
-              filename,
-              height,
-              width,
-              ...data
-            });
-            resolveAfter.addItem(file.toJSON());
-          });
+      const images = await Promise.all(
+        sizes.map(async width => {
+          const fileDir = path.join(uploadDir, '' + width);
+          await createUploadDir(fileDir);
+          return new Promise((resolve, reject) => {
+            const stream = fs.createReadStream(filepath);
+            const url = `/${id}-${filename}`;
+            const newFilePath = `${fileDir}${url}`;
+            const writeStream = fs.createWriteStream(newFilePath);
+            const sizeId = uuidV4();
+            const transformStream = pipeline.resize(width);
+            const errorFn = async err => {
+              // try {
+              //   return Promise.reject(err);
+              // } catch (error) {
+              //   return Promise.reject(error);
+              // }
+              return reject(err);
+            };
+            writeStream.on('error', errorFn);
+            stream.on('error', errorFn);
+            transformStream
+              .on('error', async err => {
+                try {
+                  if (transformStream.truncated)
+                    // Delete the truncated file
+                    await unlinkAsync(newFilePath);
+                  logger.error(err);
+                  return reject(err);
+                } catch (error) {
+                  logger.error(error);
+                  return reject(error);
+                }
+              })
+              .pipe(writeStream)
+              .on('finish', async () => {
+                try {
+                  const { height } = await sharp(newFilePath).metadata();
+                  const file = await db.models.File.create({
+                    id: sizeId,
+                    path: newFilePath,
+                    url,
+                    filename,
+                    height,
+                    width,
+                    ...data
+                  });
+                  return resolve(file.toJSON());
+                } catch (error) {
+                  // console.error(error);
+                  return reject(error);
+                }
+              });
+            stream.pipe(pipeline).on('error', reject);
+          }).catch(() => Promise.resolve());
+        })
+      ).catch(() => {
+        // console.error(errs);
+        return Promise.resolve();
       });
-      stream.pipe(pipeline).on('error', reject);
+      resolve(images);
       // .on('finish', resolve);
     } catch (e) {
       reject(e);
@@ -193,57 +197,84 @@ export const createAlternateImageSizes = (
 };
 
 const storeDB = async (file, db) => {
-  const instance = await db.models.File.create(file);
-  return instance.toJSON();
+  try {
+    const instance = await db.models.File.create(file);
+    return instance.toJSON();
+  } catch (error) {
+    logger.log(error);
+    return new Error('ERROR Saving!');
+  }
 };
 
 export const processFile = async (upload, context) => {
-  await createUploadDir(uploadDir);
-  const { stream, filename, mimetype, encoding } = await upload;
-  const { id, filepath, url } = await storeFS({ stream, filename });
-  return storeDB(
-    { id, filename, mimetype, encoding, path: filepath, url },
-    context
-  );
+  try {
+    await createUploadDir(uploadDir);
+    const { stream, filename, mimetype, encoding } = await upload;
+    const { id, filepath, url } = await storeFS({ stream, filename });
+    return storeDB(
+      { id, filename, mimetype, encoding, path: filepath, url },
+      context
+    );
+  } catch (error) {
+    logger.log(error);
+    return;
+  }
 };
 
-export const processImage = async (upload, sizes, context) => {
-  await createUploadDir(uploadDir);
-  const id = uuidV4();
-  const { stream, filename, mimetype, encoding } = await upload;
+export const processImage = (upload, sizes, context) => {
+  return new Promise(async (resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error('Process was taking too long!'));
+    }, 4800);
+    const { stream, filename, mimetype, encoding } = await upload;
+    try {
+      await createUploadDir(uploadDir);
+      const id = await uuidV4();
 
-  const { filepath, url } = await storeFS({ stream, filename, id });
-  const duri = new DataURI();
+      const { filepath, url } = await storeFS({ stream, filename, id });
+      const dataURI = await new DataURI();
 
-  const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
-    sharp(filepath).metadata(),
-    createSvg(filepath),
-    sharp(filepath)
-      .resize(10)
-      .jpeg()
-      .toBuffer()
-  ]);
-  duri.format('.jpeg', dataUriBuffer);
-  const dataUri = duri.content;
-  const svgDataUri = await optimize(svg);
-  await storeDB(
-    {
-      id,
-      url,
-      filename,
-      svg: svgDataUri,
-      mimetype,
-      width,
-      height,
-      dataUri,
-      encoding,
-      path: filepath
-    },
-    context
-  );
-  const rs = fs.createReadStream(filepath);
-  await createAlternateImageSizes(
-    { stream: rs, id, sizes, filename, mimetype, encoding },
-    context
-  );
+      const [{ width, height }, svg, dataUriBuffer] = await Promise.all([
+        sharp(filepath).metadata(),
+        createSvg(filepath).then(optimize),
+        sharp(filepath)
+          .resize(10)
+          .jpeg()
+          .toBuffer()
+      ]).catch(() => {
+        return Promise.resolve();
+      });
+      dataURI.format('.jpeg', dataUriBuffer);
+      const dataUri = dataURI.content;
+      await storeDB(
+        {
+          id,
+          url,
+          filename,
+          svg,
+          mimetype,
+          width,
+          height,
+          dataUri,
+          encoding,
+          path: filepath
+        },
+        context
+      );
+      if (sizes.length) {
+        await createAlternateImageSizes(
+          { filepath, id, sizes, filename, mimetype, encoding },
+          context
+        );
+      }
+      clearTimeout(timeout);
+      return resolve();
+    } catch (e) {
+      //
+      logger.log(e);
+      clearTimeout(timeout);
+      stream.close();
+      return resolve();
+    }
+  });
 };

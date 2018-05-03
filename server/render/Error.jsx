@@ -17,6 +17,7 @@ RoutedError.propTypes = {};
 // eslint-disable-next-line no-unused-vars
 export const errorHandler = (err, req, res, next) =>
   Promise.resolve().then(async () => {
+    logger.log(err);
     try {
       const notice = (await logger.error(err)) || {};
 

@@ -32,7 +32,6 @@ describe('Functions', () => {
     });
     // beforeAll(removeFolder(global.uploadDir));
     it('should process the stream', async () => {
-      console.log(global.mockUuid);
       jest.mock('uuid/v4', () => global.mockUuid);
       try {
         const id = global.mockUuid;
@@ -46,7 +45,7 @@ describe('Functions', () => {
           createDb()
         );
       } catch (error) {
-        console.error(error);
+        // console.error(error);
         expect(error).toBeUndefined();
       }
       expect(fs.existsSync(path.join(global.uploadDir, '20'))).toBe(true);

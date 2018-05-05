@@ -1,11 +1,11 @@
 # TODOs
 
 - Build a function that will compress GraphQL Schema Strings
-- Add Draft.js ✔
 - Integrate with Browser-Sync
 - Add Command Line
 - Add Admin Panel
 - Add MDX-js
+- Add graphql-crunch
 - Serve up Page using a Stream
   - Possibly using [react-helmet-async](https://github.com/NYTimes/react-helmet-async)
 - Setup Helmet-CSP
@@ -31,6 +31,7 @@
   - lower ✔
 - Add Sessions ✔
   - Add Session Storage
+- Add Draft.js ✔
 - add Dynamic relative css handling ✔
 - add StyleLint ✔
 - add Express Hot Reload on Routes ✔

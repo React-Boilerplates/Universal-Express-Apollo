@@ -1,7 +1,7 @@
 # TODOs
 
 - Build a function that will compress GraphQL Schema Strings
-- Add Draft.js
+- Add Draft.js ✔
 - Integrate with Browser-Sync
 - Add Command Line
 - Add Admin Panel

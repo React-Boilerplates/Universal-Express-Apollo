@@ -5,6 +5,7 @@
 - Add Command Line
 - Add Admin Panel
 - Add MDX-js
+- Look at Cypress.io
 - Add graphql-crunch
 - Serve up Page using a Stream
   - Possibly using [react-helmet-async](https://github.com/NYTimes/react-helmet-async)

@@ -1,5 +1,5 @@
 // import path from 'path';
-import compiler from './compiler';
+import compiler from '../../../test_utilities/compilerAsync';
 
 describe('Production', () => {
   process.env.NODE_ENV = 'production';

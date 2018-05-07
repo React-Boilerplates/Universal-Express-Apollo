@@ -1,4 +1,4 @@
-const compiler = require('./compiler');
+const compiler = require('./../../../test_utilities/compilerAsync');
 const config = require('../service-worker');
 const crypto = require('crypto');
 const path = require('path');
@@ -26,12 +26,14 @@ const serviceWorkerTransformer = production => content =>
     if (!production) config.mode = 'development';
     let code;
     try {
+      // eslint-disable-next-line no-unused-vars
       const [d, fs] = await compiler(config);
 
       code = fs
         .readFileSync(path.join(process.cwd(), 'public', 'sw.js'))
         .toString();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
       reject(error);
     }

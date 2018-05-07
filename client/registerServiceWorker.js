@@ -3,7 +3,7 @@ const swUrl = '/sw.js';
 const registerServiceWorker = () => {
   const result = navigator.serviceWorker
     .register(swUrl)
-    .then(console.log)
+    // .then(console.log)
     .catch(() => Promise.resolve());
   return result;
 };

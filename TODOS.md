@@ -2,6 +2,7 @@
 
 - Build a function that will compress GraphQL Schema Strings
 - Integrate with Browser-Sync
+- Add E2E Testing (Build Server, Test Each Page and Action)
 - Add Command Line
 - Add Admin Panel
 - Add MDX-js

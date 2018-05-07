@@ -1,12 +1,14 @@
 # TODOs
 
 - Build a function that will compress GraphQL Schema Strings
-- Add Draft.js
 - Integrate with Browser-Sync
+- Add E2E Testing (Build Server, Test Each Page and Action)
 - Add Command Line
 - Add Admin Panel
 - Add MDX-js
-- Server up Page using a Stream
+- Look at Cypress.io
+- Add graphql-crunch
+- Serve up Page using a Stream
   - Possibly using [react-helmet-async](https://github.com/NYTimes/react-helmet-async)
 - Setup Helmet-CSP
 - Setup Tree-Shaking on Image-Loader
@@ -31,6 +33,7 @@
   - lower ✔
 - Add Sessions ✔
   - Add Session Storage
+- Add Draft.js ✔
 - add Dynamic relative css handling ✔
 - add StyleLint ✔
 - add Express Hot Reload on Routes ✔

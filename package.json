@@ -30,9 +30,9 @@
         "clean": "npm run clean:server && npm run clean:client",
         "clean:server": "rm -rf build",
         "clean:client": "rm -rf public",
-        "start:prod": "cross-env node build/main.js",
         "pre:start": "npm run dev:client && npm run clean",
         "start": "cross-env NODE_ENV=development BABEL_ENV=server babel-node --harmony server/dev.js",
+        "start:prod": "cross-env node build/main.js",
         "heroku-postbuild": "npm run build"
     },
     "bugs": {
@@ -146,6 +146,7 @@
         "eslint-plugin-react": "7.7.0",
         "extract-text-webpack-plugin": "4.0.0-beta.0",
         "jest": "22.4.3",
+        "jest-puppeteer": "^3.0.1",
         "jest-styled-components": "5.0.1",
         "loader-utils": "1.1.0",
         "make-dir-webpack-plugin": "0.1.0",

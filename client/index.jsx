@@ -10,6 +10,12 @@ const rootElement = document.getElementById('root');
 const render = element => {
   let promise = Promise.resolve();
 
+  if (process.env.NODE_ENV !== 'production') {
+    promise = promise.then(() =>
+      import('./dev.js').then(mod => mod.default(React))
+    );
+  }
+
   promise = promise.then(() =>
     Promise.all([loadComponents()]).then(() => {
       ReactDOM.hydrate(<App />, element);

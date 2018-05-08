@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import slug from 'slug';
 
 const logger = require('../logger');
 
@@ -14,8 +15,16 @@ const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true
       },
+      slug: {
+        type: Sequelize.STRING
+      },
+      displayName: {
+        type: Sequelize.STRING,
+        unique: true
+      },
       email: {
         type: Sequelize.STRING,
+        unique: true,
         set(val) {
           this.setDataValue('email', val.toLowerCase());
         },
@@ -59,7 +68,7 @@ const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
     }
     return false;
   };
-  User.hasSecurePassword = async user => {
+  User.hashPassword = async user => {
     // Potentially check to see if the password is secure enough!
     if (user.password !== user.password_confirmation)
       throw new Error('Passwords do not match!');
@@ -67,18 +76,32 @@ const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
     user.set('hash', hash);
     return user;
   };
+
+  User.createSlug = async user => {
+    // Potentially check to see if the password is secure enough!
+    if (!user.firstName && !user.lastName) user.set('slug', 'unknown-user');
+    else {
+      const name = `${user.firstName || ''} ${user.lastName || ''}`;
+      user.set('slug', slug(name));
+    }
+    return user;
+  };
+
+  User.preMutation = async user => {
+    if (!user.password) return null;
+    let final;
+    final = await User.hashPassword(user);
+    final = await User.createSlug(final);
+    return final;
+  };
   User.associations = models => {
     const relationships = {};
     // CREATE JOINS
     relationships.Post = User.hasMany(models.Post, { as: 'posts' });
     return relationships;
   };
-  User.beforeCreate(
-    async user => (!user.password ? null : User.hasSecurePassword(user))
-  );
-  User.beforeUpdate(
-    async user => (!user.password ? null : User.hasSecurePassword(user))
-  );
+  User.beforeCreate(async user => User.preMutation(user));
+  User.beforeUpdate(async user => User.preMutation(user));
 
   return User;
 };
@@ -89,7 +112,7 @@ createUserModel.postSetup = async (models, relationships) => {
     try {
       await models.User.sync({ force });
       logger.log('Building Model');
-      const casual = require('casual'); // eslint-disable-line global-require, import/no-extraneous-dependencies
+      const casual = require('casual'); // eslint-disable-line global-require, import/no-extraneous-dependencies, node/no-unpublished-require
       await models.User.create(
         {
           firstName: 'Craig',

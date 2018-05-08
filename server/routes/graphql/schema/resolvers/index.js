@@ -30,15 +30,17 @@ const resolvers = {
     }
   }),
   Query: {
-    posts: async (parent, args, context) =>
+    posts: async (parent, args = { first: 10 }, context) =>
       connectionFromPromisedArray(
         context.models.Post.findAll({
           order: [['createdAt', 'DESC']]
         }).then(list =>
           list.map(v => {
             const userId = v.get('userId');
+            const post = v.toJSON();
             if (userId) context.loader.users.load(userId);
-            return v.get();
+            context.loader.posts.prime(v.get('id'), post);
+            return post;
           })
         ),
         args

@@ -11,6 +11,7 @@ config.gypi
 CVS
 npm-debug.log
 **/__tests__/**
+node_modules/
 tools/
 **/*.spec.js
 **/dev.js

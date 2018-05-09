@@ -32,7 +32,8 @@
         "clean:client": "rm -rf public",
         "pre:start": "npm run dev:client && npm run clean",
         "start": "cross-env NODE_ENV=development BABEL_ENV=server babel-node --harmony server/dev.js",
-        "start:prod": "cross-env node build/main.js",
+        "start:prod": "node build/main.js",
+        "now-start": "node build/main.js",
         "heroku-postbuild": "npm run build"
     },
     "bugs": {

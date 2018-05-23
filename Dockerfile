@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:8@sha256:3b4f810f7184aacea35894aa436e3c47b40df3ff75fca142f4fbf776eacf57bf
+FROM mhart/alpine-node:8@sha256:72344934ed265582ba93d2ca7df98665d6deba1418c4d717d625c6337ea026fb
 WORKDIR /src
 ADD . .
 RUN npm install

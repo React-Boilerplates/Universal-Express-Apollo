@@ -1,63 +1,57 @@
 import React from 'react';
 import { Route } from 'react-router';
-import Home from './pages/Home';
-import ErrorPage from './pages/Error';
-import Post from './pages/Post';
-import User from './pages/User';
-import Users from './pages/Users';
-import Posts from './pages/Posts';
-import NoMatch from './pages/NoMatch';
+import * as Routes from './pages';
 
-const Routes = [
+const routes = [
   {
     exact: true,
     path: '/',
-    component: Home
+    component: Routes.Home
   },
   {
     exact: true,
     path: '/amp/',
-    component: Home
+    component: Routes.Home
   },
   {
     exact: true,
-    path: '/post/:id',
-    component: Post
+    path: '/post/:id/:name?',
+    component: Routes.Post
   },
   {
     exact: true,
-    path: '/amp/post/:id',
-    component: Post
+    path: '/amp/post/:id/:name?',
+    component: Routes.Post
   },
   {
     exact: true,
-    path: '/user/:id',
-    component: User
+    path: '/user/:id/:name?',
+    component: Routes.User
   },
   {
     exact: true,
-    path: '/amp/user/:id',
-    component: User
+    path: '/amp/user/:id/:name?',
+    component: Routes.User
   },
   {
     exact: true,
-    path: '/posts',
-    component: Posts
+    path: '/posts/:after?',
+    component: Routes.Posts
   },
   {
     exact: true,
-    path: '/amp/posts',
-    component: Posts
+    path: '/amp/posts/:after?',
+    component: Routes.Posts
   },
   {
     exact: true,
-    path: '/users',
-    component: Users
+    path: '/users/:after?',
+    component: Routes.Users
   },
   {
     exact: true,
-    path: '/amp/users',
-    component: Users
+    path: '/amp/users/:after?',
+    component: Routes.Users
   }
 ];
 
@@ -65,13 +59,13 @@ let addedRoutes = [];
 
 if (process.env.NODE_ENV === 'development') {
   addedRoutes = [
-    <Route key="error" exact path="/error" component={ErrorPage} />,
-    <Route key="none" component={NoMatch} />
+    <Route key="error" exact path="/error" component={Routes.ErrorPage} />,
+    <Route key="none" component={Routes.NoMatch} />
   ];
 } else {
-  addedRoutes = [<Route key="none" component={NoMatch} />];
+  addedRoutes = [<Route key="none" component={Routes.NoMatch} />];
 }
 
-export default Routes.map(props => (
-  <Route key={props.path || 'none'} {...props} />
-)).concat(addedRoutes);
+export default routes
+  .map(props => <Route key={props.path || 'none'} {...props} />)
+  .concat(addedRoutes);

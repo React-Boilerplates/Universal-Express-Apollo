@@ -62,6 +62,7 @@ const typeDefs = /* GraphQL */ gql`
 
   type Post implements Node {
     id: ID!
+    slug: String!
     title: String!
     description: String!
     author: Person!
@@ -102,6 +103,7 @@ const typeDefs = /* GraphQL */ gql`
   type Person implements Node {
     id: ID!
     name: String!
+    slug: String!
     posts: [Post]
   }
 

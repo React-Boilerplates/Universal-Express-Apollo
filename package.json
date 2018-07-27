@@ -32,7 +32,8 @@
         "clean:client": "rm -rf public",
         "pre:start": "npm run dev:client && npm run clean",
         "start": "cross-env NODE_ENV=development BABEL_ENV=server babel-node --harmony server/dev.js",
-        "start:prod": "cross-env node build/main.js",
+        "start:prod": "node build/main.js",
+        "now-start": "node build/main.js",
         "heroku-postbuild": "npm run build"
     },
     "bugs": {
@@ -69,6 +70,7 @@
         "express-jwt": "^5.3.1",
         "express-session": "^1.15.6",
         "graphql": "^0.13.2",
+        "graphql-crunch": "^1.1.2",
         "graphql-relay": "^0.5.5",
         "graphql-tag": "^2.8.0",
         "graphql-tools": "^3.0.0",
@@ -93,6 +95,7 @@
         "redux-form": "^7.3.0",
         "sequelize": "^4.37.5",
         "sharp": "^0.20.1",
+        "slug": "^0.9.1",
         "sqlite3": "^4.0.0",
         "styled-components": "^3.2.3",
         "svgo": "^1.0.5",
@@ -150,6 +153,7 @@
         "jest-styled-components": "5.0.1",
         "loader-utils": "1.1.0",
         "make-dir-webpack-plugin": "0.1.0",
+        "memoizee": "^0.4.12",
         "memory-fs": "0.4.1",
         "mock-env": "0.2.0",
         "openport": "0.0.5",
@@ -180,7 +184,8 @@
         "webpack-hot-middleware": "2.22.1",
         "webpack-manifest-plugin": "2.0.2",
         "webpack-node-externals": "1.7.2",
-        "webpack-pwa-manifest": "3.6.2"
+        "webpack-pwa-manifest": "3.6.2",
+        "why-did-you-update": "^0.1.1"
     },
     "engines": {
         "node": ">=8.0.0"

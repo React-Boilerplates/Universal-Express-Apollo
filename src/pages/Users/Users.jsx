@@ -18,6 +18,7 @@ const query = gql`
         node {
           id
           name
+          slug
         }
       }
     }
@@ -26,9 +27,13 @@ const query = gql`
 
 export const Users = data => (
   <React.Fragment>
-    {data.users.edges.map(({ node }) => node).map(({ id, name }) => (
+    {data.users.edges.map(({ node }) => node).map(({ id, name, slug }) => (
       <div key={id}>
-        <Link to={`/user/${id}`} onMouseOver={Post.load} onFocus={Post.load}>
+        <Link
+          to={`/user/${id}/${slug}`}
+          onMouseOver={Post.load}
+          onFocus={Post.load}
+        >
           <div>{`${name}`}</div>
         </Link>
       </div>

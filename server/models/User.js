@@ -95,10 +95,8 @@ const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
     return final;
   };
   User.associations = models => {
-    const relationships = {};
     // CREATE JOINS
-    relationships.Post = User.hasMany(models.Post, { as: 'posts' });
-    return relationships;
+    models.User.Post = User.hasMany(models.Post, { as: 'posts' });
   };
   User.beforeCreate(async user => User.preMutation(user));
   User.beforeUpdate(async user => User.preMutation(user));
@@ -106,7 +104,7 @@ const createUserModel = (Sequelize = require('sequelize'), sequelize) => {
   return User;
 };
 
-createUserModel.postSetup = async (models, relationships) => {
+createUserModel.postSetup = async models => {
   const range = length => [...Array(length).keys()];
   if (force) {
     try {
@@ -126,7 +124,7 @@ createUserModel.postSetup = async (models, relationships) => {
           }))
         },
         {
-          include: [relationships.User.Post]
+          include: [models.User.Post]
         }
       );
 
@@ -145,7 +143,7 @@ createUserModel.postSetup = async (models, relationships) => {
               }))
             },
             {
-              include: [relationships.User.Post]
+              include: [models.User.Post]
             }
           );
           return user;

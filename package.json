@@ -91,7 +91,7 @@
         "react-router-dom": "^4.2.2",
         "redux": "^4.0.0",
         "redux-form": "^7.3.0",
-        "sequelize": "^4.37.5",
+        "sequelize": "^6.19.1",
         "sharp": "^0.20.1",
         "sqlite3": "^4.0.0",
         "styled-components": "^3.2.3",

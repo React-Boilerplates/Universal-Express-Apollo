@@ -120,7 +120,7 @@
         "babel-istanbul": "0.12.2",
         "babel-loader": "7.1.4",
         "babel-plugin-dynamic-import-node": "1.2.0",
-        "babel-plugin-graphql-tag": "1.5.0",
+        "babel-plugin-graphql-tag": "1.6.0",
         "babel-plugin-import-inspector": "2.0.0",
         "babel-plugin-styled-components": "1.5.1",
         "babel-plugin-transform-react-remove-prop-types": "0.4.13",
